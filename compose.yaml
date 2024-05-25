@@ -1,0 +1,190 @@
+version: '3.8'
+
+services:
+  company-db-service:
+    container_name: company-postgresql
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: company-db
+      POSTGRES_USER: company-postgres-user
+      POSTGRES_PASSWORD: company-postgres-pwd
+    ports:
+      - 5432:5432
+    volumes:
+      - /var/lib/postgres
+    networks:
+      - fase-04-network
+
+  company-api:
+    container_name: company-api
+    build:
+      context: ./company
+    depends_on:
+      - company-db-service
+    ports:
+      - "8082:8082"
+    environment:
+      spring.datasource.url: jdbc:postgresql://company-db-service:5432/company-db
+      spring.datasource.username: company-postgres-user
+      spring.datasource.password: company-postgres-pwd
+    networks:
+      - fase-04-network
+
+  customer-db-service:
+    container_name: customer-postgresql
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: customer-db
+      POSTGRES_USER: customer-postgres-user
+      POSTGRES_PASSWORD: customer-postgres-pwd
+    ports:
+      - 5433:5432
+    volumes:
+      - /var/lib/postgres
+    networks:
+      - fase-04-network
+
+  customer-api:
+    container_name: customer-api
+    build:
+      context: ./customer
+    depends_on:
+      - customer-db-service
+    ports:
+      - "8083:8083"
+    environment:
+      spring.datasource.url: jdbc:postgresql://customer-db-service/customer-db
+      spring.datasource.username: customer-postgres-user
+      spring.datasource.password: customer-postgres-pwd
+    networks:
+      - fase-04-network
+
+  product-db-service:
+    container_name: product-postgresql
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: product-db
+      POSTGRES_USER: product-postgres-user
+      POSTGRES_PASSWORD: product-postgres-pwd
+    ports:
+      - 5434:5432
+    volumes:
+      - /var/lib/postgres
+    networks:
+      - fase-04-network
+
+  product-api:
+    container_name: product-api
+    build:
+      context: ./product
+    depends_on:
+      - product-db-service
+    ports:
+      - "8084:8084"
+    environment:
+      spring.datasource.url: jdbc:postgresql://product-db-service/product-db
+      spring.datasource.username: product-postgres-user
+      spring.datasource.password: product-postgres-pwd
+    networks:
+      - fase-04-network
+
+  order-db-service:
+    container_name: order-postgresql
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: order-db
+      POSTGRES_USER: order-postgres-user
+      POSTGRES_PASSWORD: order-postgres-pwd
+    ports:
+      - 5435:5432
+    volumes:
+      - /var/lib/postgres
+    networks:
+      - fase-04-network
+
+  order-api:
+    container_name: order-api
+    build:
+      context: ./order
+    depends_on:
+      - order-db-service
+    ports:
+      - "8085:8085"
+    environment:
+      spring.datasource.url: jdbc:postgresql://order-db-service/order-db
+      spring.datasource.username: order-postgres-user
+      spring.datasource.password: order-postgres-pwd
+      URL_LOGISTICS: http://logistics-api:8086
+    networks:
+      - fase-04-network
+
+  logistics-db-service:
+    container_name: logistics-postgresql
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: logistics-db
+      POSTGRES_USER: logistics-postgres-user
+      POSTGRES_PASSWORD: logistics-postgres-pwd
+    ports:
+      - 5436:5432
+    volumes:
+      - /var/lib/postgres
+    networks:
+      - fase-04-network
+
+  logistics-api:
+    container_name: logistics-api
+    build:
+      context: ./logistics
+    depends_on:
+      - logistics-db-service
+    ports:
+      - "8086:8086"
+    environment:
+      spring.datasource.url: jdbc:postgresql://logistics-db-service/logistics-db
+      spring.datasource.username: logistics-postgres-user
+      spring.datasource.password: logistics-postgres-pwd
+      URL_ORDER: http://order-api:8085
+    networks:
+      - fase-04-network
+
+  batch-db-service:
+    container_name: batch-postgresql
+    image: postgres:15.1
+    environment:
+      POSTGRES_DB: batch-db
+      POSTGRES_USER: batch-postgres-user
+      POSTGRES_PASSWORD: batch-postgres-pwd
+    ports:
+      - 5437:5432
+    volumes:
+      - /var/lib/postgres
+    networks:
+      - fase-04-network
+
+  product-batch-api:
+    container_name: product-batch-api
+    build:
+      context: ./product-batch
+    depends_on:
+      - batch-db-service
+      - product-db-service
+      - logistics-db-service
+    ports:
+      - "8087:8087"
+    environment:
+      spring.datasource.jdbcurl: jdbc:postgresql://batch-db-service/batch-db
+      spring.datasource.username: batch-postgres-user
+      spring.datasource.password: batch-postgres-pwd
+      product.datasource.jdbcurl: jdbc:postgresql://product-db-service/product-db
+      product.datasource.username: product-postgres-user
+      product.datasource.password: product-postgres-pwd
+      logistics.datasource.jdbcurl: jdbc:postgresql://logistics-db-service/logistics-db
+      logistics.datasource.username: logistics-postgres-user
+      logistics.datasource.password: logistics-postgres-pwd
+    networks:
+      - fase-04-network
+
+networks:
+  fase-04-network:
+    driver: bridge
