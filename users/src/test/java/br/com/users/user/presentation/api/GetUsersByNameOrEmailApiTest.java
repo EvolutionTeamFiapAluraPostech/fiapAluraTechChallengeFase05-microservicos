@@ -1,9 +1,12 @@
 package br.com.users.user.presentation.api;
 
-import static br.com.users.shared.testData.user.UserTestData.createUser;
+import static br.com.users.shared.testData.user.UserTestData.createNewUser;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasSize;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import br.com.users.shared.annotation.DatabaseTest;
@@ -17,7 +20,6 @@ import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 @IntegrationTest
@@ -37,7 +39,7 @@ class GetUsersByNameOrEmailApiTest {
   }
 
   private User createAndSaveUser() {
-    var user = createUser();
+    var user = createNewUser();
     return entityManager.merge(user);
   }
 
@@ -57,8 +59,9 @@ class GetUsersByNameOrEmailApiTest {
     var request = get(URL_USERS)
         .param("name", user.getName());
     var mvcResult = mockMvc.perform(request)
-        .andExpect(status().isAccepted())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(APPLICATION_JSON))
+        .andExpect(jsonPath("$.content", hasSize(1)))
         .andReturn();
 
     var contentAsString = mvcResult.getResponse().getContentAsString();
@@ -76,7 +79,7 @@ class GetUsersByNameOrEmailApiTest {
         .param("email", user.getEmail());
     var mvcResult = mockMvc.perform(request)
         .andExpect(status().isOk())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(content().contentType(APPLICATION_JSON))
         .andReturn();
 
     var contentAsString = mvcResult.getResponse().getContentAsString();
@@ -95,7 +98,7 @@ class GetUsersByNameOrEmailApiTest {
         .param("email", user.getEmail());
     var mvcResult = mockMvc.perform(request)
         .andExpect(status().isOk())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(content().contentType(APPLICATION_JSON))
         .andReturn();
 
     var contentAsString = mvcResult.getResponse().getContentAsString();
@@ -114,7 +117,7 @@ class GetUsersByNameOrEmailApiTest {
         .param("email", "");
     var mvcResult = mockMvc.perform(request)
         .andExpect(status().isOk())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(content().contentType(APPLICATION_JSON))
         .andReturn();
 
     var contentAsString = mvcResult.getResponse().getContentAsString();
@@ -123,7 +126,8 @@ class GetUsersByNameOrEmailApiTest {
   }
 
   @Test
-  void shouldReturnAllUsersWhenNameAndEmailParametersWereNotInformedAndUserAlreadyExists() throws Exception {
+  void shouldReturnAllUsersWhenNameAndEmailParametersWereNotInformedAndUserAlreadyExists()
+      throws Exception {
     var user = findUser();
     var userPage = PageUtil.generatePageOfUser(user);
     var userOutputDtoExpected = UserOutputDto.toPage(userPage);
@@ -131,7 +135,7 @@ class GetUsersByNameOrEmailApiTest {
     var request = get(URL_USERS);
     var mvcResult = mockMvc.perform(request)
         .andExpect(status().isOk())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(content().contentType(APPLICATION_JSON))
         .andReturn();
 
     var contentAsString = mvcResult.getResponse().getContentAsString();
@@ -149,12 +153,13 @@ class GetUsersByNameOrEmailApiTest {
         .param("email", "");
     var mvcResult = mockMvc.perform(request)
         .andExpect(status().isOk())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(content().contentType(APPLICATION_JSON))
         .andReturn();
 
     var contentAsString = mvcResult.getResponse().getContentAsString();
     var userFound = JsonUtil.fromJson(contentAsString, UserContent.class);
-    assertThat(userFound.getContent()).usingRecursiveComparison().isEqualTo(userPageOutputDtoExpected);
+    assertThat(userFound.getContent()).usingRecursiveComparison()
+        .isEqualTo(userPageOutputDtoExpected);
   }
 
   @Test
@@ -167,11 +172,12 @@ class GetUsersByNameOrEmailApiTest {
         .param("email", "smith@matrix.com");
     var mvcResult = mockMvc.perform(request)
         .andExpect(status().isOk())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(content().contentType(APPLICATION_JSON))
         .andReturn();
 
     var contentAsString = mvcResult.getResponse().getContentAsString();
     var userFound = JsonUtil.fromJson(contentAsString, UserContent.class);
-    assertThat(userFound.getContent()).usingRecursiveComparison().isEqualTo(userPageOutputDtoExpected);
+    assertThat(userFound.getContent()).usingRecursiveComparison()
+        .isEqualTo(userPageOutputDtoExpected);
   }
 }

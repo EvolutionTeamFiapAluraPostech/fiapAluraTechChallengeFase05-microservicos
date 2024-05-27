@@ -14,7 +14,6 @@ import br.com.users.user.presentation.dto.PutUserInputDto;
 import br.com.users.user.presentation.dto.UserFilter;
 import br.com.users.user.presentation.dto.UserOutputDto;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Email;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -81,7 +80,7 @@ public class UsersController implements UsersApi {
 
   @GetMapping("/email/{email}")
   @ResponseStatus(HttpStatus.OK)
-  public UserOutputDto getUserByEmail(@PathVariable @Email String email) {
+  public UserOutputDto getUserByEmail(@PathVariable String email) {
     var userFound = getUserByEmailUseCase.execute(email);
     return UserOutputDto.from(userFound);
   }

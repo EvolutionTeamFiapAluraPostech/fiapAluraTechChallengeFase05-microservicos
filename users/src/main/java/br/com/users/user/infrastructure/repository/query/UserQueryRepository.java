@@ -11,8 +11,8 @@ public interface UserQueryRepository {
           SELECT u
           FROM User u
           LEFT JOIN FETCH u.authorities a
-          WHERE (:name IS NULL OR UPPER(TRIM(u.name)) LIKE CONCAT('%', UPPER(TRIM(:name)), '%'))
-            AND (:email IS NULL OR UPPER(TRIM(u.email)) LIKE CONCAT('%', UPPER(TRIM(:email)), '%'))
+          WHERE (:name IS NULL OR trim(u.name) LIKE %:name%)
+            AND (:email IS NULL OR trim(u.email) LIKE %:email%)
       """)
   Page<User> queryUserByNameLikeIgnoreCaseOrEmail(String name, String email, Pageable pageable);
 }

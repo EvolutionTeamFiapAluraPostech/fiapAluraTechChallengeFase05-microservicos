@@ -1,7 +1,8 @@
 package br.com.users.user.presentation.api;
 
-import static br.com.users.shared.testData.user.UserTestData.createUser;
+import static br.com.users.shared.testData.user.UserTestData.createNewUser;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -12,7 +13,6 @@ import jakarta.persistence.EntityManager;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 @IntegrationTest
@@ -30,7 +30,7 @@ class DeleteUserApiTest {
   }
 
   private User createAndPersistUser() {
-    var user = createUser();
+    var user = createNewUser();
     return entityManager.merge(user);
   }
 
@@ -39,7 +39,7 @@ class DeleteUserApiTest {
     var user = createAndPersistUser();
 
     var request = delete(URL_USERS + user.getId())
-        .contentType(MediaType.APPLICATION_JSON);
+        .contentType(APPLICATION_JSON);
     mockMvc.perform(request)
         .andExpect(status().isNoContent());
 
@@ -51,7 +51,7 @@ class DeleteUserApiTest {
   @Test
   void shouldReturnNotFoundWhenUserUuidWasNotFound() throws Exception {
     var request = delete(URL_USERS + UUID.randomUUID())
-        .contentType(MediaType.APPLICATION_JSON);
+        .contentType(APPLICATION_JSON);
     mockMvc.perform(request)
         .andExpect(status().isNotFound());
   }
