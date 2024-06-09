@@ -106,7 +106,7 @@ O objetivo deste microsserviço é gerenciar os usuários do sistema, ou seja, o
                     * Validação do e-mail já cadastrado na base de dados;
                 * Http response status do endpoint:
                     * Status 200 - Ok - usuário autenticado na aplicação;
-                    * Status 400 - Bad request - se alguma regra foi violada;
+                    * Status 401 - Unauthorized - se o usuário não foi autenticado;
 
         * http://localhost:8080/users/{id} 
             * Verbo GET - para realizar a pesquisa de um usuário pelo seu ID.
