@@ -1,6 +1,35 @@
 version: '3.8'
 
 services:
+  user-db-service:
+    container_name: user-postgresql
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: users-db
+      POSTGRES_USER: users-postgres-user
+      POSTGRES_PASSWORD: users-postgres-pwd
+    ports:
+      - 5432:5432
+    volumes:
+      - /var/lib/postgres
+    networks:
+      - fase-05-network
+
+  user-api:
+    container_name: user-api
+    build:
+      context: ./company
+    depends_on:
+      - user-db-service
+    ports:
+      - "8080:8080"
+    environment:
+      spring.datasource.url: jdbc:postgresql://user-db-service:5432/user-db
+      spring.datasource.username: users-postgres-user
+      spring.datasource.password: users-postgres-pwd
+    networks:
+      - fase-05-network
+
   company-db-service:
     container_name: company-postgresql
     image: postgres:latest
@@ -13,7 +42,7 @@ services:
     volumes:
       - /var/lib/postgres
     networks:
-      - fase-04-network
+      - fase-05-network
 
   company-api:
     container_name: company-api
@@ -22,13 +51,13 @@ services:
     depends_on:
       - company-db-service
     ports:
-      - "8082:8082"
+      - "8081:8081"
     environment:
       spring.datasource.url: jdbc:postgresql://company-db-service:5432/company-db
       spring.datasource.username: company-postgres-user
       spring.datasource.password: company-postgres-pwd
     networks:
-      - fase-04-network
+      - fase-05-network
 
   customer-db-service:
     container_name: customer-postgresql
@@ -42,7 +71,7 @@ services:
     volumes:
       - /var/lib/postgres
     networks:
-      - fase-04-network
+      - fase-05-network
 
   customer-api:
     container_name: customer-api
@@ -57,7 +86,7 @@ services:
       spring.datasource.username: customer-postgres-user
       spring.datasource.password: customer-postgres-pwd
     networks:
-      - fase-04-network
+      - fase-05-network
 
   product-db-service:
     container_name: product-postgresql
@@ -71,7 +100,7 @@ services:
     volumes:
       - /var/lib/postgres
     networks:
-      - fase-04-network
+      - fase-05-network
 
   product-api:
     container_name: product-api
@@ -86,7 +115,7 @@ services:
       spring.datasource.username: product-postgres-user
       spring.datasource.password: product-postgres-pwd
     networks:
-      - fase-04-network
+      - fase-05-network
 
   order-db-service:
     container_name: order-postgresql
@@ -100,7 +129,7 @@ services:
     volumes:
       - /var/lib/postgres
     networks:
-      - fase-04-network
+      - fase-05-network
 
   order-api:
     container_name: order-api
@@ -116,7 +145,7 @@ services:
       spring.datasource.password: order-postgres-pwd
       URL_LOGISTICS: http://logistics-api:8086
     networks:
-      - fase-04-network
+      - fase-05-network
 
   logistics-db-service:
     container_name: logistics-postgresql
@@ -130,7 +159,7 @@ services:
     volumes:
       - /var/lib/postgres
     networks:
-      - fase-04-network
+      - fase-05-network
 
   logistics-api:
     container_name: logistics-api
@@ -146,7 +175,7 @@ services:
       spring.datasource.password: logistics-postgres-pwd
       URL_ORDER: http://order-api:8085
     networks:
-      - fase-04-network
+      - fase-05-network
 
   batch-db-service:
     container_name: batch-postgresql
@@ -160,7 +189,7 @@ services:
     volumes:
       - /var/lib/postgres
     networks:
-      - fase-04-network
+      - fase-05-network
 
   product-batch-api:
     container_name: product-batch-api
@@ -183,8 +212,8 @@ services:
       logistics.datasource.username: logistics-postgres-user
       logistics.datasource.password: logistics-postgres-pwd
     networks:
-      - fase-04-network
+      - fase-05-network
 
 networks:
-  fase-04-network:
+  fase-05-network:
     driver: bridge

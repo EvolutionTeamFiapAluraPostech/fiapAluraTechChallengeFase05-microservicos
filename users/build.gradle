@@ -28,11 +28,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation "org.springframework.cloud:spring-cloud-starter-openfeign:${versionSpringCloudOpenFeign}"
     implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${versionSpringDocOpenApi}"
-    implementation 'org.springframework.boot:spring-boot-starter-webflux'
     implementation 'org.flywaydb:flyway-core'
+    implementation "org.hamcrest:hamcrest:${versionHamcrest}"
     implementation "io.jsonwebtoken:jjwt:${versionJjwt}"
     implementation "com.auth0:java-jwt:${versionJavaJwt}"
-    implementation "org.hamcrest:hamcrest:${versionHamcrest}"
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'org.postgresql:postgresql'
