@@ -161,7 +161,7 @@ O objetivo deste microsserviço é gerenciar os usuários do sistema, ou seja, o
 
     ![alt text](image-12.png)
 
-    163 testes de integração e unidade, executados em 5 segudos, com 94% de classes e 89% de linhas de código cobertas.
+    194 testes de integração e unidade, executados em 4,5 segudos, com 94% de classes e 89% de linhas de código cobertas.
 
     ![alt text](image-15.png)
 
