@@ -3,9 +3,11 @@ package br.com.users.user.presentation.api;
 import static br.com.users.shared.testData.user.UserTestData.ALTERNATIVE_USER_CPF;
 import static br.com.users.shared.testData.user.UserTestData.ALTERNATIVE_USER_EMAIL;
 import static br.com.users.shared.testData.user.UserTestData.ALTERNATIVE_USER_NAME;
+import static br.com.users.shared.testData.user.UserTestData.DEFAULT_USER_CPF;
 import static br.com.users.shared.testData.user.UserTestData.DEFAULT_USER_PASSWORD;
 import static br.com.users.shared.testData.user.UserTestData.createNewUser;
 import static br.com.users.shared.util.IsUUID.isUUID;
+import static br.com.users.user.domain.enums.DocNumberType.CNPJ;
 import static br.com.users.user.domain.enums.DocNumberType.CPF;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -24,6 +26,9 @@ import jakarta.persistence.EntityManager;
 import java.util.UUID;
 import org.junit.Ignore;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -115,6 +120,85 @@ class PutUserApiTest {
     mockMvc.perform(request)
         .andExpect(status().isBadRequest());
   }
+
+  @ParameterizedTest
+  @NullAndEmptySource
+  @ValueSource(strings = {"XPTO"})
+  void shouldReturnBadRequestWhenUserDocNumberTypeIsInvalid(String docNumberType) throws Exception {
+    var userUuid = UUID.randomUUID();
+    var userInputDto = """
+        {
+          "name": "Morpheus",
+          "email": "morpheus@matrix.com",
+          "password": "@Bcd1234",
+          "docNumberType": "%s",
+          "docNumber": "11955975094"
+        }""".formatted(docNumberType);
+
+    var request = put(URL_USERS + userUuid)
+        .contentType(APPLICATION_JSON)
+        .content(userInputDto);
+
+    mockMvc.perform(request)
+        .andExpect(status().isBadRequest());
+  }
+
+  @Ignore
+  void shouldReturnBadRequestWhenUserDocNumberAlreadyExits() throws Exception {
+    var user = createNewUser();
+    user.setDocNumber(DEFAULT_USER_CPF);
+    var userInputDto = JsonUtil.toJson(user);
+    var userSaved = entityManager.merge(user);
+    entityManager.flush();
+    var userUuid = userSaved.getId();
+
+    var request = put(URL_USERS + userUuid)
+        .contentType(APPLICATION_JSON)
+        .content(userInputDto);
+    mockMvc.perform(request)
+        .andExpect(status().isConflict());
+  }
+
+  @ParameterizedTest
+  @NullAndEmptySource
+  @ValueSource(strings = {"12345678901", "00000000000", "1111111111", "22222222222", "33333333333",
+      "44444444444", "55555555555", "66666666666", "77777777777", "88888888888", "99999999999",
+      "abcdefg"})
+  void shouldReturnBadRequestWhenUserDocNumberIsAnInvalidCpf(String cpf) throws Exception {
+    var user = createNewUser();
+    user.setDocNumberType(CPF);
+    user.setDocNumber(cpf);
+    var userInputDto = JsonUtil.toJson(user);
+    var userSaved = entityManager.merge(user);
+    var userUuid = userSaved.getId();
+
+    var request = put(URL_USERS + userUuid)
+        .contentType(APPLICATION_JSON)
+        .content(userInputDto);
+    mockMvc.perform(request)
+        .andExpect(status().isBadRequest());
+  }
+
+  @ParameterizedTest
+  @NullAndEmptySource
+  @ValueSource(strings = {"12345678901234", "00000000000000", "1111111111111", "22222222222222",
+      "33333333333333", "44444444444444", "55555555555555", "66666666666666", "77777777777777",
+      "88888888888888", "99999999999999", "abcdefg"})
+  void shouldReturnBadRequestWhenUserDocNumberIsAnInvalidCnpj(String cnpj) throws Exception {
+    var user = createNewUser();
+    user.setDocNumberType(CNPJ);
+    user.setDocNumber(cnpj);
+    var userInputDto = JsonUtil.toJson(user);
+    var userSaved = entityManager.merge(user);
+    var userUuid = userSaved.getId();
+
+    var request = put(URL_USERS + userUuid)
+        .contentType(APPLICATION_JSON)
+        .content(userInputDto);
+    mockMvc.perform(request)
+        .andExpect(status().isBadRequest());
+  }
+
 
   @Ignore
   void shouldReturnBadRequestWhenUserEmailAlreadyExistsInOtherUser() throws Exception {

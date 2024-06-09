@@ -86,7 +86,9 @@ O objetivo deste microsserviço é gerenciar os usuários do sistema, ou seja, o
                     * Atributos name, email, tipo do documento, número do documento e password obrigatórios;
                     * Atributos name e email com o tamanho máximo de 500 caracteres;
                     * Atributo tipo do documento deverá ser CPF ou CNPJ;
+                      * Para esta regra, foi criada uma anotação genérica @ValueOfEnum(enumClass = DocNumberType.class), que avalia se o valor do atributo do DTO de entrada é correspondente as opções disponíveis no enum.
                     * Atributo número do documento deverá ser um número válido para CPF ou CNPJ;
+                      * Para esta regra, foi criada uma anotação @CPFouCNPJ que realiza a regra de validação do número de CPF ou número de CNPJ conforme o tipo do documento.
                     * Atributo senha com o tamanho mínimo de 8 e máximo de 20 caracteres;
                     * Validação de força da senha, exigindo no mínimo 1 caracter maiúsculo, 1 caracter minúsculo, 1 caracter especial ( @#$%^&+= ) e 1 número;
                     * Validação do e-mail único na base de dados;
