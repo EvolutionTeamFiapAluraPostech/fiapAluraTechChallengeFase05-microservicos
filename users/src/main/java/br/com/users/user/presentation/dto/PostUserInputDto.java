@@ -2,12 +2,15 @@ package br.com.users.user.presentation.dto;
 
 import br.com.users.user.domain.entity.User;
 import br.com.users.user.domain.enums.DocNumberType;
+import br.com.users.user.presentation.dto.customvalidator.CPFouCNPJ;
+import br.com.users.user.domain.validator.ValueOfEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import org.hibernate.validator.constraints.Length;
 
+@CPFouCNPJ
 @Tag(name = "PostUserInputDto", description = "DTO de entrada representação de um usuário")
 public record PostUserInputDto(
     @Schema(example = "Thomas Anderson", description = "Nome do usuário.")
@@ -22,6 +25,7 @@ public record PostUserInputDto(
     @Schema(example = "CPF ou CNPJ", description = "CPF/CNPJ do usuário.")
     @NotBlank(message = "Document number type is required.")
     @Length(max = 4, message = "Max cpf length is 4 characters.")
+    @ValueOfEnum(enumClass = DocNumberType.class)
     String docNumberType,
     @Schema(example = "92477979000", description = "CPF/CNPJ do usuário.")
     @NotBlank(message = "cpf is required.")

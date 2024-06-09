@@ -83,13 +83,14 @@ O objetivo deste microsserviço é gerenciar os usuários do sistema, ou seja, o
             * Verbo POST - para realizar o cadastro.
                 * Escopo: público, não requer autenticação.
                 * Regras de negócio:
-                    * Atributos name, email e password obrigatórios;
+                    * Atributos name, email, tipo do documento, número do documento e password obrigatórios;
                     * Atributos name e email com o tamanho máximo de 500 caracteres;
+                    * Atributo tipo do documento deverá ser CPF ou CNPJ;
+                    * Atributo número do documento deverá ser um número válido para CPF ou CNPJ;
                     * Atributo senha com o tamanho mínimo de 8 e máximo de 20 caracteres;
                     * Validação de força da senha, exigindo no mínimo 1 caracter maiúsculo, 1 caracter minúsculo, 1 caracter especial ( @#$%^&+= ) e 1 número;
                     * Validação do e-mail único na base de dados;
-                    * O atributo password será criptografado antes de ser 
-                    armazenado no banco de dados.
+                    * O atributo password será criptografado antes de ser armazenado no banco de dados.
                 * Http response status do endpoint:
                     * Status 201 - Created - cadastro realizado com input de dados válidos;
                     * Status 400 - Bad request - se alguma regra foi violada;

@@ -1,10 +1,12 @@
 package br.com.users.user.presentation.api;
 
-import static br.com.users.shared.testData.user.UserTestData.*;
-import static br.com.users.shared.testData.user.UserTestData.ALTERNATIVE_USER_EMAIL;
+import static br.com.users.shared.testData.user.UserTestData.DEFAULT_USER_CPF;
 import static br.com.users.shared.testData.user.UserTestData.DEFAULT_USER_EMAIL;
 import static br.com.users.shared.testData.user.UserTestData.DEFAULT_USER_NAME;
+import static br.com.users.shared.testData.user.UserTestData.createNewUser;
 import static br.com.users.shared.util.IsUUID.isUUID;
+import static br.com.users.user.domain.enums.DocNumberType.CNPJ;
+import static br.com.users.user.domain.enums.DocNumberType.CPF;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -15,7 +17,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import br.com.users.shared.annotation.DatabaseTest;
 import br.com.users.shared.annotation.IntegrationTest;
 import br.com.users.shared.api.JsonUtil;
-import br.com.users.shared.testData.user.UserTestData;
 import br.com.users.shared.util.StringUtil;
 import br.com.users.user.domain.entity.User;
 import com.jayway.jsonpath.JsonPath;
@@ -212,10 +213,31 @@ class PostUserApiTest {
         .andExpect(status().isBadRequest());
   }
 
+  @ParameterizedTest
+  @NullAndEmptySource
+  @ValueSource(strings = {"XPTO"})
+  void shouldReturnBadRequestWhenUserDocNumberTypeIsInvalid(String docNumberType) throws Exception {
+    var userInputDto = """
+        {
+          "name": "Morpheus",
+          "email": "morpheus@matrix.com",
+          "password": "@Bcd1234",
+          "docNumberType": "%s",
+          "docNumber": "11955975094"
+        }""".formatted(docNumberType);
+
+    var request = post(URL_USERS)
+        .contentType(APPLICATION_JSON)
+        .content(userInputDto);
+
+    mockMvc.perform(request)
+        .andExpect(status().isBadRequest());
+  }
+
   @Test
   void shouldReturnBadRequestWhenUserDocNumberAlreadyExits() throws Exception {
     var user = createNewUser();
-    user.setEmail(ALTERNATIVE_USER_EMAIL);
+    user.setDocNumber(DEFAULT_USER_CPF);
     var userInputDto = JsonUtil.toJson(user);
     entityManager.persist(user);
 
@@ -224,5 +246,43 @@ class PostUserApiTest {
         .content(userInputDto);
     mockMvc.perform(request)
         .andExpect(status().isConflict());
+  }
+
+  @ParameterizedTest
+  @NullAndEmptySource
+  @ValueSource(strings = {"12345678901", "00000000000", "1111111111", "22222222222", "33333333333",
+      "44444444444", "55555555555", "66666666666", "77777777777", "88888888888", "99999999999",
+      "abcdefg"})
+  void shouldReturnBadRequestWhenUserDocNumberIsAnInvalidCpf(String cpf) throws Exception {
+    var user = createNewUser();
+    user.setDocNumberType(CPF);
+    user.setDocNumber(cpf);
+    var userInputDto = JsonUtil.toJson(user);
+    entityManager.persist(user);
+
+    var request = post(URL_USERS)
+        .contentType(APPLICATION_JSON)
+        .content(userInputDto);
+    mockMvc.perform(request)
+        .andExpect(status().isBadRequest());
+  }
+
+  @ParameterizedTest
+  @NullAndEmptySource
+  @ValueSource(strings = {"12345678901234", "00000000000000", "1111111111111", "22222222222222",
+      "33333333333333", "44444444444444", "55555555555555", "66666666666666", "77777777777777",
+      "88888888888888", "99999999999999", "abcdefg"})
+  void shouldReturnBadRequestWhenUserDocNumberIsAnInvalidCnpj(String cnpj) throws Exception {
+    var user = createNewUser();
+    user.setDocNumberType(CNPJ);
+    user.setDocNumber(cnpj);
+    var userInputDto = JsonUtil.toJson(user);
+    entityManager.persist(user);
+
+    var request = post(URL_USERS)
+        .contentType(APPLICATION_JSON)
+        .content(userInputDto);
+    mockMvc.perform(request)
+        .andExpect(status().isBadRequest());
   }
 }
