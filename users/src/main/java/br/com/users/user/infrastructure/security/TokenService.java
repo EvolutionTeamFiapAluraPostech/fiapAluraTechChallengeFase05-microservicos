@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class TokenService {
 
-  private static final String ISSUER = "API Digital Parking";
+  private static final String ISSUER = "API FIAP Users";
 
   @Value("${api.security.token.secret}")
   private String secret;
