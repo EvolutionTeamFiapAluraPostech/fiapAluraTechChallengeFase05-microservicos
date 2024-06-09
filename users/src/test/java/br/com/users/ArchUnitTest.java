@@ -91,7 +91,7 @@ class ArchUnitTest {
     classes().that().areAnnotatedWith(IntegrationTest.class)
         .should().haveSimpleNameEndingWith("ApiTest")
         .orShould().haveNameNotMatching("DatabaseTest")
-        .orShould().haveNameNotMatching("DigitalParkingApplicationTest")
+        .orShould().haveNameNotMatching("UserApplicationTest")
         .check(testPackages);
   }
 
