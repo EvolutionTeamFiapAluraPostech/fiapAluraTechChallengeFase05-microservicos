@@ -1,6 +1,6 @@
 package br.com.fiap.company.infrastructure.security;
 
-import br.com.users.user.domain.entity.User;
+import br.com.fiap.company.domain.entity.User;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
