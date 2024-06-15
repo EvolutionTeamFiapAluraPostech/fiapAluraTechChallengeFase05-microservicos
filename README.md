@@ -162,6 +162,7 @@ O objetivo deste microsserviço é gerenciar os usuários do sistema, ou seja, o
     ![alt text](image-12.png)
 
     194 testes de integração e unidade, executados em 4,5 segudos, com 94% de classes e 89% de linhas de código cobertas.
+    Para realizar os testes de integração em endpoints autenticados, foi utilizado a anotação @WithMockUser("thomas.anderson@itcompany.com"), na anotação customizada IntegrationTest.
 
     ![alt text](image-15.png)
 
@@ -239,11 +240,12 @@ O objetivo deste microsserviço é gerenciar as empresas fornecedoras de um prod
 
     ![alt text](image-14.png)
 
-    Testes de integração e unidade com 93% de linhas de código cobertas.
+    326 testes de integração e unidade, executados em 8 segudos, com 97% de classes e 86% de linhas de código cobertas.
+    Para realizar os testes de integração em endpoints autenticados, foi utilizado a anotação @WithMockUser("thomas.anderson@itcompany.com"), na anotação customizada IntegrationTest.
 
-    ![alt text](image-6.png)
+    ![alt text](image-16.png)
 
-# Microsserviço de gerenciamento de produtos
+# Microsserviço de gerenciamento de produtos (itens)
 O objetivo deste microsserviço é gerenciar os produtos/serviços cadastrados pelo fornecedor, que por sua vez, serão incluídos em pedidos de venda.
   * Microsserviço de Gerenciamento de produtos 
     * API: 
@@ -310,9 +312,10 @@ O objetivo deste microsserviço é gerenciar os produtos/serviços cadastrados p
 
     ![alt text](image-2.png)
 
-    Testes de integração e unidade com 92% de linhas de código cobertas.
+    82 testes de integração e unidade, executados em 3 segudos, com 96% de classes e 81% de linhas de código cobertas.
+    Para realizar os testes de integração em endpoints autenticados, foi utilizado a anotação @WithMockUser("thomas.anderson@itcompany.com"), na anotação customizada IntegrationTest.
 
-    ![alt text](image-8.png)
+    ![alt text](image-17.png)
 
 # Microsserviço de gerenciamento de pedidos
 O objetivo deste microsserviço é gerenciar os pedidos cadastrados pelos clientes, que irão consumir um produto/serviço.

@@ -1,0 +1,14 @@
+{
+  "deleted": false,
+  "name": "Morpheus",
+  "email": "morpheus@matrix.com",
+  "password": "@Bcd1234",
+  "docNumberType": "CPF",
+  "docNumber": "11955975094",
+  "authorities": [{ "authority": "ROLE_USER" }],
+  "enabled": true,
+  "username": "morpheus@matrix.com",
+  "accountNonExpired": true,
+  "accountNonLocked": true,
+  "credentialsNonExpired": true
+}
