@@ -1,0 +1,71 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version "${versionSpringBoot}"
+	id 'io.spring.dependency-management' version "${versionSpringDependencyManagement}"
+	id 'org.asciidoctor.jvm.convert' version "${versionAsciiDoctor}"
+}
+
+group = 'br.com.fiap.product'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	sourceCompatibility = '17'
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation "org.springframework.cloud:spring-cloud-starter-openfeign:${versionSpringCloudOpenFeign}"
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${versionSpringDocOpenApi}"
+	implementation 'org.flywaydb:flyway-core'
+	implementation "org.hamcrest:hamcrest:${versionHamcrest}"
+	implementation "io.jsonwebtoken:jjwt:${versionJjwt}"
+	implementation "com.auth0:java-jwt:${versionJavaJwt}"
+	compileOnly 'org.projectlombok:lombok'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	runtimeOnly 'org.postgresql:postgresql'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+	testImplementation "org.springframework.security:spring-security-test:${versionSpringSecurityTest}"
+	testImplementation "org.testcontainers:testcontainers:${versionTestContainers}"
+	testImplementation "org.testcontainers:junit-jupiter:${versionTestContainers}"
+	testImplementation "org.testcontainers:postgresql:${versionTestContainers}"
+	testImplementation "com.tngtech.archunit:archunit:${versionArchUnit}"
+	testImplementation "org.wiremock:wiremock-standalone:${versionWireMock}"
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+/*
+tasks.withType(Test).configureEach {
+	description = 'Runs the unit tests.'
+	group = 'verification'
+	useJUnitPlatform({
+		excludeTags 'integrationTest'
+	})
+}
+
+tasks.register('integrationTest', Test) {
+	description = 'Runs the integration tests.'
+	group = 'verification'
+	useJUnitPlatform {
+		includeTags 'integrationTest'
+	}
+}
+*/

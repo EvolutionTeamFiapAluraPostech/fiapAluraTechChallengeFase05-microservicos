@@ -1,0 +1,18 @@
+services:
+  product-db:
+    container_name: postgresql-product
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: product-db
+      POSTGRES_USER: product-postgres-user
+      POSTGRES_PASSWORD: product-postgres-pwd
+    ports:
+      - 5434:5432
+    volumes:
+      - /var/lib/postgres
+    networks:
+      - fiap05-postgres-network
+
+networks:
+  fiap05-postgres-network:
+    driver: bridge
