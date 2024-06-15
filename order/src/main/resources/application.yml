@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: order
+  jpa:
+    show-sql: true
+    database: postgresql
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5435/order-db
+    username: order-postgres-user
+    password: order-postgres-pwd
+  flyway:
+    baseline-on-migrate: true
+    schemas: 'flyway'
+
+server:
+  port: 8083
+  error:
+    include-stacktrace: never
+
+api:
+  security:
+    token:
+      secret: ${API_SECURITY_TOKEN_SECRET:Fi@p-@lur@-2ADJT}
+
+base:
+  url:
+    http-company: http://localhost:8082
+    http-customer: http://localhost:8083
+    http-product: http://localhost:8084
+    http-logistic: ${URL_LOGISTICS:http://localhost:8086}
