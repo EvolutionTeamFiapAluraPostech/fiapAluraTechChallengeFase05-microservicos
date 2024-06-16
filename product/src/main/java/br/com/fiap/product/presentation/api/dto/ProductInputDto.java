@@ -27,7 +27,9 @@ public record ProductInputDto(
     BigDecimal quantityStock,
     @Schema(example = "315.00", description = "Preço unitário do produto.")
     @Positive
-    BigDecimal price
+    BigDecimal price,
+    @Schema(example = "https://m.media-amazon.com/images/I/71Yp7pxBFOL._AC_SX522_.jpg", description = "URL da image do produto.")
+    String imageUrl
 ) {
 
   public Product toProduct() {
@@ -38,6 +40,7 @@ public record ProductInputDto(
         .unitMeasurement(this.unitMeasurement)
         .quantityStock(this.quantityStock)
         .price(this.price)
+        .imageUrl(this.imageUrl)
         .build();
   }
 }

@@ -19,22 +19,21 @@ public record ProductOutputDto(
     @Schema(example = "20.00", description = "Quantidade em estoque do produto.")
     BigDecimal quantityStock,
     @Schema(example = "315.00", description = "Preço unitário do produto.")
-    BigDecimal price
+    BigDecimal price,
+    @Schema(example = "https://m.media-amazon.com/images/I/71Yp7pxBFOL._AC_SX522_.jpg", description = "URL da image do produto.")
+    String imageUrl
 ) {
 
   public ProductOutputDto(Product product) {
     this(product.getId() != null ? product.getId().toString() : null,
-        product.getSku(),
-        product.getDescription(),
-        product.getUnitMeasurement(),
-        product.getQuantityStock(),
-        product.getPrice());
+        product.getSku(), product.getDescription(), product.getUnitMeasurement(),
+        product.getQuantityStock(), product.getPrice(), product.getImageUrl());
   }
 
   public static ProductOutputDto from(Product product) {
     return new ProductOutputDto(product.getId() != null ? product.getId().toString() : null,
         product.getSku(), product.getDescription(), product.getUnitMeasurement(),
-        product.getQuantityStock(), product.getPrice());
+        product.getQuantityStock(), product.getPrice(), product.getImageUrl());
   }
 
   public static Page<ProductOutputDto> toPage(Page<Product> productPage) {

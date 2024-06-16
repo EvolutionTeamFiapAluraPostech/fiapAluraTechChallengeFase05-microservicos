@@ -14,5 +14,6 @@ create table if not exists "product_management"."products"
     "description"      varchar(500)                not null,
     "unit_measurement" varchar(20)                 null,
     "quantity_stock"   numeric(16, 2)              null,
-    "price"            numeric(16, 2)              null
+    "price"            numeric(16, 2)              null,
+    "image_url"        varchar(2500)               not null
 );
