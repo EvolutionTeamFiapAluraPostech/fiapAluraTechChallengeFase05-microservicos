@@ -25,6 +25,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
   private static final String URL_COMPANIES = "/companies";
+  public static final String V3_API_DOCS = "/v3/api-docs/**";
+  public static final String SWAGGER_UI_HTML = "/swagger-ui.html";
+  public static final String SWAGGER_UI = "/swagger-ui/**";
 
   private final SecurityFilter securityFilter;
 
@@ -41,7 +44,7 @@ public class SecurityConfig {
           req.requestMatchers(GET, URL_COMPANIES + "/**").hasAnyAuthority(USER.name(), ADMIN.name());
           req.requestMatchers(PUT, URL_COMPANIES + "/**").hasAuthority(ADMIN.name());
           req.requestMatchers(DELETE, URL_COMPANIES + "/**").hasAuthority(ADMIN.name());
-          req.requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll();
+          req.requestMatchers(V3_API_DOCS, SWAGGER_UI_HTML, SWAGGER_UI).permitAll();
           req.anyRequest().denyAll();
         })
         .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
