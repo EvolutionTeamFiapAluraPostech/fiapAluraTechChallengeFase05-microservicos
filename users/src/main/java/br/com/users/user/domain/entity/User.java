@@ -11,7 +11,6 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,8 +18,6 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Where;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @SuperBuilder
@@ -49,7 +46,7 @@ public class User extends BaseEntity implements UserDetails {
   @Column(nullable = false)
   private String docNumber;
 
-  @ManyToMany(fetch = FetchType.LAZY)
+  @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(schema = "user_management", name = "users_authorities",
       joinColumns = @JoinColumn(name = "user_id"),
       inverseJoinColumns = @JoinColumn(name = "authority_id"))
@@ -78,10 +75,5 @@ public class User extends BaseEntity implements UserDetails {
   @Override
   public boolean isEnabled() {
     return true;
-  }
-
-  @Override
-  public Collection<? extends GrantedAuthority> getAuthorities() {
-    return List.of(new SimpleGrantedAuthority("ROLE_USER"));
   }
 }
