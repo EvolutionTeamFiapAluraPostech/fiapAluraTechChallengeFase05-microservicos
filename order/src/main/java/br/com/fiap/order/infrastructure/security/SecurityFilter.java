@@ -28,7 +28,8 @@ public class SecurityFilter extends OncePerRequestFilter {
     var tokenJwt = getToken(request);
     if (tokenJwt != null) {
       var user = tokenService.getUserFrom(tokenJwt);
-      var authenticationToken = new UsernamePasswordAuthenticationToken(user, null, null);
+      var authenticationToken = new UsernamePasswordAuthenticationToken(user, null,
+          user.getAuthorities());
       SecurityContextHolder.getContext().setAuthentication(authenticationToken);
     }
     filterChain.doFilter(request, response);
