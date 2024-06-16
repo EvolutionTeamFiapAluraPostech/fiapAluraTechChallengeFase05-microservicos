@@ -27,8 +27,7 @@ public class SecurityFilter extends OncePerRequestFilter {
       FilterChain filterChain) throws ServletException, IOException {
     var tokenJwt = getToken(request);
     if (tokenJwt != null) {
-      var payload = tokenService.getPayloadFrom(tokenJwt);
-      var user = getUserFrom(payload);
+      var user = tokenService.getUserFrom(tokenJwt);
       var authenticationToken = new UsernamePasswordAuthenticationToken(user, null, null);
       SecurityContextHolder.getContext().setAuthentication(authenticationToken);
     }

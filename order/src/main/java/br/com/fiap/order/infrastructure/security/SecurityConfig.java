@@ -1,5 +1,13 @@
 package br.com.fiap.order.infrastructure.security;
 
+import static br.com.fiap.order.infrastructure.security.UserRole.ADMIN;
+import static br.com.fiap.order.infrastructure.security.UserRole.USER;
+import static org.springframework.http.HttpMethod.DELETE;
+import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpMethod.PATCH;
+import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.http.HttpMethod.PUT;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,6 +25,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 public class SecurityConfig {
 
+  private static final String URL_ORDERS = "/orders";
+  public static final String V3_API_DOCS = "/v3/api-docs/**";
+  public static final String SWAGGER_UI_HTML = "/swagger-ui.html";
+  public static final String SWAGGER_UI = "/swagger-ui/**";
+
   private final SecurityFilter securityFilter;
 
   public SecurityConfig(SecurityFilter securityFilter) {
@@ -28,8 +41,14 @@ public class SecurityConfig {
     return http.csrf(AbstractHttpConfigurer::disable)
         .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(req -> {
-          req.requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll();
-          req.anyRequest().authenticated();
+          req.requestMatchers(POST, URL_ORDERS).hasAnyAuthority(USER.name(), ADMIN.name());
+          req.requestMatchers(GET, URL_ORDERS + "/**").hasAnyAuthority(USER.name(), ADMIN.name());
+          req.requestMatchers(PUT, URL_ORDERS + "/**").hasAnyAuthority(USER.name(), ADMIN.name());
+          req.requestMatchers(PATCH, URL_ORDERS + "/**").hasAnyAuthority(USER.name(), ADMIN.name());
+          req.requestMatchers(DELETE, URL_ORDERS + "/**")
+              .hasAnyAuthority(USER.name(), ADMIN.name());
+          req.requestMatchers(V3_API_DOCS, SWAGGER_UI_HTML, SWAGGER_UI).permitAll();
+          req.anyRequest().denyAll();
         })
         .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
         .build();
