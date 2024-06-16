@@ -1,5 +1,12 @@
 package br.com.fiap.company.infrastructure.security;
 
+import static br.com.fiap.company.infrastructure.security.UserRole.ADMIN;
+import static br.com.fiap.company.infrastructure.security.UserRole.USER;
+import static org.springframework.http.HttpMethod.DELETE;
+import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.http.HttpMethod.PUT;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,6 +24,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 public class SecurityConfig {
 
+  private static final String URL_COMPANIES = "/companies";
+
   private final SecurityFilter securityFilter;
 
   public SecurityConfig(SecurityFilter securityFilter) {
@@ -28,8 +37,12 @@ public class SecurityConfig {
     return http.csrf(AbstractHttpConfigurer::disable)
         .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(req -> {
+          req.requestMatchers(POST, URL_COMPANIES).hasAuthority(ADMIN.name());
+          req.requestMatchers(GET, URL_COMPANIES + "/**").hasAnyAuthority(USER.name(), ADMIN.name());
+          req.requestMatchers(PUT, URL_COMPANIES + "/**").hasAuthority(ADMIN.name());
+          req.requestMatchers(DELETE, URL_COMPANIES + "/**").hasAuthority(ADMIN.name());
           req.requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll();
-          req.anyRequest().authenticated();
+          req.anyRequest().denyAll();
         })
         .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
         .build();

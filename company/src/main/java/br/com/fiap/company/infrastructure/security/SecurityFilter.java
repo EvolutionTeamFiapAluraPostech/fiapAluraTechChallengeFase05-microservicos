@@ -1,14 +1,10 @@
 package br.com.fiap.company.infrastructure.security;
 
-import br.com.fiap.company.domain.entity.User;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.UUID;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -27,18 +23,17 @@ public class SecurityFilter extends OncePerRequestFilter {
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
       FilterChain filterChain) throws ServletException, IOException {
     var tokenJwt = getToken(request);
-    if (tokenJwt != null) {
-      var payload = tokenService.getPayloadFrom(tokenJwt);
-      var user = getUserFrom(payload);
-      var authenticationToken = new UsernamePasswordAuthenticationToken(user, null, null);
+    if (isValidToken(tokenJwt)) {
+      var user = tokenService.getUserFrom(tokenJwt);
+      var authenticationToken = new UsernamePasswordAuthenticationToken(user, null,
+          user.getAuthorities());
       SecurityContextHolder.getContext().setAuthentication(authenticationToken);
     }
     filterChain.doFilter(request, response);
   }
 
-  private User getUserFrom(String payload) throws JsonProcessingException {
-    var objectMapper = new ObjectMapper();
-    return objectMapper.readValue(payload, User.class);
+  private boolean isValidToken(String tokenJwt) {
+    return tokenJwt != null && !tokenJwt.trim().isEmpty();
   }
 
   private String getToken(HttpServletRequest request) {
