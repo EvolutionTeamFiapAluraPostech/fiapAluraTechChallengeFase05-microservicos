@@ -6,7 +6,6 @@ import br.com.fiap.order.domain.entity.User;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
@@ -36,7 +35,7 @@ public class TokenService {
     }
   }
 
-  public User getUserFrom(String token) throws JsonProcessingException {
+  public User getUserFrom(String token) {
     var payload = this.getPayloadFrom(token);
     var id = getFromJson(payload, "id");
     var name = getFromJson(payload, "name");
