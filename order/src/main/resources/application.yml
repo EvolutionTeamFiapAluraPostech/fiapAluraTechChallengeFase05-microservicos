@@ -25,7 +25,6 @@ api:
 
 base:
   url:
-    http-company: http://localhost:8082
-    http-customer: http://localhost:8083
-    http-product: http://localhost:8084
-    http-logistic: ${URL_LOGISTICS:http://localhost:8086}
+    http-user: http://localhost:8080
+    http-company: http://localhost:8081
+    http-product: http://localhost:8082

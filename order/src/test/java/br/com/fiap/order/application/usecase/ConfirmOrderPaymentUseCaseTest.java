@@ -17,7 +17,6 @@ import br.com.fiap.order.domain.entity.Order;
 import br.com.fiap.order.domain.exception.NoResultException;
 import br.com.fiap.order.domain.exception.ValidatorException;
 import br.com.fiap.order.domain.service.OrderService;
-import br.com.fiap.order.infrastructure.httpclient.logistics.request.PostOrderLogisticsHttpRequest;
 import br.com.fiap.order.shared.testdata.OrderTestData;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -39,8 +38,6 @@ class ConfirmOrderPaymentUseCaseTest {
   private UuidValidator uuidValidator;
   @Mock
   private OrderPaymentConfirmationValidator orderPaymentConfirmationValidator;
-  @Mock
-  private PostOrderLogisticsHttpRequest postOrderLogisticsHttpRequest;
   @InjectMocks
   private ConfirmOrderPaymentUseCase confirmOrderPaymentUseCase;
 
@@ -54,7 +51,6 @@ class ConfirmOrderPaymentUseCaseTest {
         () -> confirmOrderPaymentUseCase.execute(orderId.toString())).doesNotThrowAnyException();
     verify(uuidValidator).validate(orderId.toString());
     verify(orderPaymentConfirmationValidator).validate(order);
-    verify(postOrderLogisticsHttpRequest).request(order);
   }
 
   @ParameterizedTest
@@ -67,7 +63,6 @@ class ConfirmOrderPaymentUseCaseTest {
     assertThatThrownBy(() -> confirmOrderPaymentUseCase.execute(id)).isInstanceOf(
         ValidatorException.class).hasMessage(ORDER_WITH_INVALID_UUID_MESSAGE.formatted(id));
     verify(orderPaymentConfirmationValidator, never()).validate(any(Order.class));
-    verify(postOrderLogisticsHttpRequest, never()).request(any(Order.class));
   }
 
   @Test
@@ -80,6 +75,5 @@ class ConfirmOrderPaymentUseCaseTest {
     assertThatThrownBy(() -> confirmOrderPaymentUseCase.execute(id.toString())).isInstanceOf(
         NoResultException.class).hasMessage(ORDER_NOT_FOUND_WITH_ID.formatted(id));
     verify(orderPaymentConfirmationValidator, never()).validate(any(Order.class));
-    verify(postOrderLogisticsHttpRequest, never()).request(any(Order.class));
   }
 }

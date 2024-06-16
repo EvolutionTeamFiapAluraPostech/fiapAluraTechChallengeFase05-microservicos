@@ -2,21 +2,16 @@ package br.com.fiap.order.presentation.api;
 
 import static br.com.fiap.order.domain.enums.OrderStatus.PAGO;
 import static br.com.fiap.order.shared.testdata.OrderTestData.createNewOrder;
-import static com.github.tomakehurst.wiremock.client.WireMock.created;
-import static com.github.tomakehurst.wiremock.client.WireMock.equalToJson;
-import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import br.com.fiap.order.domain.entity.Order;
-import br.com.fiap.order.infrastructure.httpclient.logistics.dto.LogisticOrderInputDto;
 import br.com.fiap.order.shared.annotation.DatabaseTest;
 import br.com.fiap.order.shared.annotation.IntegrationTest;
 import br.com.fiap.order.shared.api.JsonUtil;
 import br.com.fiap.order.shared.testdata.OrderTestData;
-import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import jakarta.persistence.EntityManager;
 import java.util.UUID;
@@ -52,11 +47,6 @@ class PatchOrderPaymentConfirmationApiTest {
   void shouldReturnNoContentWhenConfirmPaymentOrder() throws Exception {
     var order = createAndPersistOrder();
     var orderInputDto = JsonUtil.toJson(order);
-    var logisticOrderInputDto = LogisticOrderInputDto.from(order);
-    var logisticOrderInputDtoJson = JsonUtil.toJson(logisticOrderInputDto);
-    stubFor(WireMock.post("/logistics")
-        .withRequestBody(equalToJson(logisticOrderInputDtoJson))
-        .willReturn(created()));
 
     var request = patch(URL_ORDERS_PAYMENT_CONFIRMATION, order.getId())
         .contentType(APPLICATION_JSON)
