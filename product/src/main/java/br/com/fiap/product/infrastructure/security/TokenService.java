@@ -36,7 +36,7 @@ public class TokenService {
     }
   }
 
-  public User getUserFrom(String token) throws JsonProcessingException {
+  public User getUserFrom(String token) {
     var payload = this.getPayloadFrom(token);
     var id = getFromJson(payload, "id");
     var name = getFromJson(payload, "name");
