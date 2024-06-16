@@ -22,16 +22,26 @@ public class TokenService {
   public String generateToken(User user) {
     try {
       var algorithm = Algorithm.HMAC256(secret);
+      var authority = getAuthorityFrom(user);
       return JWT.create()
           .withIssuer(ISSUER)
           .withSubject(user.getEmail())
           .withClaim("id", user.getId().toString())
           .withClaim("name", user.getName())
+          .withClaim("authorities", authority)
           .withExpiresAt(getExpirationDate())
           .sign(algorithm);
     } catch (JWTCreationException exception) {
       throw new RuntimeException("Erro ao gerar o token JWT", exception);
     }
+  }
+
+  private String getAuthorityFrom(User user) {
+    var authority = "%s";
+    if (user.getAuthorities() != null && !user.getAuthorities().isEmpty()) {
+      return authority.formatted(user.getAuthorities().get(0).getName());
+    }
+    return "";
   }
 
   public String getSubject(String tokenJWT) {
