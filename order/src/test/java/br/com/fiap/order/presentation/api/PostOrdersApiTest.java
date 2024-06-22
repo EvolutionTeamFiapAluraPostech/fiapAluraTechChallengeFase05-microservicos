@@ -1,10 +1,12 @@
 package br.com.fiap.order.presentation.api;
 
-import static br.com.fiap.order.shared.testdata.OrderTestData.DEFAULT_PRODUCT_UUID;
 import static br.com.fiap.order.shared.testdata.OrderTestData.DEFAULT_PRODUCT_PRICE;
 import static br.com.fiap.order.shared.testdata.OrderTestData.DEFAULT_PRODUCT_QUANTITY;
+import static br.com.fiap.order.shared.testdata.OrderTestData.DEFAULT_PRODUCT_UUID;
 import static br.com.fiap.order.shared.testdata.OrderTestData.createNewOrder;
 import static br.com.fiap.order.shared.util.IsUUID.isUUID;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -17,6 +19,8 @@ import br.com.fiap.order.domain.entity.OrderItem;
 import br.com.fiap.order.shared.annotation.DatabaseTest;
 import br.com.fiap.order.shared.annotation.IntegrationTest;
 import br.com.fiap.order.shared.api.JsonUtil;
+import com.github.tomakehurst.wiremock.client.WireMock;
+import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import com.jayway.jsonpath.JsonPath;
 import jakarta.persistence.EntityManager;
 import java.math.BigDecimal;
@@ -25,10 +29,12 @@ import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.web.servlet.MockMvc;
 
 @IntegrationTest
 @DatabaseTest
+@WireMockTest(httpPort = 7070)
 class PostOrdersApiTest {
 
   private static final String URL_ORDERS = "/orders";
@@ -49,6 +55,8 @@ class PostOrdersApiTest {
   void shouldReturnCreatedWhenSaveOrder() throws Exception {
     var order = createNewOrder();
     var orderInputDto = JsonUtil.toJson(order);
+    stubFor(WireMock.get("/companies/" + order.getCompanyId().toString())
+        .willReturn(aResponse().withStatus(HttpStatus.OK.value())));
 
     var request = post(URL_ORDERS)
         .contentType(APPLICATION_JSON)
@@ -114,17 +122,17 @@ class PostOrdersApiTest {
   @Test
   void shouldReturnBadRequestWhenOrderItemsProductIdWasNotFilled() throws Exception {
     var orderInputDto = """
-      {
-          "companyId": "dcd3398e-4988-4fba-b8c0-a649ae1ff677",
-          "customerId": "64f6db0a-3d9a-429c-a7e6-04c4691f3be9",
-          "orderItems": [
-              {
-                  "productId": "",
-                  "quantity": 10,
-                  "price": 315
-              }
-          ]
-      }""";
+        {
+            "companyId": "dcd3398e-4988-4fba-b8c0-a649ae1ff677",
+            "customerId": "64f6db0a-3d9a-429c-a7e6-04c4691f3be9",
+            "orderItems": [
+                {
+                    "productId": "",
+                    "quantity": 10,
+                    "price": 315
+                }
+            ]
+        }""";
 
     var request = post(URL_ORDERS)
         .contentType(APPLICATION_JSON)

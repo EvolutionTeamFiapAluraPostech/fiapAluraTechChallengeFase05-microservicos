@@ -1,5 +1,6 @@
 package br.com.fiap.order.application.usecase;
 
+import br.com.fiap.order.application.validator.CustomerExistsValidator;
 import br.com.fiap.order.application.validator.OrderItemPriceValidator;
 import br.com.fiap.order.application.validator.OrderItemQuantityValidator;
 import br.com.fiap.order.domain.entity.Order;
@@ -19,15 +20,18 @@ public class CreateOrderUseCase {
   public static final String LATITUDE = "Latitude";
   public static final String LONGITUDE = "Longitude";
   private final OrderService orderService;
+  private final CustomerExistsValidator customerExistsValidator;
   private final OrderItemQuantityValidator orderItemQuantityValidator;
   private final OrderItemPriceValidator orderItemPriceValidator;
   private final GetCoordinatesFromCepRequest getCoordinatesFromCepRequest;
 
   public CreateOrderUseCase(OrderService orderService,
+      CustomerExistsValidator customerExistsValidator,
       OrderItemQuantityValidator orderItemQuantityValidator,
       OrderItemPriceValidator orderItemPriceValidator,
       GetCoordinatesFromCepRequest getCoordinatesFromCepRequest) {
     this.orderService = orderService;
+    this.customerExistsValidator = customerExistsValidator;
     this.orderItemQuantityValidator = orderItemQuantityValidator;
     this.orderItemPriceValidator = orderItemPriceValidator;
     this.getCoordinatesFromCepRequest = getCoordinatesFromCepRequest;
@@ -35,6 +39,7 @@ public class CreateOrderUseCase {
 
   @Transactional
   public Order execute(OrderInputDto orderInputDto) {
+    customerExistsValidator.validate(orderInputDto.companyId());
     orderItemQuantityValidator.validate(orderInputDto.orderItems());
     orderItemPriceValidator.validate(orderInputDto.orderItems());
     var order = updateOrderAttributes(orderInputDto);

@@ -14,4 +14,4 @@ spring:
 
 base:
   url:
-    http-logistic: http://localhost:7070
+    http-company: http://localhost:7070

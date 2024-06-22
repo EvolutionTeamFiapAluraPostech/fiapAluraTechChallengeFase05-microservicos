@@ -39,6 +39,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import br.com.fiap.order.application.validator.CustomerExistsValidator;
 import br.com.fiap.order.application.validator.OrderItemPriceValidator;
 import br.com.fiap.order.application.validator.OrderItemQuantityValidator;
 import br.com.fiap.order.domain.entity.Order;
@@ -62,6 +63,8 @@ class CreateOrderUseCaseTest {
 
   @Mock
   private OrderService orderService;
+  @Mock
+  private CustomerExistsValidator customerExistsValidator;
   @Mock
   private OrderItemQuantityValidator orderItemQuantityValidator;
   @Mock
@@ -91,6 +94,7 @@ class CreateOrderUseCaseTest {
         .isEqualTo(orderWithId.getOrderItems().get(0).getQuantity());
     assertThat(orderSaved.getOrderItems().get(0).getPrice()).isNotNull()
         .isEqualTo(orderWithId.getOrderItems().get(0).getPrice());
+    verify(customerExistsValidator).validate(orderInputDto.companyId());
     verify(orderItemQuantityValidator).validate(orderInputDto.orderItems());
     verify(orderItemPriceValidator).validate(orderInputDto.orderItems());
   }
