@@ -250,4 +250,37 @@ class ProductServiceTest {
     assertThat(productsFound.getTotalPages()).isEqualTo(size);
     assertThat(productsFound.getTotalElements()).isEqualTo(size);
   }
+
+  @Test
+  void shouldFindAllProductsPaginatedWhenProductExists() {
+    var product = ProductTestData.createProduct();
+    var products = List.of(product);
+    var pageable = PageRequest.of(PAGE_NUMBER, PAGE_SIZE);
+    var size = products.size();
+    var page = new PageImpl<>(products, pageable, size);
+    when(productRepository.findAll(pageable)).thenReturn(page);
+
+    var productsFound = productService.findAll(pageable);
+
+    assertThat(productsFound).isNotNull();
+    assertThat(productsFound.getSize()).isEqualTo(PAGE_SIZE);
+    assertThat(productsFound.getTotalPages()).isEqualTo(size);
+    assertThat(productsFound.getTotalElements()).isEqualTo(size);
+  }
+
+  @Test
+  void shouldFindNothingWhenProductWasNotFound() {
+    var products = new ArrayList<Product>();
+    var pageable = PageRequest.of(PAGE_NUMBER, PAGE_SIZE);
+    var size = 0;
+    var page = new PageImpl<>(products, pageable, size);
+    when(productRepository.findAll(pageable)).thenReturn(page);
+
+    var productsFound = productService.findAll(pageable);
+
+    assertThat(productsFound).isNotNull();
+    assertThat(productsFound.getSize()).isEqualTo(PAGE_SIZE);
+    assertThat(productsFound.getTotalPages()).isEqualTo(size);
+    assertThat(productsFound.getTotalElements()).isEqualTo(size);
+  }
 }

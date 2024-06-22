@@ -15,6 +15,7 @@ import br.com.fiap.product.shared.annotation.IntegrationTest;
 import br.com.fiap.product.shared.api.JsonUtil;
 import br.com.fiap.product.shared.api.PageUtil;
 import jakarta.persistence.EntityManager;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
@@ -41,7 +42,7 @@ class GetAllProductsBySkuOrDescriptionApiTest {
   @Test
   void shouldReturnOkWhenFindProductBySku() throws Exception {
     var product = createAndPersistProduct();
-    var productPage = PageUtil.generatePageOfProduct(product);
+    var productPage = PageUtil.generatePageOfProduct(List.of(product));
     var productOutputDtoExpected = ProductOutputDto.toPage(productPage);
 
     var request = get(URL_PRODUCTS)
@@ -61,7 +62,7 @@ class GetAllProductsBySkuOrDescriptionApiTest {
   @Test
   void shouldReturnOkWhenFindProductByDescription() throws Exception {
     var product = createAndPersistProduct();
-    var productPage = PageUtil.generatePageOfProduct(product);
+    var productPage = PageUtil.generatePageOfProduct(List.of(product));
     var productOutputDtoExpected = ProductOutputDto.toPage(productPage);
 
     var request = get(URL_PRODUCTS)
@@ -81,7 +82,7 @@ class GetAllProductsBySkuOrDescriptionApiTest {
   @Test
   void shouldReturnOkWhenFindProductBySkuAndDescription() throws Exception {
     var product = createAndPersistProduct();
-    var productPage = PageUtil.generatePageOfProduct(product);
+    var productPage = PageUtil.generatePageOfProduct(List.of(product));
     var productOutputDtoExpected = ProductOutputDto.toPage(productPage);
 
     var request = get(URL_PRODUCTS)

@@ -2,6 +2,7 @@ package br.com.fiap.product.presentation.api;
 
 import br.com.fiap.product.application.usecase.CreateProductUseCase;
 import br.com.fiap.product.application.usecase.DeleteProductUseCase;
+import br.com.fiap.product.application.usecase.GetAllProductsUseCase;
 import br.com.fiap.product.application.usecase.GetProductByIdUseCase;
 import br.com.fiap.product.application.usecase.GetProductBySkuOrDescriptionUseCase;
 import br.com.fiap.product.application.usecase.UpdateProductUseCase;
@@ -32,16 +33,19 @@ public class ProductsController implements ProductsApi {
   private final UpdateProductUseCase updateProductUseCase;
   private final DeleteProductUseCase deleteProductUseCase;
   private final GetProductBySkuOrDescriptionUseCase getProductBySkuOrDescriptionUseCase;
+  private final GetAllProductsUseCase getAllProductsUseCase;
 
   public ProductsController(CreateProductUseCase createProductUseCase,
       GetProductByIdUseCase getProductByIdUseCase, UpdateProductUseCase updateProductUseCase,
       DeleteProductUseCase deleteProductUseCase,
-      GetProductBySkuOrDescriptionUseCase getProductBySkuOrDescriptionUseCase) {
+      GetProductBySkuOrDescriptionUseCase getProductBySkuOrDescriptionUseCase,
+      GetAllProductsUseCase getAllProductsUseCase) {
     this.createProductUseCase = createProductUseCase;
     this.getProductByIdUseCase = getProductByIdUseCase;
     this.updateProductUseCase = updateProductUseCase;
     this.deleteProductUseCase = deleteProductUseCase;
     this.getProductBySkuOrDescriptionUseCase = getProductBySkuOrDescriptionUseCase;
+    this.getAllProductsUseCase = getAllProductsUseCase;
   }
 
   @PostMapping
@@ -85,6 +89,17 @@ public class ProductsController implements ProductsApi {
       @PageableDefault(sort = {"description"}) Pageable pageable) {
     var productsPage = getProductBySkuOrDescriptionUseCase.execute(productFilter.sku(),
         productFilter.description(), pageable);
-    return !productsPage.getContent().isEmpty() ? ProductOutputDto.toPage(productsPage) : Page.empty();
+    return !productsPage.getContent().isEmpty() ? ProductOutputDto.toPage(productsPage)
+        : Page.empty();
+  }
+
+  @GetMapping
+  @ResponseStatus(HttpStatus.OK)
+  @Override
+  public Page<ProductOutputDto> getAllProducts(
+      @PageableDefault(sort = {"description"}) Pageable pageable) {
+    var productsPage = getAllProductsUseCase.execute(pageable);
+    return !productsPage.getContent().isEmpty() ? ProductOutputDto.toPage(productsPage)
+        : Page.empty();
   }
 }

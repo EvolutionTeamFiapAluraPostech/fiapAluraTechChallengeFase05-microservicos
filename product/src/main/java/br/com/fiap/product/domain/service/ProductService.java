@@ -49,4 +49,8 @@ public class ProductService {
     return productRepository.queryProductsBySkuLikeIgnoreCaseOrDescription(sku, description,
         pageable);
   }
+
+  public Page<Product> findAll(Pageable pageable) {
+    return productRepository.findAll(pageable);
+  }
 }

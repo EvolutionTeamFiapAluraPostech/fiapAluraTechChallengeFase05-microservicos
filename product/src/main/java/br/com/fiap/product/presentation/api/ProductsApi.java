@@ -82,4 +82,15 @@ public interface ProductsApi {
   Page<ProductOutputDto> getAllProductsBySkuOrDescription(
       @Parameter(description = "DTO com os atributos sku e description para serem utilizados como filtro de pesquisa.") ProductFilter productFilter,
       @Parameter(description = "Interface com atributos para paginação") Pageable pageable);
+
+  @Operation(summary = "Lista de todos os produtos paginada",
+      description = "Endpoint para recuperar uma lista paginada de todos os produtos, ordenada por descrição",
+      tags = {"ProductsApi"})
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "successful operation", content = {
+          @Content(mediaType = "application/json", schema = @Schema(implementation = ProductOutputDto.class))}),
+      @ApiResponse(responseCode = "404", description = "not found para produto não encontrado",
+          content = {@Content(schema = @Schema(hidden = true))})})
+  Page<ProductOutputDto> getAllProducts(
+      @Parameter(description = "Interface com atributos para paginação") Pageable pageable);
 }
