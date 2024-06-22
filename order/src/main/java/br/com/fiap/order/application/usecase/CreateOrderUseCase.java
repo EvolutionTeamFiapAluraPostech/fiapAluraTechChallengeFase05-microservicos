@@ -1,6 +1,6 @@
 package br.com.fiap.order.application.usecase;
 
-import br.com.fiap.order.application.validator.CustomerExistsValidator;
+import br.com.fiap.order.application.validator.CompanyExistsValidator;
 import br.com.fiap.order.application.validator.OrderItemPriceValidator;
 import br.com.fiap.order.application.validator.OrderItemQuantityValidator;
 import br.com.fiap.order.domain.entity.Order;
@@ -15,23 +15,23 @@ import org.springframework.transaction.annotation.Transactional;
 public class CreateOrderUseCase {
 
   private final OrderService orderService;
-  private final CustomerExistsValidator customerExistsValidator;
+  private final CompanyExistsValidator companyExistsValidator;
   private final OrderItemQuantityValidator orderItemQuantityValidator;
   private final OrderItemPriceValidator orderItemPriceValidator;
 
   public CreateOrderUseCase(OrderService orderService,
-      CustomerExistsValidator customerExistsValidator,
+      CompanyExistsValidator companyExistsValidator,
       OrderItemQuantityValidator orderItemQuantityValidator,
       OrderItemPriceValidator orderItemPriceValidator) {
     this.orderService = orderService;
-    this.customerExistsValidator = customerExistsValidator;
+    this.companyExistsValidator = companyExistsValidator;
     this.orderItemQuantityValidator = orderItemQuantityValidator;
     this.orderItemPriceValidator = orderItemPriceValidator;
   }
 
   @Transactional
   public Order execute(OrderInputDto orderInputDto) {
-    customerExistsValidator.validate(orderInputDto.companyId());
+    companyExistsValidator.validate(orderInputDto.companyId());
     orderItemQuantityValidator.validate(orderInputDto.orderItems());
     orderItemPriceValidator.validate(orderInputDto.orderItems());
     var order = updateOrderAttributes(orderInputDto);

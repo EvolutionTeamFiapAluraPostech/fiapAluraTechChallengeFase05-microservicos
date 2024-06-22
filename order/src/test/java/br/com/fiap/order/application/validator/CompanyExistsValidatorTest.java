@@ -19,12 +19,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 
 @ExtendWith(MockitoExtension.class)
-class CustomerExistsValidatorTest {
+class CompanyExistsValidatorTest {
 
   @Mock
   private CompanyHttpClient companyHttpClient;
   @InjectMocks
-  private CustomerExistsValidator customerExistsValidator;
+  private CompanyExistsValidator companyExistsValidator;
 
   @Test
   void shouldValidateCompanyIdWhenCompanyExists() {
@@ -32,7 +32,7 @@ class CustomerExistsValidatorTest {
     var companyDtoResponseEntity = new ResponseEntity<CompanyDto>(HttpStatus.OK);
     when(companyHttpClient.getCompanyById(companyId)).thenReturn(companyDtoResponseEntity);
 
-    assertThatCode(() -> customerExistsValidator.validate(companyId)).doesNotThrowAnyException();
+    assertThatCode(() -> companyExistsValidator.validate(companyId)).doesNotThrowAnyException();
   }
 
   @Test
@@ -42,7 +42,7 @@ class CustomerExistsValidatorTest {
         new NoResultException(new FieldError(this.getClass().getSimpleName(),
             COMPANY_ID_FIELD, COMPANY_NOT_FOUND_WITH_ID_MESSAGE.formatted(companyId))));
 
-    assertThatCode(() -> customerExistsValidator.validate(companyId))
+    assertThatCode(() -> companyExistsValidator.validate(companyId))
         .isInstanceOf(NoResultException.class)
         .hasMessage(COMPANY_NOT_FOUND_WITH_ID_MESSAGE.formatted(companyId));
   }

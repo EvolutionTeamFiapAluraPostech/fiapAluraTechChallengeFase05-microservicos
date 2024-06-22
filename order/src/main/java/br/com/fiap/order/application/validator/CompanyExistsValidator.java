@@ -10,11 +10,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.FieldError;
 
 @Component
-public class CustomerExistsValidator {
+public class CompanyExistsValidator {
 
   private final CompanyHttpClient companyHttpClient;
 
-  public CustomerExistsValidator(CompanyHttpClient companyHttpClient) {
+  public CompanyExistsValidator(CompanyHttpClient companyHttpClient) {
     this.companyHttpClient = companyHttpClient;
   }
 
