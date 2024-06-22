@@ -33,20 +33,6 @@ public final class OrderTestData {
   public static final BigDecimal ALTERNATIVE_PRODUCT_QUANTITY = BigDecimal.ONE;
   public static final BigDecimal ALTERNATIVE_PRODUCT_PRICE = new BigDecimal("1750.00");
   public static final UUID OTHER_PRODUCT_UUID = UUID.randomUUID();
-  public static final BigDecimal DEFAULT_COMPANY_LATITUDE = new BigDecimal("-23.56388");
-  public static final BigDecimal DEFAULT_COMPANY_LONGITUDE = new BigDecimal("-46.65241");
-  public static final String DEFAULT_CUSTOMER_NAME = "Thomas Anderson";
-  public static final String DEFAULT_CUSTOMER_EMAIL = "thomas.anderson@itcompany.com";
-  public static final String DEFAULT_CUSTOMER_CPF_DOC_NUMBER = "11955975094";
-  public static final String DEFAULT_CUSTOMER_DOC_NUMBER_TYPE = "CPF";
-  public static final String DEFAULT_CUSTOMER_STREET = "Av. Lins de Vasconcelos";
-  public static final String DEFAULT_CUSTOMER_ADDRESS_NUMBER = "1222";
-  public static final String DEFAULT_CUSTOMER_NEIGHBORHOOD = "Cambuci";
-  public static final String DEFAULT_CUSTOMER_CITY = "São Paulo";
-  public static final String DEFAULT_CUSTOMER_STATE = "SP";
-  public static final String DEFAULT_CUSTOMER_COUNTRY = "Brasil";
-  public static final String DEFAULT_CUSTOMER_POSTAL_CODE = "01538001";
-
 
   public static Order createNewOrder() {
     var orderItems = new ArrayList<OrderItem>();
@@ -55,17 +41,6 @@ public final class OrderTestData {
     var order = Order.builder()
         .companyId(DEFAULT_COMPANY_UUID)
         .customerId(DEFAULT_CUSTOMER_UUID)
-        .customerName(DEFAULT_CUSTOMER_NAME)
-        .customerEmail(DEFAULT_CUSTOMER_EMAIL)
-        .customerDocNumber(DEFAULT_CUSTOMER_CPF_DOC_NUMBER)
-        .customerDocNumberType(DEFAULT_CUSTOMER_DOC_NUMBER_TYPE)
-        .customerStreet(DEFAULT_CUSTOMER_STREET)
-        .customerNumber(DEFAULT_CUSTOMER_ADDRESS_NUMBER)
-        .customerNeighborhood(DEFAULT_CUSTOMER_NEIGHBORHOOD)
-        .customerCity(DEFAULT_CUSTOMER_CITY)
-        .customerState(DEFAULT_CUSTOMER_STATE)
-        .customerCountry(DEFAULT_CUSTOMER_COUNTRY)
-        .customerPostalCode(DEFAULT_CUSTOMER_POSTAL_CODE)
         .orderStatus(OrderStatus.AGUARDANDO_PAGAMENTO)
         .orderDate(LocalDateTime.now())
         .orderItems(orderItems)
@@ -99,19 +74,6 @@ public final class OrderTestData {
 
     return new OrderInputDto(DEFAULT_COMPANY_ID,
         DEFAULT_CUSTOMER_ID,
-        DEFAULT_CUSTOMER_NAME,
-        DEFAULT_CUSTOMER_EMAIL,
-        DEFAULT_CUSTOMER_CPF_DOC_NUMBER,
-        DEFAULT_CUSTOMER_DOC_NUMBER_TYPE,
-        DEFAULT_CUSTOMER_STREET,
-        DEFAULT_CUSTOMER_ADDRESS_NUMBER,
-        DEFAULT_CUSTOMER_NEIGHBORHOOD,
-        DEFAULT_CUSTOMER_CITY,
-        DEFAULT_CUSTOMER_STATE,
-        DEFAULT_CUSTOMER_COUNTRY,
-        DEFAULT_CUSTOMER_POSTAL_CODE,
-        DEFAULT_COMPANY_LATITUDE,
-        DEFAULT_COMPANY_LONGITUDE,
         orderItemsInputDto);
   }
 

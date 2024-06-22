@@ -38,19 +38,6 @@ public class Order extends BaseEntity {
   private Boolean active = true;
   private UUID companyId;
   private UUID customerId;
-  private String customerName;
-  private String customerEmail;
-  private String customerDocNumber;
-  private String customerDocNumberType;
-  private String customerStreet;
-  private String customerNumber;
-  private String customerNeighborhood;
-  private String customerCity;
-  private String customerState;
-  private String customerCountry;
-  private String customerPostalCode;
-  private BigDecimal customerLatitude;
-  private BigDecimal customerLongitude;
   @JsonIgnore
   @Enumerated(EnumType.STRING)
   @Column(name = "status")
@@ -62,6 +49,13 @@ public class Order extends BaseEntity {
   private BigDecimal orderTotalAmount;
   @OneToMany(targetEntity = OrderItem.class, mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private List<OrderItem> orderItems;
+
+  public void calculateTotalAmountOrderItem() {
+    for (OrderItem orderItem : getOrderItems()) {
+      orderItem.setOrder(this);
+      orderItem.calculateTotalItemAmount();
+    }
+  }
 
   public void calculateTotalOrderAmout() {
     orderTotalAmount = orderItems.stream()

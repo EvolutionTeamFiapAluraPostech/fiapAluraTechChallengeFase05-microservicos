@@ -1,20 +1,7 @@
 package br.com.fiap.order.application.usecase;
 
 import static br.com.fiap.order.shared.testdata.OrderTestData.DEFAULT_COMPANY_ID;
-import static br.com.fiap.order.shared.testdata.OrderTestData.DEFAULT_COMPANY_LATITUDE;
-import static br.com.fiap.order.shared.testdata.OrderTestData.DEFAULT_COMPANY_LONGITUDE;
-import static br.com.fiap.order.shared.testdata.OrderTestData.DEFAULT_CUSTOMER_ADDRESS_NUMBER;
-import static br.com.fiap.order.shared.testdata.OrderTestData.DEFAULT_CUSTOMER_CITY;
-import static br.com.fiap.order.shared.testdata.OrderTestData.DEFAULT_CUSTOMER_COUNTRY;
-import static br.com.fiap.order.shared.testdata.OrderTestData.DEFAULT_CUSTOMER_CPF_DOC_NUMBER;
-import static br.com.fiap.order.shared.testdata.OrderTestData.DEFAULT_CUSTOMER_DOC_NUMBER_TYPE;
-import static br.com.fiap.order.shared.testdata.OrderTestData.DEFAULT_CUSTOMER_EMAIL;
 import static br.com.fiap.order.shared.testdata.OrderTestData.DEFAULT_CUSTOMER_ID;
-import static br.com.fiap.order.shared.testdata.OrderTestData.DEFAULT_CUSTOMER_NAME;
-import static br.com.fiap.order.shared.testdata.OrderTestData.DEFAULT_CUSTOMER_NEIGHBORHOOD;
-import static br.com.fiap.order.shared.testdata.OrderTestData.DEFAULT_CUSTOMER_POSTAL_CODE;
-import static br.com.fiap.order.shared.testdata.OrderTestData.DEFAULT_CUSTOMER_STATE;
-import static br.com.fiap.order.shared.testdata.OrderTestData.DEFAULT_CUSTOMER_STREET;
 import static br.com.fiap.order.shared.testdata.OrderTestData.DEFAULT_PRODUCT_DESCRIPTION;
 import static br.com.fiap.order.shared.testdata.OrderTestData.DEFAULT_PRODUCT_ID;
 import static br.com.fiap.order.shared.testdata.OrderTestData.DEFAULT_PRODUCT_PRICE;
@@ -29,6 +16,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import br.com.fiap.order.application.validator.CompanyExistsValidator;
+import br.com.fiap.order.application.validator.CustomerExistsValidator;
 import br.com.fiap.order.application.validator.OrderItemPriceValidator;
 import br.com.fiap.order.application.validator.OrderItemQuantityValidator;
 import br.com.fiap.order.domain.entity.Order;
@@ -54,6 +42,8 @@ class CreateOrderUseCaseTest {
   private OrderService orderService;
   @Mock
   private CompanyExistsValidator companyExistsValidator;
+  @Mock
+  private CustomerExistsValidator customerExistsValidator;
   @Mock
   private OrderItemQuantityValidator orderItemQuantityValidator;
   @Mock
@@ -83,7 +73,9 @@ class CreateOrderUseCaseTest {
         .isEqualTo(orderWithId.getOrderItems().get(0).getQuantity());
     assertThat(orderSaved.getOrderItems().get(0).getPrice()).isNotNull()
         .isEqualTo(orderWithId.getOrderItems().get(0).getPrice());
+
     verify(companyExistsValidator).validate(orderInputDto.companyId());
+    verify(customerExistsValidator).validate(orderInputDto.customerId());
     verify(orderItemQuantityValidator).validate(orderInputDto.orderItems());
     verify(orderItemPriceValidator).validate(orderInputDto.orderItems());
   }
@@ -96,19 +88,6 @@ class CreateOrderUseCaseTest {
     var orderItemsInputDto = List.of(orderItemInputDto);
     var orderInputDto = new OrderInputDto(DEFAULT_COMPANY_ID,
         DEFAULT_CUSTOMER_ID,
-        DEFAULT_CUSTOMER_NAME,
-        DEFAULT_CUSTOMER_EMAIL,
-        DEFAULT_CUSTOMER_CPF_DOC_NUMBER,
-        DEFAULT_CUSTOMER_DOC_NUMBER_TYPE,
-        DEFAULT_CUSTOMER_STREET,
-        DEFAULT_CUSTOMER_ADDRESS_NUMBER,
-        DEFAULT_CUSTOMER_NEIGHBORHOOD,
-        DEFAULT_CUSTOMER_CITY,
-        DEFAULT_CUSTOMER_STATE,
-        DEFAULT_CUSTOMER_COUNTRY,
-        DEFAULT_CUSTOMER_POSTAL_CODE,
-        DEFAULT_COMPANY_LATITUDE,
-        DEFAULT_COMPANY_LONGITUDE,
         orderItemsInputDto);
 
     doThrow(ValidatorException.class).when(orderItemQuantityValidator).validate(orderItemsInputDto);
@@ -128,19 +107,6 @@ class CreateOrderUseCaseTest {
     var orderItemsInputDto = List.of(orderItemInputDto);
     var orderInputDto = new OrderInputDto(DEFAULT_COMPANY_ID,
         DEFAULT_CUSTOMER_ID,
-        DEFAULT_CUSTOMER_NAME,
-        DEFAULT_CUSTOMER_EMAIL,
-        DEFAULT_CUSTOMER_CPF_DOC_NUMBER,
-        DEFAULT_CUSTOMER_DOC_NUMBER_TYPE,
-        DEFAULT_CUSTOMER_STREET,
-        DEFAULT_CUSTOMER_ADDRESS_NUMBER,
-        DEFAULT_CUSTOMER_NEIGHBORHOOD,
-        DEFAULT_CUSTOMER_CITY,
-        DEFAULT_CUSTOMER_STATE,
-        DEFAULT_CUSTOMER_COUNTRY,
-        DEFAULT_CUSTOMER_POSTAL_CODE,
-        DEFAULT_COMPANY_LATITUDE,
-        DEFAULT_COMPANY_LONGITUDE,
         orderItemsInputDto);
 
     doThrow(ValidatorException.class).when(orderItemPriceValidator).validate(orderItemsInputDto);

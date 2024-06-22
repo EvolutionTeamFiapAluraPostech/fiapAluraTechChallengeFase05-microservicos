@@ -57,6 +57,8 @@ class PostOrdersApiTest {
     var orderInputDto = JsonUtil.toJson(order);
     stubFor(WireMock.get("/companies/" + order.getCompanyId().toString())
         .willReturn(aResponse().withStatus(HttpStatus.OK.value())));
+    stubFor(WireMock.get("/users/" + order.getCustomerId().toString())
+        .willReturn(aResponse().withStatus(HttpStatus.OK.value())));
 
     var request = post(URL_ORDERS)
         .contentType(APPLICATION_JSON)

@@ -1,10 +1,10 @@
 package br.com.fiap.order.application.usecase;
 
 import br.com.fiap.order.application.validator.CompanyExistsValidator;
+import br.com.fiap.order.application.validator.CustomerExistsValidator;
 import br.com.fiap.order.application.validator.OrderItemPriceValidator;
 import br.com.fiap.order.application.validator.OrderItemQuantityValidator;
 import br.com.fiap.order.domain.entity.Order;
-import br.com.fiap.order.domain.entity.OrderItem;
 import br.com.fiap.order.domain.enums.OrderStatus;
 import br.com.fiap.order.domain.service.OrderService;
 import br.com.fiap.order.presentation.api.dto.OrderInputDto;
@@ -16,15 +16,18 @@ public class CreateOrderUseCase {
 
   private final OrderService orderService;
   private final CompanyExistsValidator companyExistsValidator;
+  private final CustomerExistsValidator customerExistsValidator;
   private final OrderItemQuantityValidator orderItemQuantityValidator;
   private final OrderItemPriceValidator orderItemPriceValidator;
 
   public CreateOrderUseCase(OrderService orderService,
       CompanyExistsValidator companyExistsValidator,
+      CustomerExistsValidator customerExistsValidator,
       OrderItemQuantityValidator orderItemQuantityValidator,
       OrderItemPriceValidator orderItemPriceValidator) {
     this.orderService = orderService;
     this.companyExistsValidator = companyExistsValidator;
+    this.customerExistsValidator = customerExistsValidator;
     this.orderItemQuantityValidator = orderItemQuantityValidator;
     this.orderItemPriceValidator = orderItemPriceValidator;
   }
@@ -32,6 +35,7 @@ public class CreateOrderUseCase {
   @Transactional
   public Order execute(OrderInputDto orderInputDto) {
     companyExistsValidator.validate(orderInputDto.companyId());
+    customerExistsValidator.validate(orderInputDto.customerId());
     orderItemQuantityValidator.validate(orderInputDto.orderItems());
     orderItemPriceValidator.validate(orderInputDto.orderItems());
     var order = updateOrderAttributes(orderInputDto);
@@ -40,16 +44,9 @@ public class CreateOrderUseCase {
 
   private Order updateOrderAttributes(OrderInputDto orderInputDto) {
     var order = orderInputDto.toOrder();
-    calculateTotalAmountOrderItem(order);
+    order.calculateTotalAmountOrderItem();
     order.setOrderStatus(OrderStatus.AGUARDANDO_PAGAMENTO);
     order.calculateTotalOrderAmout();
     return order;
-  }
-
-  private void calculateTotalAmountOrderItem(Order order) {
-    for (OrderItem orderItem : order.getOrderItems()) {
-      orderItem.setOrder(order);
-      orderItem.calculateTotalItemAmount();
-    }
   }
 }
