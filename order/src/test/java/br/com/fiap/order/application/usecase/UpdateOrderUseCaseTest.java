@@ -18,7 +18,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -28,7 +27,6 @@ import br.com.fiap.order.domain.entity.Order;
 import br.com.fiap.order.domain.entity.OrderItem;
 import br.com.fiap.order.domain.exception.NoResultException;
 import br.com.fiap.order.domain.service.OrderService;
-import br.com.fiap.order.infrastructure.httpclient.cep.GetCoordinatesFromCepRequest;
 import br.com.fiap.order.presentation.api.dto.OrderDto;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -47,8 +45,6 @@ class UpdateOrderUseCaseTest {
   private UuidValidator uuidValidator;
   @Mock
   private OrderIsAbleToUpdateValidator orderIsAbleToUpdateValidator;
-  @Mock
-  private GetCoordinatesFromCepRequest getCoordinatesFromCepRequest;
   @InjectMocks
   private UpdateOrderUseCase updateOrderUseCase;
 
@@ -72,7 +68,6 @@ class UpdateOrderUseCaseTest {
     assertThat(orderUpdated).usingRecursiveComparison().isEqualTo(order);
     verify(uuidValidator).validate(any(String.class));
     verify(orderIsAbleToUpdateValidator).validate(any(Order.class));
-    verify(getCoordinatesFromCepRequest, times(2)).request(any(String.class));
   }
 
   @Test
@@ -112,7 +107,6 @@ class UpdateOrderUseCaseTest {
     assertThat(orderUpdated).usingRecursiveComparison().isEqualTo(order);
     verify(uuidValidator).validate(any(String.class));
     verify(orderIsAbleToUpdateValidator).validate(any(Order.class));
-    verify(getCoordinatesFromCepRequest, times(2)).request(any(String.class));
   }
 
   @Test
@@ -128,6 +122,5 @@ class UpdateOrderUseCaseTest {
         .isInstanceOf(NoResultException.class)
         .hasMessage(ORDER_NOT_FOUND_WITH_ID.formatted(orderId));
     verify(orderIsAbleToUpdateValidator, never()).validate(any(Order.class));
-    verify(getCoordinatesFromCepRequest, never()).request(any(String.class));
   }
 }

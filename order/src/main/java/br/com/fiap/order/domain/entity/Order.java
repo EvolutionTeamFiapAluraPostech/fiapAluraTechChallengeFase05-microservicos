@@ -37,19 +37,6 @@ public class Order extends BaseEntity {
   @Builder.Default
   private Boolean active = true;
   private UUID companyId;
-  private String companyName;
-  private String companyEmail;
-  private String companyDocNumber;
-  private String companyDocNumberType;
-  private String companyStreet;
-  private String companyNumber;
-  private String companyNeighborhood;
-  private String companyCity;
-  private String companyState;
-  private String companyCountry;
-  private String companyPostalCode;
-  private BigDecimal companyLatitude;
-  private BigDecimal companyLongitude;
   private UUID customerId;
   private String customerName;
   private String customerEmail;

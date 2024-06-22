@@ -5,33 +5,25 @@ import br.com.fiap.order.application.validator.UuidValidator;
 import br.com.fiap.order.domain.entity.Order;
 import br.com.fiap.order.domain.entity.OrderItem;
 import br.com.fiap.order.domain.service.OrderService;
-import br.com.fiap.order.infrastructure.httpclient.cep.GetCoordinatesFromCepRequest;
 import br.com.fiap.order.presentation.api.dto.OrderDto;
 import br.com.fiap.order.presentation.api.dto.OrderItemDto;
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 @Service
 public class UpdateOrderUseCase {
 
-  public static final String LATITUDE = "Latitude";
-  public static final String LONGITUDE = "Longitude";
   private final OrderService orderService;
   private final UuidValidator uuidValidator;
   private final OrderIsAbleToUpdateValidator orderIsAbleToUpdateValidator;
-  private final GetCoordinatesFromCepRequest getCoordinatesFromCepRequest;
 
   public UpdateOrderUseCase(OrderService orderService, UuidValidator uuidValidator,
-      OrderIsAbleToUpdateValidator orderAlreadyDeliveredValidator,
-      GetCoordinatesFromCepRequest getCoordinatesFromCepRequest) {
+      OrderIsAbleToUpdateValidator orderAlreadyDeliveredValidator) {
     this.orderService = orderService;
     this.uuidValidator = uuidValidator;
     this.orderIsAbleToUpdateValidator = orderAlreadyDeliveredValidator;
-    this.getCoordinatesFromCepRequest = getCoordinatesFromCepRequest;
   }
 
   @Transactional
@@ -46,12 +38,6 @@ public class UpdateOrderUseCase {
   private void updateOrderAttributesToSave(Order order, OrderDto orderDto) {
     order.setCompanyId(UUID.fromString(orderDto.companyId()));
     order.setCustomerId(UUID.fromString(orderDto.customerId()));
-    if (isNecessaryGettingCompanyCoordinates(order)) {
-      getCoordinatesFromWebAndUpdateCompanyAddress(order);
-    }
-    if (isNecessaryGettingCustomerCoordinates(order)) {
-      getCoordinatesFromWebAndUpdateCustomerAddress(order);
-    }
     updateOrderItemAttributesToSave(order.getOrderItems(), orderDto.orderItems());
   }
 
@@ -109,48 +95,5 @@ public class UpdateOrderUseCase {
                     orderItemDto -> UUID.fromString(orderItemDto.id()).equals(orderItem.getId()))))
         .toList();
     orderItems.removeAll(orderItemToRemove);
-  }
-
-  private void getCoordinatesFromWebAndUpdateCustomerAddress(Order order) {
-    var coordinates = getCoordinatesFromCepRequest.request(order.getCustomerPostalCode());
-    if (!coordinates.isEmpty()) {
-      coordinates.forEach(coordinate -> {
-        if (coordinate.containsKey(LATITUDE)) {
-          order.setCustomerLatitude(coordinate.get(LATITUDE));
-        }
-        if (coordinate.containsKey(LONGITUDE)) {
-          order.setCustomerLongitude(coordinate.get(LONGITUDE));
-        }
-      });
-    }
-  }
-
-  private boolean isNecessaryGettingCustomerCoordinates(Order order) {
-    return StringUtils.hasLength(order.getCompanyPostalCode())
-        && (order.getCustomerLatitude() == null || order.getCustomerLatitude()
-        .equals(BigDecimal.ZERO)
-        || order.getCustomerLongitude() == null || order.getCustomerLongitude()
-        .equals(BigDecimal.ZERO));
-  }
-
-  private void getCoordinatesFromWebAndUpdateCompanyAddress(Order order) {
-    var coordinates = getCoordinatesFromCepRequest.request(order.getCompanyPostalCode());
-    if (!coordinates.isEmpty()) {
-      coordinates.forEach(coordinate -> {
-        if (coordinate.containsKey(LATITUDE)) {
-          order.setCompanyLatitude(coordinate.get(LATITUDE));
-        }
-        if (coordinate.containsKey(LONGITUDE)) {
-          order.setCompanyLongitude(coordinate.get(LONGITUDE));
-        }
-      });
-    }
-  }
-
-  private boolean isNecessaryGettingCompanyCoordinates(Order order) {
-    return StringUtils.hasLength(order.getCompanyPostalCode())
-        && (order.getCompanyLatitude() == null || order.getCompanyLatitude().equals(BigDecimal.ZERO)
-        || order.getCompanyLongitude() == null || order.getCompanyLongitude()
-        .equals(BigDecimal.ZERO));
   }
 }

@@ -1,19 +1,8 @@
 package br.com.fiap.order.application.usecase;
 
-import static br.com.fiap.order.shared.testdata.OrderTestData.DEFAULT_COMPANY_ADDRESS_NUMBER;
-import static br.com.fiap.order.shared.testdata.OrderTestData.DEFAULT_COMPANY_CITY;
-import static br.com.fiap.order.shared.testdata.OrderTestData.DEFAULT_COMPANY_CNPJ_DOC_NUMBER;
-import static br.com.fiap.order.shared.testdata.OrderTestData.DEFAULT_COMPANY_COUNTRY;
-import static br.com.fiap.order.shared.testdata.OrderTestData.DEFAULT_COMPANY_DOC_NUMBER_TYPE;
-import static br.com.fiap.order.shared.testdata.OrderTestData.DEFAULT_COMPANY_EMAIL;
 import static br.com.fiap.order.shared.testdata.OrderTestData.DEFAULT_COMPANY_ID;
 import static br.com.fiap.order.shared.testdata.OrderTestData.DEFAULT_COMPANY_LATITUDE;
 import static br.com.fiap.order.shared.testdata.OrderTestData.DEFAULT_COMPANY_LONGITUDE;
-import static br.com.fiap.order.shared.testdata.OrderTestData.DEFAULT_COMPANY_NAME;
-import static br.com.fiap.order.shared.testdata.OrderTestData.DEFAULT_COMPANY_NEIGHBORHOOD;
-import static br.com.fiap.order.shared.testdata.OrderTestData.DEFAULT_COMPANY_POSTAL_CODE;
-import static br.com.fiap.order.shared.testdata.OrderTestData.DEFAULT_COMPANY_STATE;
-import static br.com.fiap.order.shared.testdata.OrderTestData.DEFAULT_COMPANY_STREET;
 import static br.com.fiap.order.shared.testdata.OrderTestData.DEFAULT_CUSTOMER_ADDRESS_NUMBER;
 import static br.com.fiap.order.shared.testdata.OrderTestData.DEFAULT_CUSTOMER_CITY;
 import static br.com.fiap.order.shared.testdata.OrderTestData.DEFAULT_CUSTOMER_COUNTRY;
@@ -106,19 +95,6 @@ class CreateOrderUseCaseTest {
         DEFAULT_PRODUCT_DESCRIPTION, new BigDecimal(quantity), DEFAULT_PRODUCT_PRICE);
     var orderItemsInputDto = List.of(orderItemInputDto);
     var orderInputDto = new OrderInputDto(DEFAULT_COMPANY_ID,
-        DEFAULT_COMPANY_NAME,
-        DEFAULT_COMPANY_EMAIL,
-        DEFAULT_COMPANY_CNPJ_DOC_NUMBER,
-        DEFAULT_COMPANY_DOC_NUMBER_TYPE,
-        DEFAULT_COMPANY_STREET,
-        DEFAULT_COMPANY_ADDRESS_NUMBER,
-        DEFAULT_COMPANY_NEIGHBORHOOD,
-        DEFAULT_COMPANY_CITY,
-        DEFAULT_COMPANY_STATE,
-        DEFAULT_COMPANY_COUNTRY,
-        DEFAULT_COMPANY_POSTAL_CODE,
-        DEFAULT_COMPANY_LATITUDE,
-        DEFAULT_COMPANY_LONGITUDE,
         DEFAULT_CUSTOMER_ID,
         DEFAULT_CUSTOMER_NAME,
         DEFAULT_CUSTOMER_EMAIL,
@@ -151,19 +127,6 @@ class CreateOrderUseCaseTest {
         DEFAULT_PRODUCT_DESCRIPTION, DEFAULT_PRODUCT_QUANTITY, new BigDecimal(price));
     var orderItemsInputDto = List.of(orderItemInputDto);
     var orderInputDto = new OrderInputDto(DEFAULT_COMPANY_ID,
-        DEFAULT_COMPANY_NAME,
-        DEFAULT_COMPANY_EMAIL,
-        DEFAULT_COMPANY_CNPJ_DOC_NUMBER,
-        DEFAULT_COMPANY_DOC_NUMBER_TYPE,
-        DEFAULT_COMPANY_STREET,
-        DEFAULT_COMPANY_ADDRESS_NUMBER,
-        DEFAULT_COMPANY_NEIGHBORHOOD,
-        DEFAULT_COMPANY_CITY,
-        DEFAULT_COMPANY_STATE,
-        DEFAULT_COMPANY_COUNTRY,
-        DEFAULT_COMPANY_POSTAL_CODE,
-        DEFAULT_COMPANY_LATITUDE,
-        DEFAULT_COMPANY_LONGITUDE,
         DEFAULT_CUSTOMER_ID,
         DEFAULT_CUSTOMER_NAME,
         DEFAULT_CUSTOMER_EMAIL,

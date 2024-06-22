@@ -15,5 +15,5 @@ create table if not exists "order_management"."order_items"
     "product_description" varchar(500)                not null,
     "quantity"            numeric(16, 2)              not null,
     "price"               numeric(16, 2)              not null,
-    "totalAmount"         numeric(16, 2)              null
+    "total_amount"        numeric(16, 2)              not null
 );

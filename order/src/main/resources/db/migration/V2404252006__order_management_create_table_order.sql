@@ -11,19 +11,6 @@ create table if not exists "order_management"."orders"
     "updated_by"               varchar(255)                null,
     "active"                   boolean                     not null,
     "company_id"               uuid                        not null,
-    "company_name"             varchar(500)                not null,
-    "company_email"            varchar(500)                not null,
-    "company_doc_number"       varchar(14)                 not null,
-    "company_doc_number_type"  varchar(8)                  not null,
-    "company_street"           varchar(255)                not null,
-    "company_number"           varchar(100)                not null,
-    "company_neighborhood"     varchar(100)                not null,
-    "company_city"             varchar(100)                not null,
-    "company_state"            varchar(2)                  not null,
-    "company_country"          varchar(100)                not null,
-    "company_postal_code"      varchar(8)                  not null,
-    "company_latitude"         numeric(16, 6)              null,
-    "company_longitude"        numeric(16, 6)              null,
     "customer_id"              uuid                        not null,
     "customer_name"            varchar(500)                not null,
     "customer_email"           varchar(500)                not null,
@@ -39,5 +26,6 @@ create table if not exists "order_management"."orders"
     "customer_latitude"        numeric(16, 6)              null,
     "customer_longitude"       numeric(16, 6)              null,
     "status"                   varchar(50)                 not null,
-    "order_date"               timestamp                   not null
+    "order_date"               timestamp                   not null,
+    "order_total_amount"       numeric(16, 2)              not null
 );
