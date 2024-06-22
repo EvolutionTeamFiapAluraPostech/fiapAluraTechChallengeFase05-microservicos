@@ -46,4 +46,8 @@ public record OrderInputDto(
         .orderItems(orderItems)
         .build();
   }
+
+  public List<String> getProductsIdListFromOrder() {
+    return orderItems().stream().map(OrderItemInputDto::productId).toList();
+  }
 }
