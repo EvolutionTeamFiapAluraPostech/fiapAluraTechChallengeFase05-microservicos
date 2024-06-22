@@ -34,7 +34,6 @@ public record OrderInputDto(
           .productId(!orderItemInputDto.productId().isEmpty() ? UUID.fromString(
               orderItemInputDto.productId()) : null)
           .productSku(orderItemInputDto.productSku())
-          .productDescription(orderItemInputDto.productDescription())
           .quantity(orderItemInputDto.quantity())
           .price(orderItemInputDto.price())
           .build();

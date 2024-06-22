@@ -23,8 +23,6 @@ public final class OrderTestData {
       "cfa8315f-3f9a-4105-a2f2-f02a0a303b20");
   public static final String DEFAULT_PRODUCT_ID = DEFAULT_PRODUCT_UUID.toString();
   public static final String DEFAULT_PRODUCT_SKU = "Key/BR-/Erg/Bla";
-  public static final String DEFAULT_PRODUCT_DESCRIPTION = "Keyboard Ergonomic Black";
-
   public static final BigDecimal DEFAULT_PRODUCT_QUANTITY = BigDecimal.TEN;
   public static final BigDecimal DEFAULT_PRODUCT_PRICE = new BigDecimal("315");
   public static final UUID ALTERNATIVE_COMPANY_UUID = UUID.randomUUID();
@@ -51,7 +49,6 @@ public final class OrderTestData {
         .order(order)
         .productId(DEFAULT_PRODUCT_UUID)
         .productSku(DEFAULT_PRODUCT_SKU)
-        .productDescription(DEFAULT_PRODUCT_DESCRIPTION)
         .quantity(DEFAULT_PRODUCT_QUANTITY)
         .price(DEFAULT_PRODUCT_PRICE)
         .totalAmount(totalOrderAmount)
@@ -69,11 +66,10 @@ public final class OrderTestData {
 
   public static OrderInputDto createNewOrderInputDto() {
     var orderItemInputDto = new OrderItemInputDto(DEFAULT_PRODUCT_ID, DEFAULT_PRODUCT_SKU,
-        DEFAULT_PRODUCT_DESCRIPTION, DEFAULT_PRODUCT_QUANTITY, DEFAULT_PRODUCT_PRICE);
+        DEFAULT_PRODUCT_QUANTITY, DEFAULT_PRODUCT_PRICE);
     var orderItemsInputDto = List.of(orderItemInputDto);
 
-    return new OrderInputDto(DEFAULT_COMPANY_ID,
-        DEFAULT_CUSTOMER_ID,
+    return new OrderInputDto(DEFAULT_COMPANY_ID, DEFAULT_CUSTOMER_ID,
         orderItemsInputDto);
   }
 

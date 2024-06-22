@@ -1,7 +1,6 @@
 package br.com.fiap.order.application.validator;
 
 import static br.com.fiap.order.domain.messages.OrderMessages.ORDER_ITEM_QUANTITY_INVALID;
-import static br.com.fiap.order.shared.testdata.OrderTestData.DEFAULT_PRODUCT_DESCRIPTION;
 import static br.com.fiap.order.shared.testdata.OrderTestData.DEFAULT_PRODUCT_ID;
 import static br.com.fiap.order.shared.testdata.OrderTestData.DEFAULT_PRODUCT_PRICE;
 import static br.com.fiap.order.shared.testdata.OrderTestData.DEFAULT_PRODUCT_SKU;
@@ -28,7 +27,7 @@ class OrderItemQuantityValidatorTest {
   @ValueSource(strings = {"1", "1.25"})
   void shouldValidateOrderItemWhenItHasQuantityGreaterThanZero(String value) {
     var orderItemInputDto = new OrderItemInputDto(DEFAULT_PRODUCT_ID, DEFAULT_PRODUCT_SKU,
-        DEFAULT_PRODUCT_DESCRIPTION, new BigDecimal(value), DEFAULT_PRODUCT_PRICE);
+        new BigDecimal(value), DEFAULT_PRODUCT_PRICE);
     var orderItemsInputDto = List.of(orderItemInputDto);
 
     assertThatCode(() -> orderItemQuantityValidator.validate(orderItemsInputDto))
@@ -39,7 +38,7 @@ class OrderItemQuantityValidatorTest {
   @ValueSource(strings = {"-1", "0"})
   void shouldThrowExceptionWhenOrderItemQuantityIsInvalid(String value) {
     var orderItemInputDto = new OrderItemInputDto(DEFAULT_PRODUCT_ID, DEFAULT_PRODUCT_SKU,
-        DEFAULT_PRODUCT_DESCRIPTION, new BigDecimal(value), DEFAULT_PRODUCT_PRICE);
+        new BigDecimal(value), DEFAULT_PRODUCT_PRICE);
     var orderItemsInputDto = List.of(orderItemInputDto);
 
     assertThatThrownBy(() -> orderItemQuantityValidator.validate(orderItemsInputDto))

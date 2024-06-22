@@ -28,7 +28,6 @@ public class OrderItem extends BaseEntity {
   private Order order;
   private UUID productId;
   private String productSku;
-  private String productDescription;
   private BigDecimal quantity;
   private BigDecimal price;
   @JsonIgnore

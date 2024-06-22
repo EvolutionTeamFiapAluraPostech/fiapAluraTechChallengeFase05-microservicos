@@ -2,7 +2,6 @@ package br.com.fiap.order.application.usecase;
 
 import static br.com.fiap.order.shared.testdata.OrderTestData.DEFAULT_COMPANY_ID;
 import static br.com.fiap.order.shared.testdata.OrderTestData.DEFAULT_CUSTOMER_ID;
-import static br.com.fiap.order.shared.testdata.OrderTestData.DEFAULT_PRODUCT_DESCRIPTION;
 import static br.com.fiap.order.shared.testdata.OrderTestData.DEFAULT_PRODUCT_ID;
 import static br.com.fiap.order.shared.testdata.OrderTestData.DEFAULT_PRODUCT_PRICE;
 import static br.com.fiap.order.shared.testdata.OrderTestData.DEFAULT_PRODUCT_QUANTITY;
@@ -19,6 +18,7 @@ import br.com.fiap.order.application.validator.CompanyExistsValidator;
 import br.com.fiap.order.application.validator.CustomerExistsValidator;
 import br.com.fiap.order.application.validator.OrderItemPriceValidator;
 import br.com.fiap.order.application.validator.OrderItemQuantityValidator;
+import br.com.fiap.order.application.validator.ProductExistsValidator;
 import br.com.fiap.order.domain.entity.Order;
 import br.com.fiap.order.domain.exception.ValidatorException;
 import br.com.fiap.order.domain.service.OrderService;
@@ -45,16 +45,23 @@ class CreateOrderUseCaseTest {
   @Mock
   private CustomerExistsValidator customerExistsValidator;
   @Mock
+  private ProductExistsValidator productExistsValidator;
+  @Mock
   private OrderItemQuantityValidator orderItemQuantityValidator;
   @Mock
   private OrderItemPriceValidator orderItemPriceValidator;
   @InjectMocks
   private CreateOrderUseCase createOrderUseCase;
 
+  private List<String> getProductsIdListFrom(OrderInputDto orderInputDto) {
+    return orderInputDto.orderItems().stream().map(OrderItemInputDto::productId).toList();
+  }
+
   @Test
   void shouldCreateOrder() {
     var orderInputDto = OrderTestData.createNewOrderInputDto();
     var orderWithId = OrderTestData.createOrder();
+    var productsIdListFrom = getProductsIdListFrom(orderInputDto);
     when(orderService.save(any(Order.class))).thenReturn(orderWithId);
 
     var orderSaved = createOrderUseCase.execute(orderInputDto);
@@ -76,6 +83,7 @@ class CreateOrderUseCaseTest {
 
     verify(companyExistsValidator).validate(orderInputDto.companyId());
     verify(customerExistsValidator).validate(orderInputDto.customerId());
+    verify(productExistsValidator).validate(productsIdListFrom);
     verify(orderItemQuantityValidator).validate(orderInputDto.orderItems());
     verify(orderItemPriceValidator).validate(orderInputDto.orderItems());
   }
@@ -84,7 +92,7 @@ class CreateOrderUseCaseTest {
   @ValueSource(strings = {"-1", "0"})
   void shouldThrowExceptionWhenOrderItemQuantityIsInvalid(String quantity) {
     var orderItemInputDto = new OrderItemInputDto(DEFAULT_PRODUCT_ID, DEFAULT_PRODUCT_SKU,
-        DEFAULT_PRODUCT_DESCRIPTION, new BigDecimal(quantity), DEFAULT_PRODUCT_PRICE);
+        new BigDecimal(quantity), DEFAULT_PRODUCT_PRICE);
     var orderItemsInputDto = List.of(orderItemInputDto);
     var orderInputDto = new OrderInputDto(DEFAULT_COMPANY_ID,
         DEFAULT_CUSTOMER_ID,
@@ -103,7 +111,7 @@ class CreateOrderUseCaseTest {
   @ValueSource(strings = {"-1", "0"})
   void shouldThrowExceptionWhenOrderItemPriceIsInvalid(String price) {
     var orderItemInputDto = new OrderItemInputDto(DEFAULT_PRODUCT_ID, DEFAULT_PRODUCT_SKU,
-        DEFAULT_PRODUCT_DESCRIPTION, DEFAULT_PRODUCT_QUANTITY, new BigDecimal(price));
+        DEFAULT_PRODUCT_QUANTITY, new BigDecimal(price));
     var orderItemsInputDto = List.of(orderItemInputDto);
     var orderInputDto = new OrderInputDto(DEFAULT_COMPANY_ID,
         DEFAULT_CUSTOMER_ID,

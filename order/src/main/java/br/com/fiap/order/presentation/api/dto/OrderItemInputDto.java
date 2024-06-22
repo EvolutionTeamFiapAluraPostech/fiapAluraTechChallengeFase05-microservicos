@@ -14,7 +14,6 @@ public record OrderItemInputDto(
     @NotBlank
     String productId,
     String productSku,
-    String productDescription,
     @Schema(example = "1", description = "Quantidade do produto.")
     @NotNull
     @Positive
@@ -26,7 +25,7 @@ public record OrderItemInputDto(
 ) {
 
   public OrderItemInputDto(OrderItem orderItem) {
-    this(orderItem.getProductId().toString(), orderItem.getProductSku(),
-        orderItem.getProductDescription(), orderItem.getQuantity(), orderItem.getPrice());
+    this(orderItem.getProductId().toString(), orderItem.getProductSku(), orderItem.getQuantity(),
+        orderItem.getPrice());
   }
 }
