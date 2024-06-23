@@ -16,8 +16,7 @@ public class OrderIsAbleToUpdateValidator {
     if (!order.getOrderStatus().equals(AGUARDANDO_PAGAMENTO)) {
       throw new ValidatorException(new FieldError(this.getClass().getSimpleName(), ORDER_STATUS,
           ORDER_IS_NOT_VALID_FOR_UPDATE.formatted(AGUARDANDO_PAGAMENTO,
-              order.getOrderStatus().name(),
-              order.getId())));
+              order.getOrderStatus().name(), order.getId())));
     }
   }
 }
