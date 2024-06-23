@@ -1,6 +1,9 @@
 package br.com.fiap.order.application.usecase;
 
+import br.com.fiap.order.application.validator.CompanyExistsValidator;
+import br.com.fiap.order.application.validator.CustomerExistsValidator;
 import br.com.fiap.order.application.validator.OrderIsAbleToUpdateValidator;
+import br.com.fiap.order.application.validator.ProductExistsValidator;
 import br.com.fiap.order.application.validator.UuidValidator;
 import br.com.fiap.order.domain.entity.Order;
 import br.com.fiap.order.domain.entity.OrderItem;
@@ -17,12 +20,21 @@ public class UpdateOrderUseCase {
 
   private final OrderService orderService;
   private final UuidValidator uuidValidator;
+  private final CompanyExistsValidator companyExistsValidator;
+  private final CustomerExistsValidator customerExistsValidator;
+  private final ProductExistsValidator productExistsValidator;
   private final OrderIsAbleToUpdateValidator orderIsAbleToUpdateValidator;
 
   public UpdateOrderUseCase(OrderService orderService, UuidValidator uuidValidator,
+      CompanyExistsValidator companyExistsValidator,
+      CustomerExistsValidator customerExistsValidator,
+      ProductExistsValidator productExistsValidator,
       OrderIsAbleToUpdateValidator orderAlreadyDeliveredValidator) {
     this.orderService = orderService;
     this.uuidValidator = uuidValidator;
+    this.companyExistsValidator = companyExistsValidator;
+    this.customerExistsValidator = customerExistsValidator;
+    this.productExistsValidator = productExistsValidator;
     this.orderIsAbleToUpdateValidator = orderAlreadyDeliveredValidator;
   }
 
@@ -30,6 +42,8 @@ public class UpdateOrderUseCase {
   public Order execute(String id, OrderDto orderDto) {
     uuidValidator.validate(id);
     var order = orderService.findByIdRequired(UUID.fromString(id));
+    companyExistsValidator.validate(orderDto.companyId());
+    customerExistsValidator.validate(orderDto.customerId());
     orderIsAbleToUpdateValidator.validate(order);
     updateOrderAttributesToSave(order, orderDto);
     return orderService.save(order);
@@ -43,6 +57,8 @@ public class UpdateOrderUseCase {
 
   private void updateOrderItemAttributesToSave(List<OrderItem> orderItems,
       List<OrderItemDto> orderItemsDto) {
+    var productsId = orderItemsDto.stream().map(OrderItemDto::productId).toList();
+    productExistsValidator.validate(productsId);
     removeSavedOrderItemsThatWasRemovedInOrderItemsDto(orderItems, orderItemsDto);
     updateAttributesFromExistentOrderItem(orderItems, orderItemsDto);
     insertNewProductsToOrderItems(orderItems, orderItemsDto);

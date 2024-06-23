@@ -10,6 +10,8 @@ import static br.com.fiap.order.shared.testdata.OrderTestData.DEFAULT_PRODUCT_QU
 import static br.com.fiap.order.shared.testdata.OrderTestData.OTHER_PRODUCT_UUID;
 import static br.com.fiap.order.shared.testdata.OrderTestData.createNewOrder;
 import static br.com.fiap.order.shared.util.IsUUID.isUUID;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -24,16 +26,20 @@ import br.com.fiap.order.shared.annotation.DatabaseTest;
 import br.com.fiap.order.shared.annotation.IntegrationTest;
 import br.com.fiap.order.shared.api.JsonUtil;
 import br.com.fiap.order.shared.testdata.OrderTestData;
+import com.github.tomakehurst.wiremock.client.WireMock;
+import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import com.jayway.jsonpath.JsonPath;
 import jakarta.persistence.EntityManager;
 import java.math.BigDecimal;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.web.servlet.MockMvc;
 
 @IntegrationTest
 @DatabaseTest
+@WireMockTest(httpPort = 7070)
 class PutOrderApiTest {
 
   private static final String URL_ORDERS = "/orders/{id}";
@@ -60,6 +66,12 @@ class PutOrderApiTest {
     var order = createAndPersistOrder();
     order.setCustomerId(UUID.randomUUID());
     var orderInputDto = JsonUtil.toJson(order);
+    stubFor(WireMock.get("/companies/" + order.getCompanyId().toString())
+        .willReturn(aResponse().withStatus(HttpStatus.OK.value())));
+    stubFor(WireMock.get("/users/" + order.getCustomerId().toString())
+        .willReturn(aResponse().withStatus(HttpStatus.OK.value())));
+    stubFor(WireMock.get("/products/" + order.getOrderItems().get(0).getProductId())
+        .willReturn(aResponse().withStatus(HttpStatus.OK.value())));
 
     var request = put(URL_ORDERS, order.getId())
         .contentType(APPLICATION_JSON)
@@ -95,6 +107,14 @@ class PutOrderApiTest {
     order.getOrderItems().get(0).setPrice(ALTERNATIVE_PRODUCT_PRICE);
     var orderDto = new OrderDto(order);
     var orderInputDto = JsonUtil.toJson(orderDto);
+    stubFor(WireMock.get("/companies/" + order.getCompanyId().toString())
+        .willReturn(aResponse().withStatus(HttpStatus.OK.value())));
+    stubFor(WireMock.get("/users/" + order.getCustomerId().toString())
+        .willReturn(aResponse().withStatus(HttpStatus.OK.value())));
+    stubFor(WireMock.get("/products/" + order.getOrderItems().get(0).getProductId())
+        .willReturn(aResponse().withStatus(HttpStatus.OK.value())));
+    stubFor(WireMock.get("/products/" + order.getOrderItems().get(1).getProductId())
+        .willReturn(aResponse().withStatus(HttpStatus.OK.value())));
 
     var request = put(URL_ORDERS, order.getId())
         .contentType(APPLICATION_JSON)
@@ -167,6 +187,22 @@ class PutOrderApiTest {
   }
 
   @Test
+  void shouldReturnNotFoundWhenOrderCompanyWasNotFoundByCompanyId() throws Exception {
+    var order = createAndPersistOrder();
+    order.setCompanyId(UUID.randomUUID());
+    var orderInputDto = JsonUtil.toJson(order);
+    stubFor(WireMock.get("/companies/" + order.getCompanyId().toString())
+        .willReturn(aResponse().withStatus(HttpStatus.NOT_FOUND.value())));
+
+    var request = put(URL_ORDERS, order.getId())
+        .contentType(APPLICATION_JSON)
+        .content(orderInputDto);
+    mockMvc.perform(request)
+        .andExpect(status().isNotFound())
+        .andExpect(content().contentType(APPLICATION_JSON));
+  }
+
+  @Test
   void shouldReturnBadRequestWhenOrderCustomerIdWasNotFilled() throws Exception {
     var order = createAndPersistOrder();
     order.setCustomerId(null);
@@ -177,6 +213,24 @@ class PutOrderApiTest {
         .content(orderInputDto);
     mockMvc.perform(request)
         .andExpect(status().isBadRequest())
+        .andExpect(content().contentType(APPLICATION_JSON));
+  }
+
+  @Test
+  void shouldReturnNotFoundWhenOrderCustomerWasNotFoundByCustomerId() throws Exception {
+    var order = createAndPersistOrder();
+    order.setCustomerId(UUID.randomUUID());
+    var orderInputDto = JsonUtil.toJson(order);
+    stubFor(WireMock.get("/companies/" + order.getCompanyId().toString())
+        .willReturn(aResponse().withStatus(HttpStatus.OK.value())));
+    stubFor(WireMock.get("/users/" + order.getCustomerId().toString())
+        .willReturn(aResponse().withStatus(HttpStatus.NOT_FOUND.value())));
+
+    var request = put(URL_ORDERS, order.getId())
+        .contentType(APPLICATION_JSON)
+        .content(orderInputDto);
+    mockMvc.perform(request)
+        .andExpect(status().isNotFound())
         .andExpect(content().contentType(APPLICATION_JSON));
   }
 
@@ -205,6 +259,26 @@ class PutOrderApiTest {
         .content(orderInputDto);
     mockMvc.perform(request)
         .andExpect(status().isBadRequest())
+        .andExpect(content().contentType(APPLICATION_JSON));
+  }
+
+  @Test
+  void shouldReturnNotFoundWhenOrderItemsProductWasNotFoundByProductId() throws Exception {
+    var order = createAndPersistOrder();
+    order.getOrderItems().forEach(orderItem -> orderItem.setProductId(UUID.randomUUID()));
+    var orderInputDto = JsonUtil.toJson(order);
+    stubFor(WireMock.get("/companies/" + order.getCompanyId().toString())
+        .willReturn(aResponse().withStatus(HttpStatus.OK.value())));
+    stubFor(WireMock.get("/users/" + order.getCustomerId().toString())
+        .willReturn(aResponse().withStatus(HttpStatus.OK.value())));
+    stubFor(WireMock.get("/products/" + order.getOrderItems().get(0).getProductId())
+        .willReturn(aResponse().withStatus(HttpStatus.NOT_FOUND.value())));
+
+    var request = put(URL_ORDERS, order.getId())
+        .contentType(APPLICATION_JSON)
+        .content(orderInputDto);
+    mockMvc.perform(request)
+        .andExpect(status().isNotFound())
         .andExpect(content().contentType(APPLICATION_JSON));
   }
 
