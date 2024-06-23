@@ -68,48 +68,6 @@ public interface OrdersApi {
   OrderOutputDto putOrder(@Parameter(description = "UUID válido de um pedido") String id,
       @Parameter(description = "DTO com atributos para se atualizar um pedido.") OrderDto orderDto);
 
-  @Operation(summary = "Confirma o pagamento do pedido",
-      description = "Endpoint para confirmar o pagamento do pedido",
-      tags = {"OrdersApi"})
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "202", description = "successful operation", content = {
-          @Content(schema = @Schema(hidden = true))}),
-      @ApiResponse(responseCode = "400", description = "bad request para UUID inválido ou pagamento já realizado", content = {
-          @Content(schema = @Schema(hidden = true))}),
-      @ApiResponse(responseCode = "404", description = "not found para pedido não encontrado", content = {
-          @Content(schema = @Schema(hidden = true))}),
-  })
-  void patchOrderPaymentConfirmation(
-      @Parameter(description = "UUID válido de um pedido") String id);
-
-  @Operation(summary = "Atualiza o status do pedido para aguardando entrega",
-      description = "Endpoint para indicar que o pedido está aguardando entrega",
-      tags = {"OrdersApi"})
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "202", description = "successful operation", content = {
-          @Content(schema = @Schema(hidden = true))}),
-      @ApiResponse(responseCode = "400", description = "bad request para UUID inválido ou pedido já entregue", content = {
-          @Content(schema = @Schema(hidden = true))}),
-      @ApiResponse(responseCode = "404", description = "not found para pedido não encontrado", content = {
-          @Content(schema = @Schema(hidden = true))}),
-  })
-  void putOrderAwaitingDelivery(
-      @Parameter(description = "UUID válido de um pedido") String id);
-
-  @Operation(summary = "Confirma a entrega do pedido",
-      description = "Endpoint para confirmar a entrega do pedido",
-      tags = {"OrdersApi"})
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "202", description = "successful operation", content = {
-          @Content(schema = @Schema(hidden = true))}),
-      @ApiResponse(responseCode = "400", description = "bad request para UUID inválido ou entrega já realizado", content = {
-          @Content(schema = @Schema(hidden = true))}),
-      @ApiResponse(responseCode = "404", description = "not found para pedido não encontrado", content = {
-          @Content(schema = @Schema(hidden = true))}),
-  })
-  void putOrderDeliveryConfirmation(
-      @Parameter(description = "UUID válido de um pedido") String id);
-
   @Operation(summary = "Exclui um pedido",
       description = "Endpoint para excluir um pedido. A exclusão é feita por soft delete",
       tags = {"OrdersApi"})

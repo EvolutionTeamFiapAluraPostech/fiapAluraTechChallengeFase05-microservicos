@@ -1,8 +1,5 @@
 package br.com.fiap.order.presentation.api;
 
-import br.com.fiap.order.application.usecase.AwaitOrderDeliveryUseCase;
-import br.com.fiap.order.application.usecase.ConfirmOrderDeliveryUseCase;
-import br.com.fiap.order.application.usecase.ConfirmOrderPaymentUseCase;
 import br.com.fiap.order.application.usecase.CreateOrderUseCase;
 import br.com.fiap.order.application.usecase.DeleteOrderUseCase;
 import br.com.fiap.order.application.usecase.GetOrderByIdUseCase;
@@ -19,7 +16,6 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -36,25 +32,17 @@ public class OrdersController implements OrdersApi {
   private final GetOrderByIdUseCase getOrderByIdUseCase;
   private final GetOrdersByCompanyIdOrCustomerIdUseCase getOrdersByCompanyIdOrCustomerIdUseCase;
   private final UpdateOrderUseCase updateOrderUseCase;
-  private final ConfirmOrderPaymentUseCase confirmOrderPaymentUseCase;
-  private final AwaitOrderDeliveryUseCase awaitOrderDeliveryUseCase;
-  private final ConfirmOrderDeliveryUseCase confirmOrderDeliveryUseCase;
   private final DeleteOrderUseCase deleteOrderUseCase;
 
   public OrdersController(CreateOrderUseCase createOrderUseCase,
       GetOrderByIdUseCase getOrderByIdUseCase,
       GetOrdersByCompanyIdOrCustomerIdUseCase getOrdersByCompanyIdOrCustomerIdUseCase,
-      UpdateOrderUseCase updateOrderUseCase, ConfirmOrderPaymentUseCase confirmOrderPaymentUseCase,
-      AwaitOrderDeliveryUseCase awaitOrderDeliveryUseCase,
-      ConfirmOrderDeliveryUseCase confirmOrderDeliveryUseCase,
+      UpdateOrderUseCase updateOrderUseCase,
       DeleteOrderUseCase deleteOrderUseCase) {
     this.createOrderUseCase = createOrderUseCase;
     this.getOrderByIdUseCase = getOrderByIdUseCase;
     this.getOrdersByCompanyIdOrCustomerIdUseCase = getOrdersByCompanyIdOrCustomerIdUseCase;
     this.updateOrderUseCase = updateOrderUseCase;
-    this.confirmOrderPaymentUseCase = confirmOrderPaymentUseCase;
-    this.awaitOrderDeliveryUseCase = awaitOrderDeliveryUseCase;
-    this.confirmOrderDeliveryUseCase = confirmOrderDeliveryUseCase;
     this.deleteOrderUseCase = deleteOrderUseCase;
   }
 
@@ -90,27 +78,6 @@ public class OrdersController implements OrdersApi {
   public OrderOutputDto putOrder(@PathVariable String id, @RequestBody @Valid OrderDto orderDto) {
     var order = updateOrderUseCase.execute(id, orderDto);
     return OrderOutputDto.from(order);
-  }
-
-  @PatchMapping("/{id}/payment-confirmation")
-  @ResponseStatus(HttpStatus.NO_CONTENT)
-  @Override
-  public void patchOrderPaymentConfirmation(@PathVariable String id) {
-    confirmOrderPaymentUseCase.execute(id);
-  }
-
-  @PutMapping("/{id}/awaiting-delivery")
-  @ResponseStatus(HttpStatus.NO_CONTENT)
-  @Override
-  public void putOrderAwaitingDelivery(@PathVariable String id) {
-    awaitOrderDeliveryUseCase.execute(id);
-  }
-
-  @PutMapping("/{id}/delivery-confirmation")
-  @ResponseStatus(HttpStatus.NO_CONTENT)
-  @Override
-  public void putOrderDeliveryConfirmation(@PathVariable String id) {
-    confirmOrderDeliveryUseCase.execute(id);
   }
 
   @DeleteMapping("/{id}")
