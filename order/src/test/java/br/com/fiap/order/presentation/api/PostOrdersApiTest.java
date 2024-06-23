@@ -96,6 +96,22 @@ class PostOrdersApiTest {
   }
 
   @Test
+  void shouldReturnNotFoundWhenOrderCompanyIdDoesNotExist() throws Exception {
+    var order = createNewOrder();
+    order.setCompanyId(UUID.randomUUID());
+    var orderInputDto = JsonUtil.toJson(order);
+    stubFor(WireMock.get("/companies/" + order.getCompanyId().toString())
+        .willReturn(aResponse().withStatus(HttpStatus.NOT_FOUND.value())));
+
+    var request = post(URL_ORDERS)
+        .contentType(APPLICATION_JSON)
+        .content(orderInputDto);
+    mockMvc.perform(request)
+        .andExpect(status().isNotFound())
+        .andExpect(content().contentType(APPLICATION_JSON));
+  }
+
+  @Test
   void shouldReturnBadRequestWhenOrderCustomerIdWasNotFilled() throws Exception {
     var order = createNewOrder();
     order.setCustomerId(null);
@@ -106,6 +122,24 @@ class PostOrdersApiTest {
         .content(orderInputDto);
     mockMvc.perform(request)
         .andExpect(status().isBadRequest())
+        .andExpect(content().contentType(APPLICATION_JSON));
+  }
+
+  @Test
+  void shouldReturnNotFoundWhenOrderCustomerIdDoesNotExist() throws Exception {
+    var order = createNewOrder();
+    order.setCustomerId(UUID.randomUUID());
+    var orderInputDto = JsonUtil.toJson(order);
+    stubFor(WireMock.get("/companies/" + order.getCompanyId().toString())
+        .willReturn(aResponse().withStatus(HttpStatus.OK.value())));
+    stubFor(WireMock.get("/users/" + order.getCustomerId().toString())
+        .willReturn(aResponse().withStatus(HttpStatus.NOT_FOUND.value())));
+
+    var request = post(URL_ORDERS)
+        .contentType(APPLICATION_JSON)
+        .content(orderInputDto);
+    mockMvc.perform(request)
+        .andExpect(status().isNotFound())
         .andExpect(content().contentType(APPLICATION_JSON));
   }
 
@@ -143,6 +177,26 @@ class PostOrdersApiTest {
         .content(orderInputDto);
     mockMvc.perform(request)
         .andExpect(status().isBadRequest())
+        .andExpect(content().contentType(APPLICATION_JSON));
+  }
+
+  @Test
+  void shouldReturnNotFoundWhenOrderItemProductIdIdDoesNotExist() throws Exception {
+    var order = createNewOrder();
+    order.getOrderItems().get(0).setProductId(UUID.randomUUID());
+    var orderInputDto = JsonUtil.toJson(order);
+    stubFor(WireMock.get("/companies/" + order.getCompanyId().toString())
+        .willReturn(aResponse().withStatus(HttpStatus.OK.value())));
+    stubFor(WireMock.get("/users/" + order.getCustomerId().toString())
+        .willReturn(aResponse().withStatus(HttpStatus.OK.value())));
+    stubFor(WireMock.get("/products/" + order.getOrderItems().get(0).getProductId())
+        .willReturn(aResponse().withStatus(HttpStatus.NOT_FOUND.value())));
+
+    var request = post(URL_ORDERS)
+        .contentType(APPLICATION_JSON)
+        .content(orderInputDto);
+    mockMvc.perform(request)
+        .andExpect(status().isNotFound())
         .andExpect(content().contentType(APPLICATION_JSON));
   }
 
