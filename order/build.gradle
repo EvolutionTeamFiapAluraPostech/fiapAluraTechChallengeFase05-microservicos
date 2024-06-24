@@ -59,11 +59,10 @@ dependencyManagement {
     }
 }
 
-tasks.named('test') {
+/*tasks.named('test') {
     useJUnitPlatform()
-}
+}*/
 
-/*
 tasks.withType(Test).configureEach {
     description = 'Runs the unit tests.'
     group = 'verification'
@@ -79,4 +78,3 @@ tasks.register('integrationTest', Test) {
         includeTags 'integrationTest'
     }
 }
-*/
