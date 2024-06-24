@@ -112,7 +112,7 @@ O objetivo deste microsserviço é gerenciar os usuários do sistema, ou seja, o
 
         * http://localhost:8080/users/{id} 
             * Verbo GET - para realizar a pesquisa de um usuário pelo seu ID.
-                * Escopo: privado, requer autenticação.
+                * Escopo: privado, requer autenticação com role USER/ADMIN.
                 * Regras de negócio:
                     * O usuário será pesquisado por um UUID válido.
                     * O usuário já deve ter sido cadastrado anteriormente;
@@ -122,7 +122,7 @@ O objetivo deste microsserviço é gerenciar os usuários do sistema, ou seja, o
                     * Status 404 - Not found - se o usuário não foi encontrado por seu ID;
 
             * Verbo PUT - para realizar a atualização de dados de um usuário pelo seu ID. Necessário informar request body.
-                * Escopo: privado, requer autenticação.
+                * Escopo: privado, requer autenticação com role ADMIN.
                 * Regras de negócio:
                     * O usuário será pesquisado por um UUID válido;
                     * O usuário já deve ter sido cadastrado anteriormente;
@@ -135,7 +135,7 @@ O objetivo deste microsserviço é gerenciar os usuários do sistema, ou seja, o
                     * Status 409 - Conflict - se o e-mail ou cpf do usuário já está cadastrado na base de dados.
 
             * Verbo DELETE - para realizar a exclusão (soft delete) de um usuário pelo seu ID.
-                * Escopo: privado, requer autenticação.
+                * Escopo: privado, requer autenticação com role ADMIN.
                 * Regras de negócio:
                     * O usuário será pesquisado por um UUID válido.
                     * O usuário já deve ter sido cadastrado anteriormente;
@@ -146,7 +146,7 @@ O objetivo deste microsserviço é gerenciar os usuários do sistema, ou seja, o
 
         * http://localhost:8080/users/name-email
             * Verbo GET - para realizar a pesquisa paginada de um usuário pelo seu nome ou email.
-                * Escopo: privado, requer autenticação.
+                * Escopo: privado, requer autenticação com role USER/ADMIN.
                 * Regras de negócio:
                     * O usuário será pesquisado por um e-mail com formato válido.
                     * O usuário já deve ter sido cadastrado anteriormente;
@@ -162,7 +162,7 @@ O objetivo deste microsserviço é gerenciar os usuários do sistema, ou seja, o
     ![alt text](image-12.png)
 
     194 testes de integração e unidade, executados em 4,5 segudos, com 94% de classes e 89% de linhas de código cobertas.
-    Para realizar os testes de integração em endpoints autenticados, foi utilizado a anotação @WithMockUser("thomas.anderson@itcompany.com"), na anotação customizada IntegrationTest.
+    Para realizar os testes de integração em endpoints autenticados, foi utilizado a anotação @WithMockUser("thomas.anderson@itcompany.com", authorities = {"ADMIN"}), na anotação customizada IntegrationTest.
 
     ![alt text](image-15.png)
 
@@ -172,7 +172,7 @@ O objetivo deste microsserviço é gerenciar as empresas fornecedoras de um prod
     * API: 
         * http://localhost:8081/companies 
             * Verbo POST - para realizar o cadastro.
-                * Escopo: privado, requer autenticação.
+                * Escopo: privado, requer autenticação com role ADMIN.
                 * Regras de negócio:
                     * Atributos name, email, número do documento, tipo de documento, rua, número, bairro, cidade, Estado, país, e CEP obrigatórios;
                     * Atributos name e email com o tamanho máximo de 500 caracteres;
@@ -192,7 +192,7 @@ O objetivo deste microsserviço é gerenciar as empresas fornecedoras de um prod
 
         * http://localhost:8081/companies/{id} 
             * Verbo GET - para realizar a pesquisa de uma empresa pelo seu ID.
-                * Escopo: privado, requer autenticação.
+                * Escopo: privado, requer autenticação com role USER/ADMIN.
                 * Regras de negócio:
                     * A empresa será pesquisada por um UUID válido.
                     * A empresa já deve ter sido cadastrada anteriormente;
@@ -202,7 +202,7 @@ O objetivo deste microsserviço é gerenciar as empresas fornecedoras de um prod
                     * Status 404 - Not found - se a empresa não foi encontrada por seu ID;
 
             * Verbo PUT - para realizar a atualização de dados de uma empresa pelo seu ID. Necessário informar request body.
-                * Escopo: privado, requer autenticação.
+                * Escopo: privado, requer autenticação com role USER/ADMIN.
                 * Regras de negócio:
                     * A empresa será pesquisada por um UUID válido.
                     * A empresa já deve ter sido cadastrada anteriormente;
@@ -215,7 +215,7 @@ O objetivo deste microsserviço é gerenciar as empresas fornecedoras de um prod
                     * Status 409 - Conflict - se o e-mail ou cpf da empresa já está cadastrado na base de dados.
 
             * Verbo DELETE - para realizar a exclusão (soft delete) de uma empresa pelo seu ID.
-                * Escopo: privado, requer autenticação.
+                * Escopo: privado, requer autenticação com role USER/ADMIN.
                 * Regras de negócio:
                     * A empresa será pesquisada por um UUID válido.
                     * A empresa já deve ter sido cadastrada anteriormente;
@@ -226,7 +226,7 @@ O objetivo deste microsserviço é gerenciar as empresas fornecedoras de um prod
 
         * http://localhost:8081/companies/name-email
             * Verbo GET - para realizar a pesquisa paginada de uma empresa pelo seu nome ou email.
-                * Escopo: privado, requer autenticação.
+                * Escopo: privado, requer autenticação com role USER/ADMIN.
                 * Regras de negócio:
                     * A empresa será pesquisada por um e-mail com formato válido.
                     * A empresa já deve ter sido cadastrada anteriormente;
@@ -241,7 +241,7 @@ O objetivo deste microsserviço é gerenciar as empresas fornecedoras de um prod
     ![alt text](image-14.png)
 
     326 testes de integração e unidade, executados em 8 segudos, com 97% de classes e 86% de linhas de código cobertas.
-    Para realizar os testes de integração em endpoints autenticados, foi utilizado a anotação @WithMockUser("thomas.anderson@itcompany.com"), na anotação customizada IntegrationTest.
+    Para realizar os testes de integração em endpoints autenticados, foi utilizado a anotação @WithMockUser("thomas.anderson@itcompany.com", authorities = {"ADMIN"}), na anotação customizada IntegrationTest.
 
     ![alt text](image-16.png)
 
@@ -250,10 +250,17 @@ O objetivo deste microsserviço é gerenciar os produtos/serviços cadastrados p
   * Microsserviço de Gerenciamento de produtos 
     * API: 
         * http://localhost:8082/products
-            * Verbo POST - para realizar o cadastro.
-                * Escopo: privado, requer autenticação.
+            * Verbo GET - para realizar a pesquisa de todos os produtos, retornando uma lista paginada.
+                * Escopo: privado, requer autenticação com role USER/ADMIN.
                 * Regras de negócio:
-                    * Atributos sku, descrição, unidade de medida, quantidade em estoque e preço obrigatórios;
+                    * Este endpoint retornará uma coleção paginada de produtos se existirem registros no banco de dados.
+                * Http response status do endpoint:
+                    * Status 200 - Ok - se existirem produtos cadastrados;
+
+            * Verbo POST - para realizar o cadastro.
+                * Escopo: privado, requer autenticação com role ADMIN.
+                * Regras de negócio:
+                    * Atributos sku, descrição, unidade de medida, quantidade em estoque, preço obrigatórios e url da imagem.
                     * Atributos sku e unidade de medida com o tamanho máximo de 20 caracteres;
                     * Atributo descrição mínimo de 3 e máximo de 500 caracteres;
                     * Atributos quantidade em estoque e preço unitário com o valor maior que zero;
@@ -265,7 +272,7 @@ O objetivo deste microsserviço é gerenciar os produtos/serviços cadastrados p
 
         * http://localhost:8082/products/{id}
             * Verbo GET - para realizar a pesquisa de um produto pelo seu ID.
-                * Escopo: privado, requer autenticação.
+                * Escopo: privado, requer autenticação com role USER/ADMIN.
                 * Regras de negócio:
                     * O produto será pesquisada por um UUID válido.
                     * O produto já deve ter sido cadastrado anteriormente;
@@ -275,7 +282,7 @@ O objetivo deste microsserviço é gerenciar os produtos/serviços cadastrados p
                     * Status 404 - Not found - se o produto não foi encontrado por seu ID;
 
             * Verbo PUT - para realizar a atualização de dados de um produto pelo seu ID. Necessário informar request body.
-                * Escopo: privado, requer autenticação.
+                * Escopo: privado, requer autenticação com role ADMIN.
                 * Regras de negócio:
                     * O produto será pesquisado por um UUID válido.
                     * O produto já deve ter sido cadastrado anteriormente;
@@ -288,7 +295,7 @@ O objetivo deste microsserviço é gerenciar os produtos/serviços cadastrados p
                     * Status 409 - Conflict - se o sku do produto já está cadastrado na base de dados.
 
             * Verbo DELETE - para realizar a exclusão (soft delete) de um produto pelo seu ID.   
-                * Escopo: privado, requer autenticação.
+                * Escopo: privado, requer autenticação com role ADMIN.
                 * Regras de negócio:
                     * O produto será pesquisado por um UUID válido.
                     * O produto já deve ter sido cadastrado anteriormente;
@@ -299,7 +306,7 @@ O objetivo deste microsserviço é gerenciar os produtos/serviços cadastrados p
 
         * http://localhost:8082/products/sku-description
             * Verbo GET - para realizar a pesquisa paginada de um produto pelo seu sku ou descrição.
-                * Escopo: privado, requer autenticação.
+                * Escopo: privado, requer autenticação com role USER/ADMIN.
                 * Regras de negócio:
                     * O produto já deve ter sido cadastrado anteriormente;
                 * Http response status do endpoint:
@@ -313,7 +320,7 @@ O objetivo deste microsserviço é gerenciar os produtos/serviços cadastrados p
     ![alt text](image-2.png)
 
     82 testes de integração e unidade, executados em 3 segudos, com 96% de classes e 81% de linhas de código cobertas.
-    Para realizar os testes de integração em endpoints autenticados, foi utilizado a anotação @WithMockUser("thomas.anderson@itcompany.com"), na anotação customizada IntegrationTest.
+    Para realizar os testes de integração em endpoints autenticados, foi utilizado a anotação @WithMockUser("thomas.anderson@itcompany.com", authorities = {"ADMIN"}), na anotação customizada IntegrationTest.
 
     ![alt text](image-17.png)
 
@@ -323,25 +330,22 @@ O objetivo deste microsserviço é gerenciar os pedidos cadastrados pelos client
     * API: 
         * http://localhost:8083/orders
             * Verbo POST - para realizar o cadastro.
-                * Escopo: privado, requer autenticação.
+                * Escopo: privado, requer autenticação com role USER/ADMIN.
                 * Regras de negócio:
-                    * Atributos ID da empresa/usuário, nome da empresa/usuário e-mail da empresa/usuário, número do documento da empresa/usuário, tipo do documento da empresa/usuário (CFP ou CNPJ), rua da empresa/usuário, número da empresa/usuário, bairro da empresa/usuário, cidade da empresa/usuário, Estado da empresa/usuário, CEP da empresa/usuário, lista dos produtos com ID do produto, sku do produto, descrição do produto, unidade de medida do produto, quantidade do produto e preço unitário obrigatórios;
-                    * Atributos name e email com o tamanho máximo de 500 caracteres;
-                    * Atributo docNumber com o tamanho máximo de 14 caracteres; 
-                    * Atributo rua com o tamanho máximo de 255 caracteres;
-                    * Atributo número, bairro, cidade e país com o tamanho máximo de 100 caracteres;
-                    * Atributo Estado com o tamanho máximo de 2 caracteres;
-                    * Atributo CEP com o tamanho máximo de 8 caracteres;
+                    * Atributos ID da empresa/usuário, lista dos produtos com ID do produto, sku do produto, unidade de medida do produto, quantidade do produto e preço unitário obrigatórios;
                     * Atributos sku e unidade de medida com o tamanho máximo de 20 caracteres;
-                    * Atributo descrição mínimo de 3 e máximo de 500 caracteres;
                     * Atributos quantidade em estoque e preço unitário com o valor maior que zero;
+                    * Validar se o atributo companyId é de uma empresa existente no microsserviço de gerenciamento de empresas;
+                    * Validar se o atributo customerId é de um usuário existente no microsserviço de gerenciamento de usuários;
+                    * Validar se o atributo productId é de um produto existente no microsserviço de gerenciamento de produtos;
                 * Http response status do endpoint:
                     * Status 201 - Created - cadastro realizado com input de dados válidos;
                     * Status 400 - Bad request - se alguma regra foi violada;
+                    * Status 404 - Not found - se o pedido, empresa, cliente ou produto não foi encontrado por seu ID;
 
         * http://localhost:8083/orders/{id}
             * Verbo GET - para realizar a pesquisa de um pedido pelo seu ID.
-                * Escopo: privado, requer autenticação.
+                * Escopo: privado, requer autenticação com role USER/ADMIN.
                 * Regras de negócio:
                     * O pedido será pesquisada por um UUID válido.
                     * O pedido já deve ter sido cadastrado anteriormente;
@@ -351,25 +355,21 @@ O objetivo deste microsserviço é gerenciar os pedidos cadastrados pelos client
                     * Status 404 - Not found - se o pedido não foi encontrado por seu ID;
 
             * Verbo PUT - para realizar a atualização de dados de um pedido pelo seu ID. Necessário informar request body.
-                * Escopo: privado, requer autenticação.
+                * Escopo: privado, requer autenticação com role USER/ADMIN.
                 * Regras de negócio:
-                    * Atributos ID da empresa/usuário, nome da empresa/usuário e-mail da empresa/usuário, número do documento da empresa/usuário, tipo do documento da empresa/usuário (CFP ou CNPJ), rua da empresa/usuário, número da empresa/usuário, bairro da empresa/usuário, cidade da empresa/usuário, Estado da empresa/usuário, CEP da empresa/usuário, lista dos produtos com ID do produto, sku do produto, descrição do produto, unidade de medida do produto, quantidade do produto e preço unitário obrigatórios;
-                    * Atributos name e email com o tamanho máximo de 500 caracteres;
-                    * Atributo docNumber com o tamanho máximo de 14 caracteres; 
-                    * Atributo rua com o tamanho máximo de 255 caracteres;
-                    * Atributo número, bairro, cidade e país com o tamanho máximo de 100 caracteres;
-                    * Atributo Estado com o tamanho máximo de 2 caracteres;
-                    * Atributo CEP com o tamanho máximo de 8 caracteres;
+                    * Atributos ID da empresa/usuário, lista dos produtos com ID do produto, sku do produto, unidade de medida do produto, quantidade do produto e preço unitário obrigatórios;
                     * Atributos sku e unidade de medida com o tamanho máximo de 20 caracteres;
-                    * Atributo descrição mínimo de 3 e máximo de 500 caracteres;
                     * Atributos quantidade em estoque e preço unitário com o valor maior que zero;
+                    * Validar se o atributo companyId é de uma empresa existente no microsserviço de gerenciamento de empresas;
+                    * Validar se o atributo customerId é de um usuário existente no microsserviço de gerenciamento de usuários;
+                    * Validar se o atributo productId é de um produto existente no microsserviço de gerenciamento de produtos;
                 * Http response status do endpoint:
                     * Status 202 - Accepted - atualização realizada com input de dados válidos;
                     * Status 400 - Bad request - se alguma regra foi violada;
-                    * Status 404 - Not found - se o pedido não foi encontrado por seu ID para ser atualizado;
+                    * Status 404 - Not found - se o pedido, empresa, cliente ou produto não foi encontrado por seu ID para ser atualizado;
 
             * Verbo DELETE - para realizar a exclusão (soft delete) de um pedido pelo seu ID.   
-                * Escopo: privado, requer autenticação.
+                * Escopo: privado, requer autenticação com role USER/ADMIN.
                 * Regras de negócio:
                     * O pedido será pesquisado por um UUID válido.
                     * O pedido já deve ter sido cadastrado anteriormente;
@@ -378,46 +378,9 @@ O objetivo deste microsserviço é gerenciar os pedidos cadastrados pelos client
                     * Status 400 - Bad request - se alguma regra foi violada;
                     * Status 404 - Not found - se o pedido não foi encontrado por seu ID para ser excluído;
 
-        * http://localhost:8083/orders/{id}/payment-confirmation
-            * Verbo PATCH - para informar o pagamento do pedido. Neste endpoint será validado se o pedido já foi pago e evitar duplicidade de pagamento.
-                * Escopo: privado, requer autenticação.
-                * Regras de negócio:
-                    * O pedido será pesquisado por um UUID válido.
-                    * O pedido já deve ter sido cadastrado anteriormente;
-                    * O pedido não deve ter sido pago;
-                * Http response status do endpoint:
-                    * Status 204 - No content - operação realizada com sucesso;
-                    * Status 400 - Bad request - se alguma regra foi violada;
-                    * Status 404 - Not found - se o pedido não foi encontrado por seu ID para ter o pagamento confirmado;
-
-        * http://localhost:8083/orders/{id}/awaiting-delivery
-            * Verbo PATCH - para informar que o pedido está em entrega. Neste endpoint será validado se o pedido foi pago e se já está no status atual, evitando persistência desnecessária no banco de dados.
-                * Escopo: privado, requer autenticação.
-                * Regras de negócio:
-                    * O pedido será pesquisado por um UUID válido.
-                    * O pedido já deve ter sido cadastrado anteriormente;
-                    * O pedido deve ter sido pago;
-                * Http response status do endpoint:
-                    * Status 204 - No content - operação realizada com sucesso;
-                    * Status 400 - Bad request - se alguma regra foi violada;
-                    * Status 404 - Not found - se o pedido não foi encontrado por seu ID para ter o status atualizado;
-
-        * http://localhost:8083/orders/{id}/delivery-confirmation
-            * Verbo PUT - para informar que o pedido foi entregue. Neste endpoint será validado se o pedido foi pago e se já está no status atual, evitando persistência desnecessária no banco de dados.
-                * Escopo: privado, requer autenticação.
-                * Regras de negócio:
-                    * O pedido será pesquisado por um UUID válido.
-                    * O pedido já deve ter sido cadastrado anteriormente;
-                    * O pedido não deve ter sido entregue;
-                    * O pedido deve ter sido pago;
-                * Http response status do endpoint:
-                    * Status 204 - No content - operação realizada com sucesso;
-                    * Status 400 - Bad request - se alguma regra foi violada;
-                    * Status 404 - Not found - se o pedido não foi encontrado por seu ID para ter o status atualizado;
-
         * http://localhost:8083/orders/company-customer
             * Verbo GET - para realizar a pesquisa paginada de um pedido pela empresa ou cliente.        
-                * Escopo: privado, requer autenticação.
+                * Escopo: privado, requer autenticação com role USER/ADMIN.
                 * Regras de negócio:
                     * O pedido já deve ter sido cadastrado anteriormente;
                 * Http response status do endpoint:
@@ -425,15 +388,135 @@ O objetivo deste microsserviço é gerenciar os pedidos cadastrados pelos client
                     * Status 200 - Ok - O pedido não encontrado, mas com response body com propriedades de paginação, porém com o content vazio;
                     * Status 400 - Bad request - se alguma regra foi violada;
 
+        * http://localhost:8083/orders/{id}/payment
+            * Verbo PATCH - para realizar a atualização status do pedido para PAGO.
+                * Escopo: privado, requer autenticação com role USER/ADMIN.
+                * Regras de negócio:
+                    * Validar se o atributo ID é de um pedido existente;
+                    * Validar se o atributo STATUS é de AGUARDANDO_PAGAMENTO;
+                * Http response status do endpoint:
+                    * Status 202 - Accepted - atualização realizada com input de dados válidos;
+                    * Status 400 - Bad request - se alguma regra foi violada;
+                    * Status 404 - Not found - se o não foi encontrado por seu ID para ser atualizado;
+
     * Documentação: http://localhost:8083/swagger-ui/index.html
     * Banco de dados: http://localhost:5435/order-db
 
 ![alt text](image-3.png)
 
 Testes de integração e unidade com 85% de linhas de código cobertas.
+Para os testes dos endpoints que realizam comunicação a um microsserviço externo, seu respectivo endpoint foi mockado com o Wiremock, para tornar o teste independente e não falhar pela dependência do microsserviço externo.
 
 ![alt text](image-9.png)
 
+# Microsserviço de gerenciamento de pagamentos
+O objetivo deste microsserviço é gerenciar os pagamentos cadastrados pelos clientes, que realizaram a compra de um pedido.
+  * Microsserviço de Gerenciamento de pagamentos 
+    * API: 
+        * http://localhost:8084/payments
+            * Verbo POST - para realizar o cadastro do pagamento.
+                * Escopo: privado, requer autenticação com role USER/ADMIN.
+                * Regras de negócio:
+                    * Atributos ID pedido e tipo de pagamento obrigatórios.
+                    * Validar se o atributo orderId é de um pedido existente no microsserviço de gerenciamento de pedidos;
+                    * Recuperar os dados do pedido no microsserviço de pedidos;
+                    * Os status do pagamento poderão ser PENDENTE ou REALIZADO.
+                    * O pagamento será cadastrado com o status PENDENTE. 
+                * Http response status do endpoint:
+                    * Status 201 - Created - cadastro realizado com input de dados válidos;
+                    * Status 400 - Bad request - se alguma regra foi violada;
+                    * Status 404 - Not found - se o pedido, empresa, cliente ou produto não foi encontrado por seu ID;
+
+        * http://localhost:8084/payments/{id}
+            * Verbo GET - para realizar a pesquisa de um pagamento pelo seu ID.
+                * Escopo: privado, requer autenticação com role USER/ADMIN.
+                * Regras de negócio:
+                    * O pagamento será pesquisada por um UUID válido.
+                    * O pagamento já deve ter sido cadastrado anteriormente;
+                * Http response status do endpoint:
+                    * Status 200 - Ok - se o pagamento foi encontrado por seu ID;
+                    * Status 400 - Bad request - se alguma regra foi violada;
+                    * Status 404 - Not found - se o pagamento não foi encontrado por seu ID;
+
+            * Verbo PUT - para realizar a atualização de dados de um pagamento pelo seu ID. Necessário informar request body.
+                * Escopo: privado, requer autenticação com role USER/ADMIN.
+                * Regras de negócio:
+                    * Atributos ID da empresa/usuário/pedido, lista dos produtos com ID do produto, sku do produto, unidade de medida do produto, quantidade do produto e preço unitário obrigatórios;
+                    * Atributos quantidade em estoque e preço unitário com o valor maior que zero;
+                    * Validar se o atributo companyId é de uma empresa existente no microsserviço de gerenciamento de empresas;
+                    * Validar se o atributo customerId é de um usuário existente no microsserviço de gerenciamento de usuários;
+                    * Validar se o atributo orderId é de um pedido existente no microsserviço de gerenciamento de pedidos;
+                    * Validar se o atributo productId é de um produto existente no microsserviço de gerenciamento de produtos;
+                * Http response status do endpoint:
+                    * Status 202 - Accepted - atualização realizada com input de dados válidos;
+                    * Status 400 - Bad request - se alguma regra foi violada;
+                    * Status 404 - Not found - se o pedido, empresa, cliente ou produto não foi encontrado por seu ID para ser atualizado;
+
+            * Verbo DELETE - para realizar a exclusão (soft delete) de um pagamento pelo seu ID.   
+                * Escopo: privado, requer autenticação com role USER/ADMIN.
+                * Regras de negócio:
+                    * O pedido será pesquisado por um UUID válido.
+                    * O pagamento já deve ter sido cadastrado anteriormente e não pode ter sido pago (status REALIZADO).
+                * Http response status do endpoint:
+                    * Status 204 - No content - exclusão realizada com sucesso;
+                    * Status 400 - Bad request - se alguma regra foi violada;
+                    * Status 404 - Not found - se o pagamento do pedido não foi encontrado por seu ID para ser excluído;
+
+            * Verbo PATCH - para realizar o pagamento de um pedido.
+                * Escopo: privado, requer autenticação com role USER/ADMIN.
+                * Regras de negócio:
+                    * O pagamento será pesquisada por um UUID válido.
+                    * O pagamento já deve ter sido cadastrado anteriormente;
+                    * Os status do pagamento deve ser PENDENTE.
+                    * O microsserviço de pagamento realizará uma requisição para o microsserviço de pedido e atualizar o status do pedido para PAGO. 
+                * Http response status do endpoint:
+                    * Status 202 - Accepted - atualização realizada com input de dados válidos;
+                    * Status 400 - Bad request - se alguma regra foi violada;
+                    * Status 404 - Not found - se o pagamento não foi encontrado por seu ID para ser atualizado;
+
+        * http://localhost:8084/payments/{id}/open
+            * Verbo PATCH - para realizar o estorno de um pedido pago.
+                * Escopo: privado, requer autenticação com role USER/ADMIN.
+                * Regras de negócio:
+                    * O pagamento será pesquisada por um UUID válido.
+                    * O pagamento já deve ter sido cadastrado anteriormente;
+                    * Os status do pagamento deve ser REALIZADO.
+                    * O microsserviço de pagamento realizará uma requisição para o microsserviço de pedido e atualizar o status do pedido para AGUARDANDO_PAGAMENTO. 
+                * Http response status do endpoint:
+                    * Status 202 - Accepted - atualização realizada com input de dados válidos;
+                    * Status 400 - Bad request - se alguma regra foi violada;
+                    * Status 404 - Not found - se o pagamento não foi encontrado por seu ID para ser atualizado;
+
+        * http://localhost:8084/payments/order/{id}
+            * Verbo GET - para realizar a pesquisa de um pagamento de um pedido pelo ID do pedido.
+                * Escopo: privado, requer autenticação com role USER/ADMIN.
+                * Regras de negócio:
+                    * O pagamento será pesquisada por um UUID de pedido válido.
+                    * O pagamento já deve ter sido cadastrado anteriormente;
+                * Http response status do endpoint:
+                    * Status 200 - Ok - se o pagamento foi encontrado por seu ID;
+                    * Status 400 - Bad request - se alguma regra foi violada;
+                    * Status 404 - Not found - se o pagamento do pedido não foi encontrado pelo ID do pedido;
+
+        * http://localhost:8084/payments/company-customer
+            * Verbo GET - para realizar a pesquisa paginada de um pagamento pela empresa ou cliente.        
+                * Escopo: privado, requer autenticação com role USER/ADMIN.
+                * Regras de negócio:
+                    * O pagamento já deve ter sido cadastrado anteriormente;
+                * Http response status do endpoint:
+                    * Status 200 - Ok - O pagamento encontrado com sucesso;
+                    * Status 200 - Ok - O pagamento não encontrado, mas com response body com propriedades de paginação, porém com o content vazio;
+                    * Status 400 - Bad request - se alguma regra foi violada;
+
+    * Documentação: http://localhost:8084/swagger-ui/index.html
+    * Banco de dados: http://localhost:5436/payment-db
+
+![alt text](image-18.png)
+
+Testes de integração e unidade com 85% de linhas de código cobertas.
+Para os testes dos endpoints que realizam comunicação a um microsserviço externo, seu respectivo endpoint foi mockado com o Wiremock, para tornar o teste independente e não falhar pela dependência do microsserviço externo.
+
+![alt text](image-9.png)
 
 # Qualidade de software
 Para garantir a qualidade de software, implementamos testes de unidade e de integração na grande maioria do código. Para identificar o que foi testado, utilizamos a cobertura de testes de código do próprio IntelliJ IDEA e o ArchUnit. A decisão de utilizar o próprio IntelliJ foi motivada pela manutenção de menor número de dependências a serem adicionadas no projeto, com o objetivo de reduzir possibilidades de libs externas abrirem uma fragilidade na segurança da aplicação (lembrando do caso do Log4J) e que no cenário em que o projeto foi desenvolvido não foi necessária a adição do Jacoco. O ArchUnit foi utilizado para identificar através de um teste a existência de testes correspondentes para as classes de serviço, use case, validators, identifica se as classes foram criadas respeitando a arquitetura/design do projeto (cada classe deverá ser criada em sua respectiva pasta, conforme seu objetivo, não é permitido injetar repositories em classes indevidas, métodos de use case que executam operações de escrita em banco de dados devem ser anotadas com @Transactional).
