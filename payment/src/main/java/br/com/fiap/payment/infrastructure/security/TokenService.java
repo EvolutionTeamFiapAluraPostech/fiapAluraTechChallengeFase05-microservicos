@@ -1,0 +1,71 @@
+package br.com.fiap.payment.infrastructure.security;
+
+import static org.flywaydb.core.internal.util.JsonUtils.getFromJson;
+
+import br.com.fiap.payment.domain.entity.User;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import java.util.Base64;
+import java.util.Collections;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
+@Service
+public class TokenService {
+
+  private static final String ISSUER = "API FIAP";
+
+  @Value("${api.security.token.secret}")
+  private String secret;
+
+  public User getUserFrom(String token) {
+    var subject = getSubject(token);
+    if (StringUtils.hasLength(subject)) {
+      var payload = this.getPayloadFrom(token);
+      return createUserFrom(payload);
+    }
+    return null;
+  }
+
+  private User createUserFrom(String payload) {
+    var authorities = getAuthorities(payload);
+    var id = getFromJson(payload, "id");
+    var name = getFromJson(payload, "name");
+    var sub = getFromJson(payload, "sub");
+    var iss = getFromJson(payload, "iss");
+    var exp = Long.valueOf(getFromJson(payload, "exp"));
+    return new User(id, name, sub, iss, exp, authorities);
+  }
+
+  private String getSubject(String tokenJWT) {
+    try {
+      var algorithm = Algorithm.HMAC256(this.secret);
+      return JWT.require(algorithm)
+          .withIssuer(ISSUER)
+          .build()
+          .verify(tokenJWT)
+          .getSubject();
+    } catch (JWTVerificationException exception) {
+      throw new RuntimeException("Token JWT inválido ou expirado!", exception);
+    }
+  }
+
+  private List<GrantedAuthority> getAuthorities(String payload) {
+    var authorities = getFromJson(payload, "authorities");
+    if (authorities != null && !authorities.trim().isEmpty()) {
+      return Collections.singletonList(new SimpleGrantedAuthority(authorities));
+    }
+    return Collections.emptyList();
+  }
+
+  private String getPayloadFrom(String tokenJWT) {
+    var chunks = tokenJWT.split("\\.");
+    var decoder = Base64.getUrlDecoder();
+    return new String(decoder.decode(chunks[1]));
+  }
+}

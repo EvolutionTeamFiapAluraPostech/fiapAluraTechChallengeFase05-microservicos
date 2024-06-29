@@ -6,9 +6,9 @@ spring:
     database: postgresql
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5436/payment-db
-    username: payment-postgres-user
-    password: payment-postgres-pwd
+    url: ${PAYMENT-POSTGRES-DB:jdbc:postgresql://localhost:5436/payment-db}
+    username: ${PAYMENT-POSTGRES-USER:payment-postgres-user}
+    password: ${PAYMENT-POSTGRES-PWD:payment-postgres-pwd}
   flyway:
     baseline-on-migrate: true
     schemas: 'flyway'
