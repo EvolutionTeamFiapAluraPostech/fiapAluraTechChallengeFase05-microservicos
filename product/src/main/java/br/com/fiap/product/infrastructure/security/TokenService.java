@@ -14,16 +14,33 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 @Service
 public class TokenService {
 
-  private static final String ISSUER = "API FIAP Products";
+  private static final String ISSUER = "API FIAP";
 
   @Value("${api.security.token.secret}")
   private String secret;
 
-  public String getSubject(String tokenJWT) {
+
+  public User getUserFrom(String token) {
+    var subject = getSubject(token);
+    if (StringUtils.hasLength(subject)) {
+      var payload = this.getPayloadFrom(token);
+      var id = getFromJson(payload, "id");
+      var name = getFromJson(payload, "name");
+      var sub = getFromJson(payload, "sub");
+      var iss = getFromJson(payload, "iss");
+      var exp = Long.valueOf(getFromJson(payload, "exp"));
+      var authorities = getAuthorities(payload);
+      return new User(id, name, sub, iss, exp, authorities);
+    }
+    return null;
+  }
+
+  private String getSubject(String tokenJWT) {
     try {
       var algorithm = Algorithm.HMAC256(this.secret);
       return JWT.require(algorithm)
@@ -34,17 +51,6 @@ public class TokenService {
     } catch (JWTVerificationException exception) {
       throw new RuntimeException("Token JWT inválido ou expirado!", exception);
     }
-  }
-
-  public User getUserFrom(String token) {
-    var payload = this.getPayloadFrom(token);
-    var id = getFromJson(payload, "id");
-    var name = getFromJson(payload, "name");
-    var sub = getFromJson(payload, "sub");
-    var iss = getFromJson(payload, "iss");
-    var exp = Long.valueOf(getFromJson(payload, "exp"));
-    var authorities = getAuthorities(payload);
-    return new User(id, name, sub, iss, exp, authorities);
   }
 
   private List<GrantedAuthority> getAuthorities(String payload) {
