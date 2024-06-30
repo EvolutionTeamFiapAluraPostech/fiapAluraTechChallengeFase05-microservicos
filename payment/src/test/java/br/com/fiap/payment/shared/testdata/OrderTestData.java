@@ -41,7 +41,7 @@ public final class OrderTestData {
     var orderItemDto = new OrderItemDto(DEFAULT_ORDER_ITEM_ID, DEFAULT_PRODUCT_ID,
         BigDecimal.ONE, BigDecimal.ZERO);
     return new OrderDto(DEFAULT_ORDER_ID, DEFAULT_COMPANY_ID, DEFAULT_CUSTOMER_ID,
-        Collections.emptyList());
+        Collections.singletonList(orderItemDto));
   }
 
   private OrderTestData() {

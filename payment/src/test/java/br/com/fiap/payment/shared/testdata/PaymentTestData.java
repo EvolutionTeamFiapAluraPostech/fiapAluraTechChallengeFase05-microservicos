@@ -4,6 +4,11 @@ import static br.com.fiap.payment.domain.enums.PaymentStatus.REALIZADO;
 import static br.com.fiap.payment.domain.enums.PaymentType.PIX;
 
 import br.com.fiap.payment.domain.entity.Payment;
+import br.com.fiap.payment.domain.enums.PaymentType;
+import br.com.fiap.payment.infrastructure.httpclient.company.dto.CompanyDto;
+import br.com.fiap.payment.infrastructure.httpclient.customer.dto.CustomerDto;
+import br.com.fiap.payment.infrastructure.httpclient.order.dto.OrderDto;
+import br.com.fiap.payment.presentation.api.dto.PaymentInputDto;
 import java.math.BigDecimal;
 import java.util.UUID;
 
@@ -36,6 +41,27 @@ public final class PaymentTestData {
 
   public static Payment createPayment() {
     var payment = createNewPayment();
+    payment.setId(UUID.randomUUID());
+    return payment;
+  }
+
+  public static Payment createPaymentFrom(PaymentInputDto paymentInputDto, OrderDto orderDto,
+      CompanyDto companyDto, CustomerDto customerDto) {
+    return Payment.builder()
+        .orderId(paymentInputDto.orderId())
+        .companyId(orderDto.companyId())
+        .companyName(companyDto.name())
+        .customerId(orderDto.customerId())
+        .customerName(customerDto.name())
+        .paymentType(PaymentType.valueOf(paymentInputDto.paymentType()))
+        .paymentStatus(REALIZADO)
+        .paymentTotalAmount(orderDto.calculateTotalAmount())
+        .build();
+  }
+
+  public static Payment createPaymentSavedFrom(PaymentInputDto paymentInputDto, OrderDto orderDto,
+      CompanyDto companyDto, CustomerDto customerDto) {
+    var payment = createPaymentFrom(paymentInputDto, orderDto, companyDto, customerDto);
     payment.setId(UUID.randomUUID());
     return payment;
   }

@@ -3,6 +3,8 @@ package br.com.fiap.payment.application.usecase;
 import static br.com.fiap.payment.domain.enums.PaymentStatus.REALIZADO;
 
 import br.com.fiap.payment.application.validator.OrderWithItemValidator;
+import br.com.fiap.payment.application.validator.OrderWithItemWithoutTotalAmount;
+import br.com.fiap.payment.application.validator.UserFromSecurityContextIsTheSameOfOrderValidator;
 import br.com.fiap.payment.domain.entity.Payment;
 import br.com.fiap.payment.domain.enums.PaymentType;
 import br.com.fiap.payment.domain.service.PaymentService;
@@ -22,31 +24,39 @@ public class CreatePaymentUseCase {
 
   private final PaymentService paymentService;
   private final UuidValidator uuidValidator;
+  private final UserFromSecurityContextIsTheSameOfOrderValidator userFromSecurityContextIsTheSameOfOrderValidator;
   private final GetOrderByIdHttpRequest getOrderByIdHttpRequest;
   private final GetCompanyByIdHttpRequest getCompanyByIdHttpRequest;
   private final GetCustomerByIdRequest getCustomerByIdRequest;
   private final OrderWithItemValidator orderWithItemValidator;
+  private final OrderWithItemWithoutTotalAmount orderWithItemWithoutTotalAmount;
 
   public CreatePaymentUseCase(PaymentService paymentService, UuidValidator uuidValidator,
+      UserFromSecurityContextIsTheSameOfOrderValidator userFromSecurityContextIsTheSameOfOrderValidator,
       GetOrderByIdHttpRequest getOrderByIdHttpRequest,
       GetCompanyByIdHttpRequest getCompanyByIdHttpRequest,
       GetCustomerByIdRequest getCustomerByIdRequest,
-      OrderWithItemValidator orderWithItemValidator) {
+      OrderWithItemValidator orderWithItemValidator,
+      OrderWithItemWithoutTotalAmount orderWithItemWithoutTotalAmount) {
     this.paymentService = paymentService;
     this.uuidValidator = uuidValidator;
+    this.userFromSecurityContextIsTheSameOfOrderValidator = userFromSecurityContextIsTheSameOfOrderValidator;
     this.getOrderByIdHttpRequest = getOrderByIdHttpRequest;
     this.getCompanyByIdHttpRequest = getCompanyByIdHttpRequest;
     this.getCustomerByIdRequest = getCustomerByIdRequest;
     this.orderWithItemValidator = orderWithItemValidator;
+    this.orderWithItemWithoutTotalAmount = orderWithItemWithoutTotalAmount;
   }
 
   @Transactional
   public Payment execute(PaymentInputDto paymentInputDto) {
     uuidValidator.validate(paymentInputDto.orderId());
     var orderDto = getOrderByIdHttpRequest.request(paymentInputDto.orderId());
+    userFromSecurityContextIsTheSameOfOrderValidator.validate(orderDto);
     var companyDto = getCompanyByIdHttpRequest.request(orderDto.companyId());
     var customerDto = getCustomerByIdRequest.request(orderDto.customerId());
     orderWithItemValidator.validate(orderDto);
+    orderWithItemWithoutTotalAmount.validate(orderDto);
     var payment = createPayment(paymentInputDto, orderDto, companyDto, customerDto);
     return paymentService.save(payment);
   }

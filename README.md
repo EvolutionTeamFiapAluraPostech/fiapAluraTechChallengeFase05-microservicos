@@ -419,13 +419,13 @@ O objetivo deste microsserviço é gerenciar os pagamentos cadastrados pelos cli
                 * Regras de negócio:
                     * Atributos ID pedido e tipo de pagamento obrigatórios.
                     * Validar se o atributo orderId é de um pedido existente no microsserviço de gerenciamento de pedidos;
-                    * Recuperar os dados do pedido no microsserviço de pedidos;
+                    * Recuperar os dados do pedido no microsserviço de pedidos e validar se o status do pedido é AGUARDANDO_PAGAMENTO. Se for algum valor difererente, lançar exceção;
                     * Os status do pagamento poderão ser PENDENTE ou REALIZADO.
-                    * O pagamento será cadastrado com o status PENDENTE. 
+                    * O pagamento será cadastrado com o status REALIZADO. 
                 * Http response status do endpoint:
                     * Status 201 - Created - cadastro realizado com input de dados válidos;
                     * Status 400 - Bad request - se alguma regra foi violada;
-                    * Status 404 - Not found - se o pedido, empresa, cliente ou produto não foi encontrado por seu ID;
+                    * Status 404 - Not found - se o pedido não foi encontrado por seu ID no microsserviço de pedidos.
 
         * http://localhost:8084/payments/{id}
             * Verbo GET - para realizar a pesquisa de um pagamento pelo seu ID.
