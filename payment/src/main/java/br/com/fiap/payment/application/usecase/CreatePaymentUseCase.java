@@ -2,12 +2,18 @@ package br.com.fiap.payment.application.usecase;
 
 import static br.com.fiap.payment.domain.enums.PaymentStatus.REALIZADO;
 
+import br.com.fiap.payment.application.validator.OrderWithItemValidator;
 import br.com.fiap.payment.domain.entity.Payment;
 import br.com.fiap.payment.domain.enums.PaymentType;
 import br.com.fiap.payment.domain.service.PaymentService;
+import br.com.fiap.payment.infrastructure.httpclient.company.dto.CompanyDto;
+import br.com.fiap.payment.infrastructure.httpclient.company.request.GetCompanyByIdHttpRequest;
+import br.com.fiap.payment.infrastructure.httpclient.customer.dto.CustomerDto;
+import br.com.fiap.payment.infrastructure.httpclient.customer.request.GetCustomerByIdRequest;
+import br.com.fiap.payment.infrastructure.httpclient.order.dto.OrderDto;
+import br.com.fiap.payment.infrastructure.httpclient.order.request.GetOrderByIdHttpRequest;
 import br.com.fiap.payment.presentation.api.dto.PaymentInputDto;
 import br.com.fiap.payment.shared.validator.UuidValidator;
-import java.math.BigDecimal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,34 +22,46 @@ public class CreatePaymentUseCase {
 
   private final PaymentService paymentService;
   private final UuidValidator uuidValidator;
+  private final GetOrderByIdHttpRequest getOrderByIdHttpRequest;
+  private final GetCompanyByIdHttpRequest getCompanyByIdHttpRequest;
+  private final GetCustomerByIdRequest getCustomerByIdRequest;
+  private final OrderWithItemValidator orderWithItemValidator;
 
-  public CreatePaymentUseCase(PaymentService paymentService, UuidValidator uuidValidator) {
+  public CreatePaymentUseCase(PaymentService paymentService, UuidValidator uuidValidator,
+      GetOrderByIdHttpRequest getOrderByIdHttpRequest,
+      GetCompanyByIdHttpRequest getCompanyByIdHttpRequest,
+      GetCustomerByIdRequest getCustomerByIdRequest,
+      OrderWithItemValidator orderWithItemValidator) {
     this.paymentService = paymentService;
     this.uuidValidator = uuidValidator;
+    this.getOrderByIdHttpRequest = getOrderByIdHttpRequest;
+    this.getCompanyByIdHttpRequest = getCompanyByIdHttpRequest;
+    this.getCustomerByIdRequest = getCustomerByIdRequest;
+    this.orderWithItemValidator = orderWithItemValidator;
   }
 
   @Transactional
   public Payment execute(PaymentInputDto paymentInputDto) {
     uuidValidator.validate(paymentInputDto.orderId());
-    var companyId = "";
-    var companyName = "";
-    var customerId = "";
-    var customerName = "";
-    var payment = createPayment(paymentInputDto, companyId, companyName, customerId, customerName);
+    var orderDto = getOrderByIdHttpRequest.request(paymentInputDto.orderId());
+    var companyDto = getCompanyByIdHttpRequest.request(orderDto.companyId());
+    var customerDto = getCustomerByIdRequest.request(orderDto.customerId());
+    orderWithItemValidator.validate(orderDto);
+    var payment = createPayment(paymentInputDto, orderDto, companyDto, customerDto);
     return paymentService.save(payment);
   }
 
-  private static Payment createPayment(PaymentInputDto paymentInputDto, String companyId,
-      String companyName, String customerId, String customerName) {
+  private static Payment createPayment(PaymentInputDto paymentInputDto, OrderDto orderDto,
+      CompanyDto companyDto, CustomerDto customerDto) {
     return Payment.builder()
         .orderId(paymentInputDto.orderId())
-        .companyId(companyId)
-        .companyName(companyName)
-        .customerId(customerId)
-        .customerName(customerName)
+        .companyId(orderDto.companyId())
+        .companyName(companyDto.name())
+        .customerId(orderDto.customerId())
+        .customerName(customerDto.name())
         .paymentType(PaymentType.valueOf(paymentInputDto.paymentType()))
         .paymentStatus(REALIZADO)
-        .paymentTotalAmount(BigDecimal.ZERO)
+        .paymentTotalAmount(orderDto.calculateTotalAmount())
         .build();
   }
 }
