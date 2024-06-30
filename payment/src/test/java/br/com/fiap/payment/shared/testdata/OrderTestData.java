@@ -1,7 +1,10 @@
 package br.com.fiap.payment.shared.testdata;
 
+import static br.com.fiap.payment.infrastructure.httpclient.order.enums.OrderStatus.AGUARDANDO_PAGAMENTO;
+
 import br.com.fiap.payment.infrastructure.httpclient.order.dto.OrderDto;
 import br.com.fiap.payment.infrastructure.httpclient.order.dto.OrderItemDto;
+import br.com.fiap.payment.infrastructure.httpclient.order.enums.OrderStatus;
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
@@ -28,20 +31,29 @@ public final class OrderTestData {
   public static OrderDto createOrderDto() {
     var orderItemDto = new OrderItemDto(DEFAULT_ORDER_ITEM_ID, DEFAULT_PRODUCT_ID,
         DEFAULT_PRODUCT_QUANTITY, DEFAULT_PRODUCT_PRICE);
-    return new OrderDto(DEFAULT_ORDER_ID, DEFAULT_COMPANY_ID, DEFAULT_CUSTOMER_ID,
+    return new OrderDto(DEFAULT_ORDER_ID, AGUARDANDO_PAGAMENTO.name(),
+        DEFAULT_COMPANY_ID, DEFAULT_CUSTOMER_ID,
         List.of(orderItemDto));
   }
 
   public static OrderDto createOrderDtoWithoutItem() {
-    return new OrderDto(DEFAULT_ORDER_ID, DEFAULT_COMPANY_ID, DEFAULT_CUSTOMER_ID,
-        Collections.emptyList());
+    return new OrderDto(DEFAULT_ORDER_ID, AGUARDANDO_PAGAMENTO.name(), DEFAULT_COMPANY_ID,
+        DEFAULT_CUSTOMER_ID, Collections.emptyList());
   }
 
   public static OrderDto createOrderDtoWithItemWithInvalidTotalAmount() {
     var orderItemDto = new OrderItemDto(DEFAULT_ORDER_ITEM_ID, DEFAULT_PRODUCT_ID,
         BigDecimal.ONE, BigDecimal.ZERO);
-    return new OrderDto(DEFAULT_ORDER_ID, DEFAULT_COMPANY_ID, DEFAULT_CUSTOMER_ID,
-        Collections.singletonList(orderItemDto));
+    return new OrderDto(DEFAULT_ORDER_ID, AGUARDANDO_PAGAMENTO.name(), DEFAULT_COMPANY_ID,
+        DEFAULT_CUSTOMER_ID, Collections.singletonList(orderItemDto));
+  }
+
+  public static OrderDto createOrderDto(OrderStatus orderStatus) {
+    var orderItemDto = new OrderItemDto(DEFAULT_ORDER_ITEM_ID, DEFAULT_PRODUCT_ID,
+        DEFAULT_PRODUCT_QUANTITY, DEFAULT_PRODUCT_PRICE);
+    return new OrderDto(DEFAULT_ORDER_ID, orderStatus.name(),
+        DEFAULT_COMPANY_ID, DEFAULT_CUSTOMER_ID,
+        List.of(orderItemDto));
   }
 
   private OrderTestData() {

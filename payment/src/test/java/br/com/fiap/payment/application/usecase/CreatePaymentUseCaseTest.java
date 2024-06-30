@@ -2,8 +2,10 @@ package br.com.fiap.payment.application.usecase;
 
 import static br.com.fiap.payment.domain.fields.PaymentFields.PAYMENT_ORDER_CUSTOMER_ID_FIELD;
 import static br.com.fiap.payment.domain.fields.PaymentFields.PAYMENT_ORDER_ORDER_ITEMS_FIELD;
+import static br.com.fiap.payment.domain.fields.PaymentFields.PAYMENT_ORDER_ORDER_STATUS_FIELD;
 import static br.com.fiap.payment.domain.messages.PaymentMessages.PAYMENT_ORDER_CUSTOMER_ID_IS_DIFFERENT_OF_AUTHENTICATED_USER_MESSAGE;
 import static br.com.fiap.payment.domain.messages.PaymentMessages.PAYMENT_ORDER_WITHOUT_ITEMS_MESSAGE;
+import static br.com.fiap.payment.domain.messages.PaymentMessages.PAYMENT_ORDER_WITH_INVALID_STATUS_MESSAGE;
 import static br.com.fiap.payment.domain.messages.PaymentMessages.PAYMENT_ORDER_WITH_ITEM_WITHOUT_TOTAL_AMOUNT_MESSAGE;
 import static br.com.fiap.payment.infrastructure.httpclient.company.messages.CompanyMessages.COMPANY_NOT_FOUND_WITH_ID_MESSAGE;
 import static br.com.fiap.payment.infrastructure.httpclient.customer.messages.CustomerMessages.CUSTOMER_NOT_FOUND_WITH_ID_MESSAGE;
@@ -26,6 +28,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import br.com.fiap.payment.application.validator.OrderStatusValidator;
 import br.com.fiap.payment.application.validator.OrderWithItemValidator;
 import br.com.fiap.payment.application.validator.OrderWithItemWithoutTotalAmount;
 import br.com.fiap.payment.application.validator.UserFromSecurityContextIsTheSameOfOrderValidator;
@@ -37,6 +40,7 @@ import br.com.fiap.payment.domain.service.PaymentService;
 import br.com.fiap.payment.infrastructure.httpclient.company.request.GetCompanyByIdHttpRequest;
 import br.com.fiap.payment.infrastructure.httpclient.customer.request.GetCustomerByIdRequest;
 import br.com.fiap.payment.infrastructure.httpclient.order.dto.OrderDto;
+import br.com.fiap.payment.infrastructure.httpclient.order.enums.OrderStatus;
 import br.com.fiap.payment.infrastructure.httpclient.order.request.GetOrderByIdHttpRequest;
 import br.com.fiap.payment.presentation.api.dto.PaymentInputDto;
 import br.com.fiap.payment.shared.validator.UuidValidator;
@@ -60,6 +64,8 @@ class CreatePaymentUseCaseTest {
   private UuidValidator uuidValidator;
   @Mock
   private GetOrderByIdHttpRequest getOrderByIdHttpRequest;
+  @Mock
+  private OrderStatusValidator orderStatusValidator;
   @Mock
   private UserFromSecurityContextIsTheSameOfOrderValidator userFromSecurityContextIsTheSameOfOrderValidator;
   @Mock
@@ -87,6 +93,7 @@ class CreatePaymentUseCaseTest {
 
     verify(userFromSecurityContextIsTheSameOfOrderValidator, never()).validate(any(OrderDto.class));
     verify(getOrderByIdHttpRequest, never()).request(paymentInputDto.orderId());
+    verify(orderStatusValidator, never()).validate(any(OrderDto.class));
     verify(getCompanyByIdHttpRequest, never()).request(any(String.class));
     verify(getCustomerByIdRequest, never()).request(any(String.class));
     verify(orderWithItemValidator, never()).validate(any(OrderDto.class));
@@ -105,6 +112,7 @@ class CreatePaymentUseCaseTest {
         .isInstanceOf(NoResultException.class)
         .hasMessage(ORDER_NOT_FOUND_WITH_ID.formatted(orderId));
 
+    verify(orderStatusValidator, never()).validate(any(OrderDto.class));
     verify(userFromSecurityContextIsTheSameOfOrderValidator, never()).validate(any(OrderDto.class));
     verify(getCompanyByIdHttpRequest, never()).request(any(String.class));
     verify(getCustomerByIdRequest, never()).request(any(String.class));
@@ -116,7 +124,6 @@ class CreatePaymentUseCaseTest {
   void shouldThrowValidatorExceptionWhenOrderCustomerIsDifferentOfUserFromSecurityContext() {
     var orderDto = createOrderDto();
     var paymentInputDto = new PaymentInputDto(orderDto.id(), PaymentType.PIX.name());
-    var companyDto = createCompanyDto(orderDto.companyId());
     var userId = UUID.randomUUID();
     when(getOrderByIdHttpRequest.request(orderDto.id())).thenReturn(orderDto);
     doThrow(new ValidatorException(
@@ -131,6 +138,28 @@ class CreatePaymentUseCaseTest {
             orderDto.id(), orderDto.customerId(), userId.toString()));
 
     verify(getCompanyByIdHttpRequest, never()).request(any(String.class));
+    verify(getCustomerByIdRequest, never()).request(any(String.class));
+    verify(orderWithItemValidator, never()).validate(any(OrderDto.class));
+    verify(paymentService, never()).save(any(Payment.class));
+  }
+
+  @Test
+  void shouldThrowValidatorExceptionWhenOrderStatusIsInvalid() {
+    var orderId = UUID.randomUUID();
+    var paymentInputDto = new PaymentInputDto(orderId.toString(), PaymentType.PIX.name());
+    var orderDto = createOrderDto();
+    when(getOrderByIdHttpRequest.request(orderId.toString())).thenReturn(orderDto);
+    doThrow(new ValidatorException(
+        new FieldError(this.getClass().getSimpleName(), PAYMENT_ORDER_ORDER_STATUS_FIELD,
+            PAYMENT_ORDER_WITH_INVALID_STATUS_MESSAGE.formatted(orderDto.id(),
+                orderDto.orderStatus(), OrderStatus.AGUARDANDO_PAGAMENTO.name())))).when(
+        orderStatusValidator).validate(orderDto);
+
+    assertThatThrownBy(() -> createPaymentUseCase.execute(paymentInputDto))
+        .isInstanceOf(ValidatorException.class)
+        .hasMessage(PAYMENT_ORDER_WITH_INVALID_STATUS_MESSAGE.formatted(orderDto.id(),
+            orderDto.orderStatus(), OrderStatus.AGUARDANDO_PAGAMENTO.name()));
+
     verify(getCustomerByIdRequest, never()).request(any(String.class));
     verify(orderWithItemValidator, never()).validate(any(OrderDto.class));
     verify(paymentService, never()).save(any(Payment.class));

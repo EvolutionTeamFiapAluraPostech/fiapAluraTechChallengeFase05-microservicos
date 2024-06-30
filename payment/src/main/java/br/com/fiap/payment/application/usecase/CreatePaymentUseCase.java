@@ -2,6 +2,7 @@ package br.com.fiap.payment.application.usecase;
 
 import static br.com.fiap.payment.domain.enums.PaymentStatus.REALIZADO;
 
+import br.com.fiap.payment.application.validator.OrderStatusValidator;
 import br.com.fiap.payment.application.validator.OrderWithItemValidator;
 import br.com.fiap.payment.application.validator.OrderWithItemWithoutTotalAmount;
 import br.com.fiap.payment.application.validator.UserFromSecurityContextIsTheSameOfOrderValidator;
@@ -30,6 +31,7 @@ public class CreatePaymentUseCase {
   private final GetCustomerByIdRequest getCustomerByIdRequest;
   private final OrderWithItemValidator orderWithItemValidator;
   private final OrderWithItemWithoutTotalAmount orderWithItemWithoutTotalAmount;
+  private final OrderStatusValidator orderStatusValidator;
 
   public CreatePaymentUseCase(PaymentService paymentService, UuidValidator uuidValidator,
       UserFromSecurityContextIsTheSameOfOrderValidator userFromSecurityContextIsTheSameOfOrderValidator,
@@ -37,7 +39,8 @@ public class CreatePaymentUseCase {
       GetCompanyByIdHttpRequest getCompanyByIdHttpRequest,
       GetCustomerByIdRequest getCustomerByIdRequest,
       OrderWithItemValidator orderWithItemValidator,
-      OrderWithItemWithoutTotalAmount orderWithItemWithoutTotalAmount) {
+      OrderWithItemWithoutTotalAmount orderWithItemWithoutTotalAmount,
+      OrderStatusValidator orderStatusValidator) {
     this.paymentService = paymentService;
     this.uuidValidator = uuidValidator;
     this.userFromSecurityContextIsTheSameOfOrderValidator = userFromSecurityContextIsTheSameOfOrderValidator;
@@ -46,12 +49,14 @@ public class CreatePaymentUseCase {
     this.getCustomerByIdRequest = getCustomerByIdRequest;
     this.orderWithItemValidator = orderWithItemValidator;
     this.orderWithItemWithoutTotalAmount = orderWithItemWithoutTotalAmount;
+    this.orderStatusValidator = orderStatusValidator;
   }
 
   @Transactional
   public Payment execute(PaymentInputDto paymentInputDto) {
     uuidValidator.validate(paymentInputDto.orderId());
     var orderDto = getOrderByIdHttpRequest.request(paymentInputDto.orderId());
+    orderStatusValidator.validate(orderDto);
     userFromSecurityContextIsTheSameOfOrderValidator.validate(orderDto);
     var companyDto = getCompanyByIdHttpRequest.request(orderDto.companyId());
     var customerDto = getCustomerByIdRequest.request(orderDto.customerId());
