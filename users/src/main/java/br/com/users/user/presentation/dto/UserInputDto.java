@@ -4,10 +4,12 @@ import br.com.users.user.domain.enums.DocNumberType;
 import br.com.users.user.domain.validator.ValueOfEnum;
 import br.com.users.user.presentation.dto.customvalidator.CPFouCNPJ;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import org.hibernate.validator.constraints.Length;
 
+@Tag(name = "UserInputDto", description = "DTO de entrada para representação de um usuário.")
 @CPFouCNPJ
 public abstract class UserInputDto {
 
