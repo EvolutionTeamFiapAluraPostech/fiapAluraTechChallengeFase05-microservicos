@@ -15,7 +15,7 @@ public class OrderWithItemWithoutTotalAmount {
   public void validate(OrderDto orderDto) {
     var orderItems = orderDto.orderItems();
     if (!orderItems.isEmpty() && orderItems.stream()
-        .anyMatch(orderItemDto -> orderItemDto.totalAmout().equals(BigDecimal.ZERO))) {
+        .anyMatch(orderItemDto -> (orderItemDto.totalAmount().compareTo(BigDecimal.ZERO) <= 0))) {
       throw new ValidatorException(
           new FieldError(this.getClass().getSimpleName(), PAYMENT_ORDER_ORDER_ITEMS_FIELD,
               PAYMENT_ORDER_WITH_ITEM_WITHOUT_TOTAL_AMOUNT_MESSAGE.formatted(orderDto.id())));

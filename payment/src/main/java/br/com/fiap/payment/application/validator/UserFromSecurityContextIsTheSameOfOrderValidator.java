@@ -21,7 +21,7 @@ public class UserFromSecurityContextIsTheSameOfOrderValidator {
 
   public void validate(OrderDto orderDto) {
     var user = userFromSecurityContext.getUser();
-    if (!user.getId().equals(orderDto.customerId())) {
+    if (!orderDto.customerId().equals(user.getId())) {
       throw new ValidatorException(
           new FieldError(this.getClass().getSimpleName(), PAYMENT_ORDER_CUSTOMER_ID_FIELD,
               PAYMENT_ORDER_CUSTOMER_ID_IS_DIFFERENT_OF_AUTHENTICATED_USER_MESSAGE.formatted(

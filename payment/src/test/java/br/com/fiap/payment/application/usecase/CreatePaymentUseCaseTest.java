@@ -1,9 +1,7 @@
 package br.com.fiap.payment.application.usecase;
 
-import static br.com.fiap.payment.domain.fields.PaymentFields.PAYMENT_ORDER_CUSTOMER_ID_FIELD;
 import static br.com.fiap.payment.domain.fields.PaymentFields.PAYMENT_ORDER_ORDER_ITEMS_FIELD;
 import static br.com.fiap.payment.domain.fields.PaymentFields.PAYMENT_ORDER_ORDER_STATUS_FIELD;
-import static br.com.fiap.payment.domain.messages.PaymentMessages.PAYMENT_ORDER_CUSTOMER_ID_IS_DIFFERENT_OF_AUTHENTICATED_USER_MESSAGE;
 import static br.com.fiap.payment.domain.messages.PaymentMessages.PAYMENT_ORDER_WITHOUT_ITEMS_MESSAGE;
 import static br.com.fiap.payment.domain.messages.PaymentMessages.PAYMENT_ORDER_WITH_INVALID_STATUS_MESSAGE;
 import static br.com.fiap.payment.domain.messages.PaymentMessages.PAYMENT_ORDER_WITH_ITEM_WITHOUT_TOTAL_AMOUNT_MESSAGE;
@@ -114,29 +112,6 @@ class CreatePaymentUseCaseTest {
 
     verify(orderStatusValidator, never()).validate(any(OrderDto.class));
     verify(userFromSecurityContextIsTheSameOfOrderValidator, never()).validate(any(OrderDto.class));
-    verify(getCompanyByIdHttpRequest, never()).request(any(String.class));
-    verify(getCustomerByIdRequest, never()).request(any(String.class));
-    verify(orderWithItemValidator, never()).validate(any(OrderDto.class));
-    verify(paymentService, never()).save(any(Payment.class));
-  }
-
-  @Test
-  void shouldThrowValidatorExceptionWhenOrderCustomerIsDifferentOfUserFromSecurityContext() {
-    var orderDto = createOrderDto();
-    var paymentInputDto = new PaymentInputDto(orderDto.id(), PaymentType.PIX.name());
-    var userId = UUID.randomUUID();
-    when(getOrderByIdHttpRequest.request(orderDto.id())).thenReturn(orderDto);
-    doThrow(new ValidatorException(
-        new FieldError(this.getClass().getSimpleName(), PAYMENT_ORDER_CUSTOMER_ID_FIELD,
-            PAYMENT_ORDER_CUSTOMER_ID_IS_DIFFERENT_OF_AUTHENTICATED_USER_MESSAGE.formatted(
-                orderDto.id(), orderDto.customerId(), userId.toString())))).when(
-        userFromSecurityContextIsTheSameOfOrderValidator).validate(orderDto);
-
-    assertThatThrownBy(() -> createPaymentUseCase.execute(paymentInputDto))
-        .isInstanceOf(ValidatorException.class)
-        .hasMessage(PAYMENT_ORDER_CUSTOMER_ID_IS_DIFFERENT_OF_AUTHENTICATED_USER_MESSAGE.formatted(
-            orderDto.id(), orderDto.customerId(), userId.toString()));
-
     verify(getCompanyByIdHttpRequest, never()).request(any(String.class));
     verify(getCustomerByIdRequest, never()).request(any(String.class));
     verify(orderWithItemValidator, never()).validate(any(OrderDto.class));

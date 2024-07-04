@@ -20,7 +20,7 @@ public record OrderDto(
 ) {
 
   public BigDecimal calculateTotalAmount() {
-    return orderItems().stream().map(OrderItemDto::totalAmout)
+    return orderItems().stream().map(OrderItemDto::totalAmount)
         .reduce(BigDecimal.ZERO, BigDecimal::add);
   }
 }

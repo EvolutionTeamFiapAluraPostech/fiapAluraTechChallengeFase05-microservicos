@@ -20,7 +20,7 @@ public record OrderItemDto(
     @Positive
     BigDecimal price,
     @Schema(example = "3150.00", description = "Valor total do item do pedido.")
-    BigDecimal totalAmout
+    BigDecimal totalAmount
 ) {
 
   public OrderItemDto(String id, String productId, BigDecimal quantity, BigDecimal price) {

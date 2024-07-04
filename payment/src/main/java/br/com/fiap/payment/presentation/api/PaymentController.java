@@ -1,4 +1,4 @@
-package br.com.fiap.payment.presentation;
+package br.com.fiap.payment.presentation.api;
 
 import br.com.fiap.payment.application.usecase.CreatePaymentUseCase;
 import br.com.fiap.payment.presentation.api.dto.PaymentDto;

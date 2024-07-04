@@ -12,9 +12,16 @@ import org.springframework.validation.FieldError;
 public class OrderWithItemValidator {
 
   public void validate(OrderDto order) {
-    if (order.orderItems().isEmpty()) {
+    if (order.orderItems() == null || order.orderItems().isEmpty()) {
       throw new ValidatorException(new FieldError(this.getClass().getSimpleName(),
           PAYMENT_ORDER_ORDER_ITEMS_FIELD, PAYMENT_ORDER_WITHOUT_ITEMS_MESSAGE.formatted(order.id())));
+    } else {
+      order.orderItems().forEach(orderItemDto -> {
+        if (orderItemDto.productId() == null || orderItemDto.productId().isEmpty()) {
+          throw new ValidatorException(new FieldError(this.getClass().getSimpleName(),
+              PAYMENT_ORDER_ORDER_ITEMS_FIELD, PAYMENT_ORDER_WITHOUT_ITEMS_MESSAGE.formatted(order.id())));
+        }
+      });
     }
   }
 }

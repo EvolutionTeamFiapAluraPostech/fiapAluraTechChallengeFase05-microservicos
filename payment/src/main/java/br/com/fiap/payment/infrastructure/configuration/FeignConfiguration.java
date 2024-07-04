@@ -11,7 +11,7 @@ public class FeignConfiguration {
   @Bean
   public RequestInterceptor requestInterceptor() {
     return template -> template.header("Authorization",
-        "Beare " + getJwtTokenFromSecurityContext());
+        "Bearer " + getJwtTokenFromSecurityContext());
   }
 
   private String getJwtTokenFromSecurityContext() {

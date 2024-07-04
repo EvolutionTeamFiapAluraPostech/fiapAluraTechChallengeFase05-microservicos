@@ -5,7 +5,6 @@ import static br.com.fiap.payment.domain.enums.PaymentStatus.REALIZADO;
 import br.com.fiap.payment.application.validator.OrderStatusValidator;
 import br.com.fiap.payment.application.validator.OrderWithItemValidator;
 import br.com.fiap.payment.application.validator.OrderWithItemWithoutTotalAmount;
-import br.com.fiap.payment.application.validator.UserFromSecurityContextIsTheSameOfOrderValidator;
 import br.com.fiap.payment.domain.entity.Payment;
 import br.com.fiap.payment.domain.enums.PaymentType;
 import br.com.fiap.payment.domain.service.PaymentService;
@@ -25,7 +24,6 @@ public class CreatePaymentUseCase {
 
   private final PaymentService paymentService;
   private final UuidValidator uuidValidator;
-  private final UserFromSecurityContextIsTheSameOfOrderValidator userFromSecurityContextIsTheSameOfOrderValidator;
   private final GetOrderByIdHttpRequest getOrderByIdHttpRequest;
   private final GetCompanyByIdHttpRequest getCompanyByIdHttpRequest;
   private final GetCustomerByIdRequest getCustomerByIdRequest;
@@ -34,7 +32,6 @@ public class CreatePaymentUseCase {
   private final OrderStatusValidator orderStatusValidator;
 
   public CreatePaymentUseCase(PaymentService paymentService, UuidValidator uuidValidator,
-      UserFromSecurityContextIsTheSameOfOrderValidator userFromSecurityContextIsTheSameOfOrderValidator,
       GetOrderByIdHttpRequest getOrderByIdHttpRequest,
       GetCompanyByIdHttpRequest getCompanyByIdHttpRequest,
       GetCustomerByIdRequest getCustomerByIdRequest,
@@ -43,7 +40,6 @@ public class CreatePaymentUseCase {
       OrderStatusValidator orderStatusValidator) {
     this.paymentService = paymentService;
     this.uuidValidator = uuidValidator;
-    this.userFromSecurityContextIsTheSameOfOrderValidator = userFromSecurityContextIsTheSameOfOrderValidator;
     this.getOrderByIdHttpRequest = getOrderByIdHttpRequest;
     this.getCompanyByIdHttpRequest = getCompanyByIdHttpRequest;
     this.getCustomerByIdRequest = getCustomerByIdRequest;
@@ -57,7 +53,6 @@ public class CreatePaymentUseCase {
     uuidValidator.validate(paymentInputDto.orderId());
     var orderDto = getOrderByIdHttpRequest.request(paymentInputDto.orderId());
     orderStatusValidator.validate(orderDto);
-    userFromSecurityContextIsTheSameOfOrderValidator.validate(orderDto);
     var companyDto = getCompanyByIdHttpRequest.request(orderDto.companyId());
     var customerDto = getCustomerByIdRequest.request(orderDto.customerId());
     orderWithItemValidator.validate(orderDto);
