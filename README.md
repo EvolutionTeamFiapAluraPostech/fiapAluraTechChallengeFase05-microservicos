@@ -419,6 +419,7 @@ O objetivo deste microsserviço é gerenciar os pagamentos cadastrados pelos cli
                 * Regras de negócio:
                     * Atributos ID pedido e tipo de pagamento obrigatórios.
                     * Validar se o atributo orderId é de um pedido existente no microsserviço de gerenciamento de pedidos;
+                    * Validar se o atributo customerId é correspondente ao usuário autenticado na aplicação, pois ele está realizando o pagamento;
                     * Recuperar os dados do pedido no microsserviço de pedidos e validar se o status do pedido é AGUARDANDO_PAGAMENTO. Se for algum valor difererente, lançar exceção;
                     * Os status do pagamento poderão ser PENDENTE ou REALIZADO.
                     * O pagamento será cadastrado com o status REALIZADO. 
