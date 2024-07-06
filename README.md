@@ -423,70 +423,11 @@ O objetivo deste microsserviço é gerenciar os pagamentos cadastrados pelos cli
                     * Recuperar os dados do pedido no microsserviço de pedidos e validar se o status do pedido é AGUARDANDO_PAGAMENTO. Se for algum valor difererente, lançar exceção;
                     * Os status do pagamento poderão ser PENDENTE ou REALIZADO.
                     * O pagamento será cadastrado com o status REALIZADO. 
+                    * O pagamento atualizará o status do pedido como PAGO.
                 * Http response status do endpoint:
                     * Status 201 - Created - cadastro realizado com input de dados válidos;
                     * Status 400 - Bad request - se alguma regra foi violada;
                     * Status 404 - Not found - se o pedido não foi encontrado por seu ID no microsserviço de pedidos.
-
-        * http://localhost:8084/payments/{id}
-            * Verbo GET - para realizar a pesquisa de um pagamento pelo seu ID.
-                * Escopo: privado, requer autenticação com role USER/ADMIN.
-                * Regras de negócio:
-                    * O pagamento será pesquisada por um UUID válido.
-                    * O pagamento já deve ter sido cadastrado anteriormente;
-                * Http response status do endpoint:
-                    * Status 200 - Ok - se o pagamento foi encontrado por seu ID;
-                    * Status 400 - Bad request - se alguma regra foi violada;
-                    * Status 404 - Not found - se o pagamento não foi encontrado por seu ID;
-
-            * Verbo PUT - para realizar a atualização de dados de um pagamento pelo seu ID. Necessário informar request body.
-                * Escopo: privado, requer autenticação com role USER/ADMIN.
-                * Regras de negócio:
-                    * Atributos ID da empresa/usuário/pedido, lista dos produtos com ID do produto, sku do produto, unidade de medida do produto, quantidade do produto e preço unitário obrigatórios;
-                    * Atributos quantidade em estoque e preço unitário com o valor maior que zero;
-                    * Validar se o atributo companyId é de uma empresa existente no microsserviço de gerenciamento de empresas;
-                    * Validar se o atributo customerId é de um usuário existente no microsserviço de gerenciamento de usuários;
-                    * Validar se o atributo orderId é de um pedido existente no microsserviço de gerenciamento de pedidos;
-                    * Validar se o atributo productId é de um produto existente no microsserviço de gerenciamento de produtos;
-                * Http response status do endpoint:
-                    * Status 202 - Accepted - atualização realizada com input de dados válidos;
-                    * Status 400 - Bad request - se alguma regra foi violada;
-                    * Status 404 - Not found - se o pedido, empresa, cliente ou produto não foi encontrado por seu ID para ser atualizado;
-
-            * Verbo DELETE - para realizar a exclusão (soft delete) de um pagamento pelo seu ID.   
-                * Escopo: privado, requer autenticação com role USER/ADMIN.
-                * Regras de negócio:
-                    * O pedido será pesquisado por um UUID válido.
-                    * O pagamento já deve ter sido cadastrado anteriormente e não pode ter sido pago (status REALIZADO).
-                * Http response status do endpoint:
-                    * Status 204 - No content - exclusão realizada com sucesso;
-                    * Status 400 - Bad request - se alguma regra foi violada;
-                    * Status 404 - Not found - se o pagamento do pedido não foi encontrado por seu ID para ser excluído;
-
-            * Verbo PATCH - para realizar o pagamento de um pedido.
-                * Escopo: privado, requer autenticação com role USER/ADMIN.
-                * Regras de negócio:
-                    * O pagamento será pesquisada por um UUID válido.
-                    * O pagamento já deve ter sido cadastrado anteriormente;
-                    * Os status do pagamento deve ser PENDENTE.
-                    * O microsserviço de pagamento realizará uma requisição para o microsserviço de pedido e atualizar o status do pedido para PAGO. 
-                * Http response status do endpoint:
-                    * Status 202 - Accepted - atualização realizada com input de dados válidos;
-                    * Status 400 - Bad request - se alguma regra foi violada;
-                    * Status 404 - Not found - se o pagamento não foi encontrado por seu ID para ser atualizado;
-
-        * http://localhost:8084/payments/{id}/open
-            * Verbo PATCH - para realizar o estorno de um pedido pago.
-                * Escopo: privado, requer autenticação com role USER/ADMIN.
-                * Regras de negócio:
-                    * O pagamento será pesquisada por um UUID válido.
-                    * O pagamento já deve ter sido cadastrado anteriormente;
-                    * Os status do pagamento deve ser REALIZADO.
-                    * O microsserviço de pagamento realizará uma requisição para o microsserviço de pedido e atualizar o status do pedido para AGUARDANDO_PAGAMENTO. 
-                * Http response status do endpoint:
-                    * Status 202 - Accepted - atualização realizada com input de dados válidos;
-                    * Status 400 - Bad request - se alguma regra foi violada;
-                    * Status 404 - Not found - se o pagamento não foi encontrado por seu ID para ser atualizado;
 
         * http://localhost:8084/payments/order/{id}
             * Verbo GET - para realizar a pesquisa de um pagamento de um pedido pelo ID do pedido.
@@ -498,16 +439,6 @@ O objetivo deste microsserviço é gerenciar os pagamentos cadastrados pelos cli
                     * Status 200 - Ok - se o pagamento foi encontrado por seu ID;
                     * Status 400 - Bad request - se alguma regra foi violada;
                     * Status 404 - Not found - se o pagamento do pedido não foi encontrado pelo ID do pedido;
-
-        * http://localhost:8084/payments/company-customer
-            * Verbo GET - para realizar a pesquisa paginada de um pagamento pela empresa ou cliente.        
-                * Escopo: privado, requer autenticação com role USER/ADMIN.
-                * Regras de negócio:
-                    * O pagamento já deve ter sido cadastrado anteriormente;
-                * Http response status do endpoint:
-                    * Status 200 - Ok - O pagamento encontrado com sucesso;
-                    * Status 200 - Ok - O pagamento não encontrado, mas com response body com propriedades de paginação, porém com o content vazio;
-                    * Status 400 - Bad request - se alguma regra foi violada;
 
     * Documentação: http://localhost:8084/swagger-ui/index.html
     * Banco de dados: http://localhost:5436/payment-db
