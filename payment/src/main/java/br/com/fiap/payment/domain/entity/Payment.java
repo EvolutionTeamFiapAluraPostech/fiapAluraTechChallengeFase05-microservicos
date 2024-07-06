@@ -41,4 +41,8 @@ public class Payment extends BaseEntity {
   @CreationTimestamp
   private LocalDateTime paymentDate;
   private BigDecimal paymentTotalAmount;
+
+  public boolean isPaymentSaved() {
+    return getId() != null;
+  }
 }

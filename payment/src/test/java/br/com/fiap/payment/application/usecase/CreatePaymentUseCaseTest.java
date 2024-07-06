@@ -40,6 +40,7 @@ import br.com.fiap.payment.infrastructure.httpclient.customer.request.GetCustome
 import br.com.fiap.payment.infrastructure.httpclient.order.dto.OrderDto;
 import br.com.fiap.payment.infrastructure.httpclient.order.enums.OrderStatus;
 import br.com.fiap.payment.infrastructure.httpclient.order.request.GetOrderByIdHttpRequest;
+import br.com.fiap.payment.infrastructure.httpclient.order.request.PatchOrderPaymentByIdHttpRequest;
 import br.com.fiap.payment.presentation.api.dto.PaymentInputDto;
 import br.com.fiap.payment.shared.validator.UuidValidator;
 import java.util.UUID;
@@ -74,6 +75,8 @@ class CreatePaymentUseCaseTest {
   private OrderWithItemValidator orderWithItemValidator;
   @Mock
   private OrderWithItemWithoutTotalAmount orderWithItemWithoutTotalAmount;
+  @Mock
+  private PatchOrderPaymentByIdHttpRequest patchOrderPaymentByIdHttpRequest;
   @InjectMocks
   private CreatePaymentUseCase createPaymentUseCase;
 
@@ -96,6 +99,7 @@ class CreatePaymentUseCaseTest {
     verify(getCustomerByIdRequest, never()).request(any(String.class));
     verify(orderWithItemValidator, never()).validate(any(OrderDto.class));
     verify(paymentService, never()).save(any(Payment.class));
+    verify(patchOrderPaymentByIdHttpRequest, never()).request(any(String.class));
   }
 
   @Test
@@ -116,6 +120,7 @@ class CreatePaymentUseCaseTest {
     verify(getCustomerByIdRequest, never()).request(any(String.class));
     verify(orderWithItemValidator, never()).validate(any(OrderDto.class));
     verify(paymentService, never()).save(any(Payment.class));
+    verify(patchOrderPaymentByIdHttpRequest, never()).request(any(String.class));
   }
 
   @Test
@@ -138,6 +143,7 @@ class CreatePaymentUseCaseTest {
     verify(getCustomerByIdRequest, never()).request(any(String.class));
     verify(orderWithItemValidator, never()).validate(any(OrderDto.class));
     verify(paymentService, never()).save(any(Payment.class));
+    verify(patchOrderPaymentByIdHttpRequest, never()).request(any(String.class));
   }
 
   @Test
@@ -157,6 +163,7 @@ class CreatePaymentUseCaseTest {
     verify(getCustomerByIdRequest, never()).request(any(String.class));
     verify(orderWithItemValidator, never()).validate(any(OrderDto.class));
     verify(paymentService, never()).save(any(Payment.class));
+    verify(patchOrderPaymentByIdHttpRequest, never()).request(any(String.class));
   }
 
   @Test
@@ -176,6 +183,7 @@ class CreatePaymentUseCaseTest {
 
     verify(orderWithItemValidator, never()).validate(any(OrderDto.class));
     verify(paymentService, never()).save(any(Payment.class));
+    verify(patchOrderPaymentByIdHttpRequest, never()).request(any(String.class));
   }
 
   @Test
@@ -197,6 +205,7 @@ class CreatePaymentUseCaseTest {
         .hasMessage(PAYMENT_ORDER_WITHOUT_ITEMS_MESSAGE.formatted(orderDto.id()));
 
     verify(paymentService, never()).save(any(Payment.class));
+    verify(patchOrderPaymentByIdHttpRequest, never()).request(any(String.class));
   }
 
   @Test
@@ -219,6 +228,7 @@ class CreatePaymentUseCaseTest {
         .hasMessage(PAYMENT_ORDER_WITH_ITEM_WITHOUT_TOTAL_AMOUNT_MESSAGE.formatted(orderDto.id()));
 
     verify(paymentService, never()).save(any(Payment.class));
+    verify(patchOrderPaymentByIdHttpRequest, never()).request(any(String.class));
   }
 
   @Test

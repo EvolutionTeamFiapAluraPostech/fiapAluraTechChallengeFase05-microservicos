@@ -14,6 +14,7 @@ import br.com.fiap.payment.infrastructure.httpclient.customer.dto.CustomerDto;
 import br.com.fiap.payment.infrastructure.httpclient.customer.request.GetCustomerByIdRequest;
 import br.com.fiap.payment.infrastructure.httpclient.order.dto.OrderDto;
 import br.com.fiap.payment.infrastructure.httpclient.order.request.GetOrderByIdHttpRequest;
+import br.com.fiap.payment.infrastructure.httpclient.order.request.PatchOrderPaymentByIdHttpRequest;
 import br.com.fiap.payment.presentation.api.dto.PaymentInputDto;
 import br.com.fiap.payment.shared.validator.UuidValidator;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,7 @@ public class CreatePaymentUseCase {
   private final OrderWithItemValidator orderWithItemValidator;
   private final OrderWithItemWithoutTotalAmount orderWithItemWithoutTotalAmount;
   private final OrderStatusValidator orderStatusValidator;
+  private final PatchOrderPaymentByIdHttpRequest patchOrderPaymentByIdHttpRequest;
 
   public CreatePaymentUseCase(PaymentService paymentService, UuidValidator uuidValidator,
       GetOrderByIdHttpRequest getOrderByIdHttpRequest,
@@ -37,7 +39,8 @@ public class CreatePaymentUseCase {
       GetCustomerByIdRequest getCustomerByIdRequest,
       OrderWithItemValidator orderWithItemValidator,
       OrderWithItemWithoutTotalAmount orderWithItemWithoutTotalAmount,
-      OrderStatusValidator orderStatusValidator) {
+      OrderStatusValidator orderStatusValidator,
+      PatchOrderPaymentByIdHttpRequest patchOrderPaymentByIdHttpRequest) {
     this.paymentService = paymentService;
     this.uuidValidator = uuidValidator;
     this.getOrderByIdHttpRequest = getOrderByIdHttpRequest;
@@ -46,6 +49,7 @@ public class CreatePaymentUseCase {
     this.orderWithItemValidator = orderWithItemValidator;
     this.orderWithItemWithoutTotalAmount = orderWithItemWithoutTotalAmount;
     this.orderStatusValidator = orderStatusValidator;
+    this.patchOrderPaymentByIdHttpRequest = patchOrderPaymentByIdHttpRequest;
   }
 
   @Transactional
@@ -58,7 +62,12 @@ public class CreatePaymentUseCase {
     orderWithItemValidator.validate(orderDto);
     orderWithItemWithoutTotalAmount.validate(orderDto);
     var payment = createPayment(paymentInputDto, orderDto, companyDto, customerDto);
-    return paymentService.save(payment);
+    var paymentSaved = paymentService.save(payment);
+    if (paymentSaved != null && paymentSaved.isPaymentSaved()) {
+      patchOrderPaymentByIdHttpRequest.request(orderDto.id());
+      return paymentSaved;
+    }
+    return null;
   }
 
   private static Payment createPayment(PaymentInputDto paymentInputDto, OrderDto orderDto,

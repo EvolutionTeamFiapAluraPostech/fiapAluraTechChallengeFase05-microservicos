@@ -53,6 +53,7 @@ class PostOrderPaymentApiTest {
   public static final UUID ORDER_ID = UUID.randomUUID();
   public static final UUID COMPANY_ID = UUID.randomUUID();
   public static final UUID CUSTOMER_ID = UUID.randomUUID();
+  public static final String URL_ORDER_PAYMENT_CONFIRMATION = "/orders/%s/payment-confirmation";
 
   private final MockMvc mockMvc;
   private final EntityManager entityManager;
@@ -272,6 +273,9 @@ class PostOrderPaymentApiTest {
             .withHeader(HEADER_CONTENT_TYPE, APPLICATION_JSON_CHARSET_UTF_8)
             .withBody(USERS_RESPONSE_BODY.formatted(CUSTOMER_ID))
         ));
+    stubFor(WireMock.put(urlEqualTo(URL_ORDER_PAYMENT_CONFIRMATION.formatted(ORDER_ID)))
+        .willReturn(aResponse()
+            .withStatus(HttpStatus.NO_CONTENT.value())));
 
     var request = post(URL_PAYMENTS)
         .contentType(APPLICATION_JSON)
