@@ -79,4 +79,18 @@ public interface OrdersApi {
       @ApiResponse(responseCode = "404", description = "not found para pedido não encontrado", content = {
           @Content(schema = @Schema(hidden = true))})})
   void deleteOrder(@Parameter(description = "UUID válido de um pedido") String id);
+
+  @Operation(summary = "Confirma o pagamento do pedido",
+      description = "Endpoint para confirmar o pagamento do pedido",
+      tags = {"OrdersApi"})
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "202", description = "successful operation", content = {
+          @Content(schema = @Schema(hidden = true))}),
+      @ApiResponse(responseCode = "400", description = "bad request para UUID inválido ou pagamento já realizado", content = {
+          @Content(schema = @Schema(hidden = true))}),
+      @ApiResponse(responseCode = "404", description = "not found para pedido não encontrado", content = {
+          @Content(schema = @Schema(hidden = true))}),
+  })
+  void putOrderPaymentConfirmation(
+      @Parameter(description = "UUID válido de um pedido") String id);
 }

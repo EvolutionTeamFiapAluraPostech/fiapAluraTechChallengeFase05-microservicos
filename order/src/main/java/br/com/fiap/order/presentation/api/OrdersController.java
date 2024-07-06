@@ -1,5 +1,6 @@
 package br.com.fiap.order.presentation.api;
 
+import br.com.fiap.order.application.usecase.ConfirmOrderPaymentUseCase;
 import br.com.fiap.order.application.usecase.CreateOrderUseCase;
 import br.com.fiap.order.application.usecase.DeleteOrderUseCase;
 import br.com.fiap.order.application.usecase.GetOrderByIdUseCase;
@@ -33,17 +34,20 @@ public class OrdersController implements OrdersApi {
   private final GetOrdersByCompanyIdOrCustomerIdUseCase getOrdersByCompanyIdOrCustomerIdUseCase;
   private final UpdateOrderUseCase updateOrderUseCase;
   private final DeleteOrderUseCase deleteOrderUseCase;
+  private final ConfirmOrderPaymentUseCase confirmOrderPaymentUseCase;
 
   public OrdersController(CreateOrderUseCase createOrderUseCase,
       GetOrderByIdUseCase getOrderByIdUseCase,
       GetOrdersByCompanyIdOrCustomerIdUseCase getOrdersByCompanyIdOrCustomerIdUseCase,
       UpdateOrderUseCase updateOrderUseCase,
-      DeleteOrderUseCase deleteOrderUseCase) {
+      DeleteOrderUseCase deleteOrderUseCase,
+      ConfirmOrderPaymentUseCase confirmOrderPaymentUseCase) {
     this.createOrderUseCase = createOrderUseCase;
     this.getOrderByIdUseCase = getOrderByIdUseCase;
     this.getOrdersByCompanyIdOrCustomerIdUseCase = getOrdersByCompanyIdOrCustomerIdUseCase;
     this.updateOrderUseCase = updateOrderUseCase;
     this.deleteOrderUseCase = deleteOrderUseCase;
+    this.confirmOrderPaymentUseCase = confirmOrderPaymentUseCase;
   }
 
   @PostMapping
@@ -85,5 +89,12 @@ public class OrdersController implements OrdersApi {
   @Override
   public void deleteOrder(@PathVariable String id) {
     deleteOrderUseCase.execute(id);
+  }
+
+  @PutMapping("/{id}/payment-confirmation")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  @Override
+  public void putOrderPaymentConfirmation(@PathVariable String id) {
+    confirmOrderPaymentUseCase.execute(id);
   }
 }
