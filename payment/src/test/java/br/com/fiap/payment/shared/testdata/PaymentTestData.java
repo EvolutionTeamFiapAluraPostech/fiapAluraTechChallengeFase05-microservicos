@@ -15,12 +15,9 @@ import java.util.UUID;
 public final class PaymentTestData {
 
   public static final UUID PAYMENT_ORDER_UUID = UUID.randomUUID();
-  public static final String PAYMENT_ORDER_ID = PAYMENT_ORDER_UUID.toString();
   public static final UUID PAYMENT_COMPANY_UUID = UUID.randomUUID();
-  public static final String PAYMENT_COMPANY_ID = PAYMENT_COMPANY_UUID.toString();
   public static final String PAYMENT_COMPANY_NAME = "Matrix Company";
   public static final UUID PAYMENT_CUSTOMER_UUID = UUID.randomUUID();
-  public static final String PAYMENT_CUSTOMER_ID = PAYMENT_CUSTOMER_UUID.toString();
   public static final String PAYMENT_CUSTOMER_NAME = "Thomas Anderson";
 
   private PaymentTestData() {
@@ -28,10 +25,10 @@ public final class PaymentTestData {
 
   public static Payment createNewPayment() {
     return Payment.builder()
-        .orderId(PAYMENT_ORDER_ID)
-        .companyId(PAYMENT_COMPANY_ID)
+        .orderId(PAYMENT_ORDER_UUID)
+        .companyId(PAYMENT_COMPANY_UUID)
         .companyName(PAYMENT_COMPANY_NAME)
-        .customerId(PAYMENT_CUSTOMER_ID)
+        .customerId(PAYMENT_CUSTOMER_UUID)
         .customerName(PAYMENT_CUSTOMER_NAME)
         .paymentType(PIX)
         .paymentStatus(REALIZADO)
@@ -48,10 +45,10 @@ public final class PaymentTestData {
   public static Payment createPaymentFrom(PaymentInputDto paymentInputDto, OrderDto orderDto,
       CompanyDto companyDto, CustomerDto customerDto) {
     return Payment.builder()
-        .orderId(paymentInputDto.orderId())
-        .companyId(orderDto.companyId())
+        .orderId(UUID.fromString(paymentInputDto.orderId()))
+        .companyId(UUID.fromString(orderDto.companyId()))
         .companyName(companyDto.name())
-        .customerId(orderDto.customerId())
+        .customerId(UUID.fromString(orderDto.customerId()))
         .customerName(customerDto.name())
         .paymentType(PaymentType.valueOf(paymentInputDto.paymentType()))
         .paymentStatus(REALIZADO)

@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @Tag(name = "PaymentsApi", description = "API de pagamento de pedidos")
 public interface PaymentsApi {
@@ -26,4 +27,14 @@ public interface PaymentsApi {
       @Parameter(description = "DTO de entrada com atributos para se cadastrar um novo pagamento de pedido. "
           + "Campos obrigatórios id do pedido.")
       PaymentInputDto paymentInputDto);
+
+  @Operation(summary = "Recupera uma ordem de pagamento pelo ID do pedido",
+      description = "Endpoint para recuperar uma ordem de pagamento pelo ID do pedido cadastrado",
+      tags = {"PaymentsApi"})
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "successful operation", content = {
+          @Content(mediaType = "application/json", schema = @Schema(implementation = PaymentDto.class))}),
+      @ApiResponse(responseCode = "404", description = "not found para pedido não encontrado",
+          content = {@Content(schema = @Schema(hidden = true))})})
+  PaymentDto getPaymentOrderSummarizeByOrderId(@PathVariable String id);
 }

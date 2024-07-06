@@ -9,6 +9,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -29,10 +30,10 @@ public class Payment extends BaseEntity {
   @JsonIgnore
   @Builder.Default
   private Boolean active = true;
-  private String orderId;
-  private String companyId;
+  private UUID orderId;
+  private UUID companyId;
   private String companyName;
-  private String customerId;
+  private UUID customerId;
   private String customerName;
   @Enumerated(EnumType.STRING)
   private PaymentType paymentType;

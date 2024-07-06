@@ -30,8 +30,9 @@ public record PaymentDto(
     BigDecimal paymentTotalAmount) {
 
   public static PaymentDto from(Payment payment) {
-    return new PaymentDto(payment.getId().toString(), payment.getOrderId(), payment.getCompanyId(),
-        payment.getCompanyName(), payment.getCustomerId(), payment.getCustomerName(),
+    return new PaymentDto(payment.getId().toString(), payment.getOrderId().toString(),
+        payment.getCompanyId().toString(), payment.getCompanyName(),
+        payment.getCustomerId().toString(), payment.getCustomerName(),
         payment.getPaymentType().name(), payment.getPaymentStatus().name(),
         payment.getPaymentDate(), payment.getPaymentTotalAmount());
   }

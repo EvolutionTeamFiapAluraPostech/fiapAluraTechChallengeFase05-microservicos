@@ -17,6 +17,7 @@ import br.com.fiap.payment.infrastructure.httpclient.order.request.GetOrderByIdH
 import br.com.fiap.payment.infrastructure.httpclient.order.request.PatchOrderPaymentByIdHttpRequest;
 import br.com.fiap.payment.presentation.api.dto.PaymentInputDto;
 import br.com.fiap.payment.shared.validator.UuidValidator;
+import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -73,10 +74,10 @@ public class CreatePaymentUseCase {
   private static Payment createPayment(PaymentInputDto paymentInputDto, OrderDto orderDto,
       CompanyDto companyDto, CustomerDto customerDto) {
     return Payment.builder()
-        .orderId(paymentInputDto.orderId())
-        .companyId(orderDto.companyId())
+        .orderId(UUID.fromString(paymentInputDto.orderId()))
+        .companyId(UUID.fromString(orderDto.companyId()))
         .companyName(companyDto.name())
-        .customerId(orderDto.customerId())
+        .customerId(UUID.fromString(orderDto.customerId()))
         .customerName(customerDto.name())
         .paymentType(PaymentType.valueOf(paymentInputDto.paymentType()))
         .paymentStatus(REALIZADO)
