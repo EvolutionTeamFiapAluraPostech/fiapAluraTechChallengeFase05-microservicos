@@ -25,6 +25,6 @@ api:
 
 base:
   url:
-    http-user: http://localhost:8080
-    http-company: http://localhost:8081
-    http-product: http://localhost:8082
+    http-user: ${URL_USER:http://localhost:8080}
+    http-company: ${URL_COMPANY:http://localhost:8081}
+    http-product: ${URL_PRODUCT:http://localhost:8082}
