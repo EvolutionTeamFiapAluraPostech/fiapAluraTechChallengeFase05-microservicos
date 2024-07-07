@@ -49,11 +49,11 @@ dependencies {
 	testImplementation "org.wiremock:wiremock-standalone:${versionWireMock}"
 }
 
-/*tasks.named('test') {
+tasks.named('test') {
 	useJUnitPlatform()
-}*/
+}
 
-tasks.withType(Test).configureEach {
+/*tasks.withType(Test).configureEach {
 	description = 'Runs the unit tests.'
 	group = 'verification'
 	useJUnitPlatform({
@@ -67,4 +67,4 @@ tasks.register('integrationTest', Test) {
 	useJUnitPlatform {
 		includeTags 'integrationTest'
 	}
-}
+}*/
