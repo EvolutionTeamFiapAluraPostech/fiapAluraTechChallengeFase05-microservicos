@@ -20,21 +20,20 @@ Criar um sistema de e-commerce, composto por microserviços de gestão de usuár
 # Tecnologias utilizadas
 1. Java 17
 2. Gradle 7.6
-3. Spring Boot 3.2.2
+3. Spring Boot 3.3.0
 4. Spring Web MVC (compatível com o Spring Boot) 
 5. Spring Data JPA (compatível com o Spring Boot)  
 6. Spring Bean Validation (compatível com o Spring Boot) 
 7. Spring Doc Open API 2.3.0
-8. Spring Batch 5
-9. Spring Open Feign 4.1.1
-10. Lombok 
-11. Postgres 15.1 e Postgres 16.3
-12. Flyway 
-13. JUnit 5
-14. Mockito
-15. TestContainers
-16. Docker
-17. WireMock 3.3.1
+8. Spring Open Feign 4.1.1
+9. Lombok 
+10. Postgres 15.1 e Postgres 16.3
+11. Flyway 
+12. JUnit 5
+13. Mockito
+14. TestContainers
+15. Docker
+16. WireMock 3.3.1
 
 # Setup do Projeto
 
@@ -42,7 +41,7 @@ Para realizar o setup do projeto é necessário possuir o Java 17, Gradle 7.6, d
 Faca o download do projeto (https://github.com/EvolutionTeamFiapAluraPostech/fiapAluraTechChallengeFase05-microservicos) e atualize suas dependências com o gradle.
 Antes de iniciar o projeto é necessário criar o banco de dados. O banco de dados está programado para ser criado em um container. 
 Para criar o container, execute o docker-compose (Acesse a pasta raiz do projeto, no mesmo local onde encontra-se o arquivo compose.yaml). Para executá-lo, execute o comando docker-compose up -d (para rodar detached e não prender o terminal). O docker compose irá criar os bancos de dados, buildar a imagem de cada um dos microsserviços, iniciar a aplicação dentro do container correspondente (em sua porta específica). Desta maneira, o conjunto todo da solução estará disponível para ser consumido.
-Após a inicialização dos microsserviços, será necessário se autenticar, pois o Spring Security está habilitado. Para tanto, utilize o Postman (ou outra aplicação de sua preferência), crie um endpoint para realizar a autenticação, com a seguinte url **localhost:8080/authenticate**. No body, inclua um json contendo o atributo “email” com o valor “thomas.anderson@itcompany.com” e outro atributo “password” com o valor “@Bcd1234”. Realize a requisição para este endpoint para se obter o token JWT que deverá ser utilizado para consumir os demais endpoints do projeto.
+Após a inicialização dos microsserviços, será necessário se autenticar, pois o Spring Security está habilitado. Para tanto, utilize o Postman (ou outra aplicação de sua preferência), crie um endpoint para realizar a autenticação, com a seguinte url **localhost:8080/authenticate**. No body, inclua um json contendo o atributo “email” com o valor “thomas.anderson@itcompany.com” e outro atributo “password” com o valor “@XptoZyB1138”. Realize a requisição para este endpoint para se obter o token JWT que deverá ser utilizado para consumir os demais endpoints do projeto.
 Segue abaixo instruções do endpoint para se autenticar na aplicação.
 
 POST /authenticate HTTP/1.1
@@ -52,8 +51,10 @@ Content-Length: 76
 
 {
 "email": "thomas.anderson@itcompany.com",
-"password": "@Bcd1234"
+"password": "@XptoZyB1138”
 }
+
+Atenção: Está sendo utilizada uma nova feature do Spring Security 6.3, disponível na versão do Spring Boot a partir da versão 3.3.0. O Spring Security fornece a interface CompromisedPasswordChecker, que por sua vez é implementada através da classe HaveIBeenPwnedRestApiPasswordChecker que é integrada a API https://haveibeenpwned.com/API/v3#PwnedPasswords. Esta API possui uma extensa base de dados de senhas comprometidas e que devem ser evitadas.
 
 # Collection do Postman
 * Marcelo-RM350802-Fiap-Alura-Tech Challenge-Fase05.postman_collection.json
@@ -69,6 +70,7 @@ Content-Length: 76
   * Microsserviço de Gerenciamento de empresas - http://localhost:8081/swagger-ui/index.html
   * Microsserviço de Gerenciamento de produtos - http://localhost:8082/swagger-ui/index.html
   * Microsserviço de Gerenciamento de pedidos - http://localhost:8083/swagger-ui/index.html
+  * Microsserviço de Gerenciamento de pagamentos - http://localhost:8084/swagger-ui/index.html
 
 # Documentação do PROJETO
 O projeto está dividido em 4 containers de microsserviços backend Java Spring Boot e outros 4 containers de banco de dados Postgresql. Cada um dos microsserviços possui seu respectivo banco de dados.
@@ -91,6 +93,7 @@ O objetivo deste microsserviço é gerenciar os usuários do sistema, ou seja, o
                       * Para esta regra, foi criada uma anotação @CPFouCNPJ que realiza a regra de validação do número de CPF ou número de CNPJ conforme o tipo do documento.
                     * Atributo senha com o tamanho mínimo de 8 e máximo de 20 caracteres;
                     * Validação de força da senha, exigindo no mínimo 1 caracter maiúsculo, 1 caracter minúsculo, 1 caracter especial ( @#$%^&+= ) e 1 número;
+                    * Está sendo utilizada uma nova feature do Spring Security 6.3, disponível na versão do Spring Boot a partir da versão 3.3.0. O Spring Security fornece a interface CompromisedPasswordChecker, que por sua vez é implementada através da classe HaveIBeenPwnedRestApiPasswordChecker que é integrada a API https://haveibeenpwned.com/API/v3#PwnedPasswords. Esta API possui uma extensa base de dados de senhas comprometidas e que devem ser evitadas.
                     * Validação do e-mail único na base de dados;
                     * O atributo password será criptografado antes de ser armazenado no banco de dados.
                 * Http response status do endpoint:
@@ -161,10 +164,10 @@ O objetivo deste microsserviço é gerenciar os usuários do sistema, ou seja, o
 
     ![alt text](image-12.png)
 
-    194 testes de integração e unidade, executados em 4,5 segudos, com 94% de classes e 89% de linhas de código cobertas.
+    200 testes de integração e unidade, executados em 6 segudos, com 94% de classes e 89% de linhas de código cobertas.
     Para realizar os testes de integração em endpoints autenticados, foi utilizado a anotação @WithMockUser("thomas.anderson@itcompany.com", authorities = {"ADMIN"}), na anotação customizada IntegrationTest.
 
-    ![alt text](image-15.png)
+    ![alt text](image-19.png)
 
 # Microsserviço de gerenciamento de empresas
 O objetivo deste microsserviço é gerenciar as empresas fornecedoras de um produto ou serviço para atender seus clientes. A empresa cadastrada será o ponto inicial da rota de entrega do bem para o cliente.
@@ -202,7 +205,7 @@ O objetivo deste microsserviço é gerenciar as empresas fornecedoras de um prod
                     * Status 404 - Not found - se a empresa não foi encontrada por seu ID;
 
             * Verbo PUT - para realizar a atualização de dados de uma empresa pelo seu ID. Necessário informar request body.
-                * Escopo: privado, requer autenticação com role USER/ADMIN.
+                * Escopo: privado, requer autenticação com role ADMIN.
                 * Regras de negócio:
                     * A empresa será pesquisada por um UUID válido.
                     * A empresa já deve ter sido cadastrada anteriormente;
@@ -215,7 +218,7 @@ O objetivo deste microsserviço é gerenciar as empresas fornecedoras de um prod
                     * Status 409 - Conflict - se o e-mail ou cpf da empresa já está cadastrado na base de dados.
 
             * Verbo DELETE - para realizar a exclusão (soft delete) de uma empresa pelo seu ID.
-                * Escopo: privado, requer autenticação com role USER/ADMIN.
+                * Escopo: privado, requer autenticação com role ADMIN.
                 * Regras de negócio:
                     * A empresa será pesquisada por um UUID válido.
                     * A empresa já deve ter sido cadastrada anteriormente;
@@ -240,10 +243,10 @@ O objetivo deste microsserviço é gerenciar as empresas fornecedoras de um prod
 
     ![alt text](image-14.png)
 
-    326 testes de integração e unidade, executados em 8 segudos, com 97% de classes e 86% de linhas de código cobertas.
+    326 testes de integração e unidade, executados em 7 segudos, com 97% de classes e 83% de linhas de código cobertas.
     Para realizar os testes de integração em endpoints autenticados, foi utilizado a anotação @WithMockUser("thomas.anderson@itcompany.com", authorities = {"ADMIN"}), na anotação customizada IntegrationTest.
 
-    ![alt text](image-16.png)
+    ![alt text](image-20.png)
 
 # Microsserviço de gerenciamento de produtos (itens)
 O objetivo deste microsserviço é gerenciar os produtos/serviços cadastrados pelo fornecedor, que por sua vez, serão incluídos em pedidos de venda.
@@ -319,10 +322,10 @@ O objetivo deste microsserviço é gerenciar os produtos/serviços cadastrados p
 
     ![alt text](image-2.png)
 
-    82 testes de integração e unidade, executados em 3 segudos, com 96% de classes e 81% de linhas de código cobertas.
+    88 testes de integração e unidade, executados em 3 segudos, com 97% de classes e 77% de linhas de código cobertas.
     Para realizar os testes de integração em endpoints autenticados, foi utilizado a anotação @WithMockUser("thomas.anderson@itcompany.com", authorities = {"ADMIN"}), na anotação customizada IntegrationTest.
 
-    ![alt text](image-17.png)
+    ![alt text](image-16.png)
 
 # Microsserviço de gerenciamento de pedidos
 O objetivo deste microsserviço é gerenciar os pedidos cadastrados pelos clientes, que irão consumir um produto/serviço.
@@ -404,10 +407,10 @@ O objetivo deste microsserviço é gerenciar os pedidos cadastrados pelos client
 
 ![alt text](image-3.png)
 
-Testes de integração e unidade com 85% de linhas de código cobertas.
+103 testes de integração e unidade, executados em 4 segudos, com 91% de classes e 75% de linhas de código cobertas.
 Para os testes dos endpoints que realizam comunicação a um microsserviço externo, seu respectivo endpoint foi mockado com o Wiremock, para tornar o teste independente e não falhar pela dependência do microsserviço externo.
 
-![alt text](image-9.png)
+![alt text](image-17.png)
 
 # Microsserviço de gerenciamento de pagamentos
 O objetivo deste microsserviço é gerenciar os pagamentos cadastrados pelos clientes, que realizaram a compra de um pedido.
@@ -445,12 +448,13 @@ O objetivo deste microsserviço é gerenciar os pagamentos cadastrados pelos cli
 
 ![alt text](image-18.png)
 
-Testes de integração e unidade com 85% de linhas de código cobertas.
+56 testes de integração e unidade, executados em 3 segudos, com 97% de classes e 78% de linhas de código cobertas.
 Para os testes dos endpoints que realizam comunicação a um microsserviço externo, seu respectivo endpoint foi mockado com o Wiremock, para tornar o teste independente e não falhar pela dependência do microsserviço externo.
 
-![alt text](image-9.png)
+![alt text](image-21.png)
 
 # Qualidade de software
 Para garantir a qualidade de software, implementamos testes de unidade e de integração na grande maioria do código. Para identificar o que foi testado, utilizamos a cobertura de testes de código do próprio IntelliJ IDEA e o ArchUnit. A decisão de utilizar o próprio IntelliJ foi motivada pela manutenção de menor número de dependências a serem adicionadas no projeto, com o objetivo de reduzir possibilidades de libs externas abrirem uma fragilidade na segurança da aplicação (lembrando do caso do Log4J) e que no cenário em que o projeto foi desenvolvido não foi necessária a adição do Jacoco. O ArchUnit foi utilizado para identificar através de um teste a existência de testes correspondentes para as classes de serviço, use case, validators, identifica se as classes foram criadas respeitando a arquitetura/design do projeto (cada classe deverá ser criada em sua respectiva pasta, conforme seu objetivo, não é permitido injetar repositories em classes indevidas, métodos de use case que executam operações de escrita em banco de dados devem ser anotadas com @Transactional).
-Os testes de unidade foram implementados nas classes de domínio e application testando a menor unidade de código. Os testes de integração foram implementados nas classes de presentation, realizando a requisição REST aos endpoints em diversos cenários, testando o código por completo, da entrada dos dados, processamento e saída. O objetivo desta segregação foi considerar a eficiência dos testes versus o tempo de entrega do projeto. Aplicando este método, foi apurado pela cobertuda de testes do IntelliJ IDEA, em mais de 90% de linhas de código testadas na maioria dos microserviços. Para realizar o teste de cobertura, clique com o botão direito do mouse sobre o nome do projeto, navegue até a opção More Run/Debug, em seguida selecione a opção Run tests in <nome do projeto> with Coverage.
+Os testes de unidade foram implementados nas classes de domínio e application testando a menor unidade de código. Os testes de integração foram implementados nas classes de presentation, realizando a requisição HTTP aos endpoints em diversos cenários, testando o código por completo, da entrada dos dados, processamento e saída. O objetivo desta segregação foi considerar a eficiência dos testes versus o tempo de entrega do projeto. Aplicando este método, foi apurado pela cobertuda de testes do IntelliJ IDEA, em mais de 90% de classes testadas na maioria dos microserviços. Para realizar o teste de cobertura, clique com o botão direito do mouse sobre o nome do projeto, navegue até a opção More Run/Debug, em seguida selecione a opção Run tests in <nome do projeto> with Coverage.
+As comunicações dentre microsserviços foram mockadas nos testes de integração, para que os testes se mantenham independentes, porém contemplando os cenários pertinentes a esta comunicação.
 
