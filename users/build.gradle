@@ -29,6 +29,7 @@ dependencies {
     implementation "org.springframework.cloud:spring-cloud-starter-openfeign:${versionSpringCloudOpenFeign}"
     implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${versionSpringDocOpenApi}"
     implementation 'org.flywaydb:flyway-core'
+    implementation 'org.flywaydb:flyway-database-postgresql'
     implementation "org.hamcrest:hamcrest:${versionHamcrest}"
     implementation "io.jsonwebtoken:jjwt:${versionJjwt}"
     implementation "com.auth0:java-jwt:${versionJavaJwt}"
@@ -45,13 +46,12 @@ dependencies {
     testImplementation "org.wiremock:wiremock-standalone:${versionWireMock}"
 }
 
-tasks.withType(Test) {
+/*tasks.withType(Test) {
     description = 'Runs the unit tests.'
     group = 'verification'
     useJUnitPlatform(){}
-}
+}*/
 
-/*
 tasks.withType(Test) {
     description = 'Runs the unit tests.'
     group = 'verification'
@@ -63,7 +63,7 @@ tasks.withType(Test) {
 task integrationTest(type: Test) {
     description = 'Runs the integration tests.'
     group = 'verification'
-    useJUnitPlatform ({
+    useJUnitPlatform({
         includeTags 'integrationTest'
     })
-}*/
+}

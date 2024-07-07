@@ -15,7 +15,7 @@ public final class UserTestData {
   public static final String ALTERNATIVE_USER_NAME = "Neo";
   public static final String ALTERNATIVE_USER_EMAIL = "neo@matrix.com";
   public static final String ALTERNATIVE_USER_CPF = "79693503058";
-  public static final String DEFAULT_USER_PASSWORD = "@Bcd1234";
+  public static final String DEFAULT_USER_PASSWORD = "@XptoZyB1138";
 
   public static User createUser() {
     var uuid = UUID.randomUUID();

@@ -8,7 +8,7 @@ SELECT false,
        'thomas.anderson@itcompany.com',
        'CPF',
        '95962710088',
-       '$2a$10$c82E3F2/hn0Z/dZq6WwL0ejik7kFslqxhkMvaPeKF2p/SOJ7WNvbS',
+       '$2a$12$AP2oQl/3BD518uHwNq/ekOh4gNE1MOHK1yxwOG11vnqrcCb.cdelq',
        null,
        NULL
 WHERE (SELECT count(*) FROM user_management.users u2) = 0;
