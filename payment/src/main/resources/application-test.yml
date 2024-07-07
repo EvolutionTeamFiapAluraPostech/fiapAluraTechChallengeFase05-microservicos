@@ -16,5 +16,4 @@ base:
   url:
     http-user: http://localhost:7070
     http-company: http://localhost:7070
-    http-product: http://localhost:7070
     http-order: http://localhost:7070

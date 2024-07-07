@@ -38,6 +38,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 	implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${versionSpringDocOpenApi}"
 	implementation 'org.flywaydb:flyway-core'
+	implementation 'org.flywaydb:flyway-database-postgresql'
 	implementation "org.hamcrest:hamcrest:${versionHamcrest}"
 	implementation "io.jsonwebtoken:jjwt:${versionJjwt}"
 	implementation "com.auth0:java-jwt:${versionJavaJwt}"

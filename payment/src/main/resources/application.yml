@@ -25,7 +25,6 @@ api:
 
 base:
   url:
-    http-user: http://localhost:8080
-    http-company: http://localhost:8081
-    http-product: http://localhost:8082
-    http-order: http://localhost:8083
+    http-user: ${URL_USER:http://localhost:8080}
+    http-company: ${URL_COMPANY:http://localhost:8081}
+    http-order: ${URL_ORDER:http://localhost:8083}
