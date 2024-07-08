@@ -39,6 +39,7 @@ public record OrderDto(
     var orderItemsDto = new ArrayList<OrderItemDto>();
 
     order.getOrderItems().forEach(orderItem -> {
+      orderItem.calculateTotalItemAmount();
       var orderItemOutputDto = new OrderItemDto(orderItem.getId().toString(),
           orderItem.getProductId().toString(),
           orderItem.getQuantity(),
