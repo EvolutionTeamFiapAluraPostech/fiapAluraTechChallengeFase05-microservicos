@@ -1,6 +1,6 @@
-INSERT INTO user_management.users (deleted, "version", created_at, updated_at, name, email,
+INSERT INTO user_management.users (id, deleted, "version", created_at, updated_at, name, email,
                                    doc_number_type, doc_number, "password", created_by, updated_by)
-SELECT false,
+SELECT '6b42b26f-ffd8-4dc3-9caf-8629add26a92'::uuid, false,
        0,
        current_timestamp,
        null,
