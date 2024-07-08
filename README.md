@@ -78,6 +78,20 @@ O projeto está dividido em 5 containers de microsserviços backend Java Spring 
 
 O backend foi implementado seguindo as recomendações da Clean Architecture, com Clean Code, SOLID e testes automatizados (de unidade e integração), seguindo os princípios do FIRST e Clean Tests. Observação: a Clean Architecuture não foi completamente implementada, visto que os microsserviços são fortemente acomplados com o Spring, entretanto, a aplicação está bem segmentada em pacotes, classes e responsabilidades, seguindo os princípios do DDD.
 
+# Comunicação entre os microsserviços
+
+- O microsserviço de usuários (Users) se comunica com todos os demais microsserviços, através da interface da aplicação, pois este gerencia os usuários e a autenticação através de um token JWT.
+- o microsserviço de empresas (Companies) se comunica com a interface da aplicação.
+- O microsserviço de produtos/itens (Products) se comunica com a interface da aplicação.
+- O microsserviço de pedidos (Orders) se comunica com a interface da aplicação e com os microsserviços de empresas e produtos.
+- O microsserviço de pagamentos (Payments) se comunica com a interface da aplicação e com os microsserviços de empresas, pedidos e pagamentos.
+- Os containers com banco de dados estão acessíveis apenas por seu respectivo microsserviço.
+
+![alt text](image-24.png)
+
+## Observação
+Este projeto de tech challenge está sendo feito por um único desenvolvedor, assim esta arquitetura foi criada para atender os requisitos mínimos do tech challenge da fase 05, pois esta arquitetura não possui um API Gateway para centralizar as requisições para os microsserviços, não tem um balanceador de carga, nem tão pouco um Authorization Server para garantir maior segurança com OAuth2/OpenID Connect.
+
 # Microsserviço de gerenciamento de usuários e autenticação na aplicação
 O objetivo deste microsserviço é gerenciar os usuários do sistema, ou seja, os consumidores de produtos que realizarão pedidos de compra de algum produto no e-commerce.
   * Microsserviço de gerenciamento de usuários
@@ -453,16 +467,6 @@ O objetivo deste microsserviço é gerenciar os pagamentos cadastrados pelos cli
 Para os testes dos endpoints que realizam comunicação a um microsserviço externo, seu respectivo endpoint foi mockado com o Wiremock, para tornar o teste independente e não falhar pela dependência do microsserviço externo.
 
 ![alt text](image-21.png)
-
-# Comunicação entre os microsserviços
-
-- O microsserviço de usuários (Users) se comunica com todos os demais microsserviços, através da interface da aplicação, pois este gerencia os usuários e a autenticação através de um token JWT.
-- o microsserviço de empresas (Companies) se comunica com a interface da aplicação.
-- O microsserviço de produtos/itens (Products) se comunica com a interface da aplicação.
-- O microsserviço de pedidos (Orders) se comunica com a interface da aplicação e com os microsserviços de empresas e produtos.
-- O microsserviço de pagamentos (Payments) se comunica com a interface da aplicação e com os microsserviços de empresas, pedidos e pagamentos.
-
-![alt text](image-24.png)
 
 # Qualidade de software
 Para garantir a qualidade de software, implementamos testes de unidade e de integração na grande maioria do código. Para identificar o que foi testado, utilizamos a cobertura de testes de código do próprio IntelliJ IDEA e o ArchUnit. A decisão de utilizar o próprio IntelliJ foi motivada pela manutenção de menor número de dependências a serem adicionadas no projeto, com o objetivo de reduzir possibilidades de libs externas abrirem uma fragilidade na segurança da aplicação (lembrando do caso do Log4J) e que no cenário em que o projeto foi desenvolvido não foi necessária a adição do Jacoco. O ArchUnit foi utilizado para identificar através de um teste a existência de testes correspondentes para as classes de serviço, use case, validators, identifica se as classes foram criadas respeitando a arquitetura/design do projeto (cada classe deverá ser criada em sua respectiva pasta, conforme seu objetivo, não é permitido injetar repositories em classes indevidas, métodos de use case que executam operações de escrita em banco de dados devem ser anotadas com @Transactional).
