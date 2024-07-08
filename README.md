@@ -87,7 +87,7 @@ O backend foi implementado seguindo as recomendações da Clean Architecture, co
 - O microsserviço de pagamentos (Payments) se comunica com a interface da aplicação e com os microsserviços de empresas, pedidos e pagamentos.
 - Os containers com banco de dados estão acessíveis apenas por seu respectivo microsserviço.
 
-![alt text](image-24.png)
+![alt text](./img/image-24.png)
 
 ## Observação
 Este projeto de tech challenge está sendo feito por um único desenvolvedor, assim esta arquitetura foi criada para atender os requisitos mínimos do tech challenge da fase 05, pois esta arquitetura não possui um API Gateway para centralizar as requisições para os microsserviços, não tem um balanceador de carga, nem tão pouco um Authorization Server para garantir maior segurança com OAuth2/OpenID Connect.
@@ -177,12 +177,12 @@ O objetivo deste microsserviço é gerenciar os usuários do sistema, ou seja, o
     * Documentação da API: http://localhost:8080/swagger-ui/index.html
     * Banco de dados: http://localhost:5432/users-db
 
-    ![alt text](image-12.png)
+    ![alt text](./img/image-12.png)
 
     200 testes de integração e unidade, executados em 6 segudos, com 94% de classes e 89% de linhas de código cobertas.
     Para realizar os testes de integração em endpoints autenticados, foi utilizado a anotação @WithMockUser("thomas.anderson@itcompany.com", authorities = {"ADMIN"}), na anotação customizada IntegrationTest.
 
-    ![alt text](image-19.png)
+    ![alt text](./img/image-19.png)
 
 # Microsserviço de gerenciamento de empresas
 O objetivo deste microsserviço é gerenciar as empresas fornecedoras de um produto ou serviço para atender seus clientes. A empresa cadastrada será o ponto inicial da rota de entrega do bem para o cliente.
@@ -256,12 +256,12 @@ O objetivo deste microsserviço é gerenciar as empresas fornecedoras de um prod
     * Documentação da API: http://localhost:8081/swagger-ui/index.html
     * Banco de dados: http://localhost:5432/company-db
 
-    ![alt text](image-14.png)
+    ![alt text](./img/image-14.png)
 
     326 testes de integração e unidade, executados em 7 segudos, com 97% de classes e 83% de linhas de código cobertas.
     Para realizar os testes de integração em endpoints autenticados, foi utilizado a anotação @WithMockUser("thomas.anderson@itcompany.com", authorities = {"ADMIN"}), na anotação customizada IntegrationTest.
 
-    ![alt text](image-20.png)
+    ![alt text](./img/image-20.png)
 
 # Microsserviço de gerenciamento de produtos (itens)
 O objetivo deste microsserviço é gerenciar os produtos/serviços cadastrados pelo fornecedor, que por sua vez, serão incluídos em pedidos de venda.
@@ -335,12 +335,12 @@ O objetivo deste microsserviço é gerenciar os produtos/serviços cadastrados p
     * Documentação: http://localhost:8082/swagger-ui/index.html
     * Banco de dados: http://localhost:5434/product-db
 
-    ![alt text](image-2.png)
+    ![alt text](./img/image-2.png)
 
     88 testes de integração e unidade, executados em 3 segudos, com 97% de classes e 77% de linhas de código cobertas.
     Para realizar os testes de integração em endpoints autenticados, foi utilizado a anotação @WithMockUser("thomas.anderson@itcompany.com", authorities = {"ADMIN"}), na anotação customizada IntegrationTest.
 
-    ![alt text](image-16.png)
+    ![alt text](./img/image-16.png)
 
 # Microsserviço de gerenciamento de pedidos
 O objetivo deste microsserviço é gerenciar os pedidos cadastrados pelos clientes, que irão consumir um produto/serviço.
@@ -420,12 +420,12 @@ O objetivo deste microsserviço é gerenciar os pedidos cadastrados pelos client
     * Documentação: http://localhost:8083/swagger-ui/index.html
     * Banco de dados: http://localhost:5435/order-db
 
-![alt text](image-3.png)
+![alt text](./img/image-3.png)
 
 103 testes de integração e unidade, executados em 4 segudos, com 91% de classes e 75% de linhas de código cobertas.
 Para os testes dos endpoints que realizam comunicação a um microsserviço externo, seu respectivo endpoint foi mockado com o Wiremock, para tornar o teste independente e não falhar pela dependência do microsserviço externo.
 
-![alt text](image-17.png)
+![alt text](./img/image-17.png)
 
 # Microsserviço de gerenciamento de pagamentos
 O objetivo deste microsserviço é gerenciar os pagamentos cadastrados pelos clientes, que realizaram a compra de um pedido.
@@ -461,12 +461,12 @@ O objetivo deste microsserviço é gerenciar os pagamentos cadastrados pelos cli
     * Documentação: http://localhost:8084/swagger-ui/index.html
     * Banco de dados: http://localhost:5436/payment-db
 
-![alt text](image-18.png)
+![alt text](./img/image-18.png)
 
 56 testes de integração e unidade, executados em 3 segudos, com 97% de classes e 78% de linhas de código cobertas.
 Para os testes dos endpoints que realizam comunicação a um microsserviço externo, seu respectivo endpoint foi mockado com o Wiremock, para tornar o teste independente e não falhar pela dependência do microsserviço externo.
 
-![alt text](image-21.png)
+![alt text](./img/image-21.png)
 
 # Qualidade de software
 Para garantir a qualidade de software, implementamos testes de unidade e de integração na grande maioria do código. Para identificar o que foi testado, utilizamos a cobertura de testes de código do próprio IntelliJ IDEA e o ArchUnit. A decisão de utilizar o próprio IntelliJ foi motivada pela manutenção de menor número de dependências a serem adicionadas no projeto, com o objetivo de reduzir possibilidades de libs externas abrirem uma fragilidade na segurança da aplicação (lembrando do caso do Log4J) e que no cenário em que o projeto foi desenvolvido não foi necessária a adição do Jacoco. O ArchUnit foi utilizado para identificar através de um teste a existência de testes correspondentes para as classes de serviço, use case, validators, identifica se as classes foram criadas respeitando a arquitetura/design do projeto (cada classe deverá ser criada em sua respectiva pasta, conforme seu objetivo, não é permitido injetar repositories em classes indevidas, métodos de use case que executam operações de escrita em banco de dados devem ser anotadas com @Transactional).
