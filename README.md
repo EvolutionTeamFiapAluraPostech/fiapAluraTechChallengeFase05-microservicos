@@ -90,7 +90,7 @@ O backend foi implementado seguindo as recomendações da Clean Architecture, co
 ![alt text](./img/image-24.png)
 
 ## Observação
-Este projeto de tech challenge está sendo feito por um único desenvolvedor, assim esta arquitetura foi criada para atender os requisitos mínimos do tech challenge da fase 05, pois esta arquitetura não possui um API Gateway para centralizar as requisições para os microsserviços, não tem um balanceador de carga, nem tão pouco um Authorization Server para garantir maior segurança com OAuth2/OpenID Connect.
+Este projeto de tech challenge está sendo feito por um único desenvolvedor, o tempo de entrega é apertado, assim esta arquitetura foi criada para atender os requisitos mínimos do tech challenge da fase 05, pois esta arquitetura não possui um API Gateway para centralizar as requisições para os microsserviços, não tem um balanceador de carga, nem tão pouco um Authorization Server para garantir maior segurança com OAuth2/OpenID Connect.
 
 # Microsserviço de gerenciamento de usuários e autenticação na aplicação
 O objetivo deste microsserviço é gerenciar os usuários do sistema, ou seja, os consumidores de produtos que realizarão pedidos de compra de algum produto no e-commerce.
