@@ -9,8 +9,9 @@ Criar um sistema de e-commerce, composto por microserviços de gestão de usuár
 1. Microsserviço de gerenciamento de usuários: microsserviço responsável por todas as operações relacionadas aos usuários do sistema, incluindo a criação, leitura, atualização e exclusão de registros (CRUD), autenticação e autorização.
 2. Microsserviço de gerenciamento de empresas: microsserviço responsável por todas as operações relacionadas as empresas que serão fornecedoras de produtos, incluindo a criação, leitura, atualização e exclusão de registros (CRUD).
 3. Microsserviço de catálogo de produtos: microsserviço responsável por todas as operações relacionadas aos produtos que serão consumidos por algum cliente, incluindo a criação, leitura, atualização e exclusão de registros (CRUD), com preço unitário.
-4. Microsserviço de gestão de pedidos: centralizará o processamento de todos os pedidos de clientes que consumirão produtos, desde a criação, até a conclusão, incluindo o recebimento, e pagamento.
-5. Cada microsserviço deverá trabalhar com seu próprio banco de dados.
+4. Microsserviço de gestão de pedidos: centralizará o processamento de todos os pedidos de clientes que consumirão produtos, desde a criação, até a conclusão.
+5. Microsserviço de gestão de pagamentos: receberá o pagamento de todos os pedidos de clientes.
+6. Cada microsserviço deverá trabalhar com seu próprio banco de dados.
 
 ## Entregáveis:
 1. Link do Github com o código fonte dos serviços desenvolvidos.
@@ -73,7 +74,7 @@ Atenção: Está sendo utilizada uma nova feature do Spring Security 6.3, dispon
   * Microsserviço de Gerenciamento de pagamentos - http://localhost:8084/swagger-ui/index.html
 
 # Documentação do PROJETO
-O projeto está dividido em 4 containers de microsserviços backend Java Spring Boot e outros 4 containers de banco de dados Postgresql. Cada um dos microsserviços possui seu respectivo banco de dados.
+O projeto está dividido em 5 containers de microsserviços backend Java Spring Boot e outros 5 containers de banco de dados Postgresql. Cada um dos microsserviços possui seu respectivo banco de dados.
 
 O backend foi implementado seguindo as recomendações da Clean Architecture, com Clean Code, SOLID e testes automatizados (de unidade e integração), seguindo os princípios do FIRST e Clean Tests. Observação: a Clean Architecuture não foi completamente implementada, visto que os microsserviços são fortemente acomplados com o Spring, entretanto, a aplicação está bem segmentada em pacotes, classes e responsabilidades, seguindo os princípios do DDD.
 
@@ -452,6 +453,16 @@ O objetivo deste microsserviço é gerenciar os pagamentos cadastrados pelos cli
 Para os testes dos endpoints que realizam comunicação a um microsserviço externo, seu respectivo endpoint foi mockado com o Wiremock, para tornar o teste independente e não falhar pela dependência do microsserviço externo.
 
 ![alt text](image-21.png)
+
+# Comunicação entre os microsserviços
+
+- O microsserviço de usuários (Users) se comunica com todos os demais microsserviços, através da interface da aplicação, pois este gerencia os usuários e a autenticação através de um token JWT.
+- o microsserviço de empresas (Companies) se comunica com a interface da aplicação.
+- O microsserviço de produtos/itens (Products) se comunica com a interface da aplicação.
+- O microsserviço de pedidos (Orders) se comunica com a interface da aplicação e com os microsserviços de empresas e produtos.
+- O microsserviço de pagamentos (Payments) se comunica com a interface da aplicação e com os microsserviços de empresas, pedidos e pagamentos.
+
+![alt text](image-24.png)
 
 # Qualidade de software
 Para garantir a qualidade de software, implementamos testes de unidade e de integração na grande maioria do código. Para identificar o que foi testado, utilizamos a cobertura de testes de código do próprio IntelliJ IDEA e o ArchUnit. A decisão de utilizar o próprio IntelliJ foi motivada pela manutenção de menor número de dependências a serem adicionadas no projeto, com o objetivo de reduzir possibilidades de libs externas abrirem uma fragilidade na segurança da aplicação (lembrando do caso do Log4J) e que no cenário em que o projeto foi desenvolvido não foi necessária a adição do Jacoco. O ArchUnit foi utilizado para identificar através de um teste a existência de testes correspondentes para as classes de serviço, use case, validators, identifica se as classes foram criadas respeitando a arquitetura/design do projeto (cada classe deverá ser criada em sua respectiva pasta, conforme seu objetivo, não é permitido injetar repositories em classes indevidas, métodos de use case que executam operações de escrita em banco de dados devem ser anotadas com @Transactional).
