@@ -1,0 +1,1888 @@
+{
+	"info": {
+		"_postman_id": "a574b3ee-e760-47d2-b7e9-3f09fc3f94ea",
+		"name": "Fiap/Alura - Tech Challenge - Fase 05",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "9250904"
+	},
+	"item": [
+		{
+			"name": "00 - Autenticate",
+			"item": [
+				{
+					"name": "01 - POST authenticate",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"thomas.anderson@itcompany.com\",\n    \"password\": \"@XptoZyB1138\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url-authenticate}}/authenticate"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "00.1 - Users",
+			"item": [
+				{
+					"name": "01 - Create new Users",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Morpheus\",\n    \"email\": \"morpheus@matrix.com\",\n    \"docNumberType\": \"CPF\",\n    \"docNumber\": \"92477979000\",\n    \"password\": \"@Bcd1234\",\n    \"role\": \"USER\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:8080/users"
+					},
+					"response": []
+				},
+				{
+					"name": "02 - Find all users paginated",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{auth_token}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "localhost:8080/users"
+					},
+					"response": []
+				},
+				{
+					"name": "03 - Update users",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{auth_token}}"
+							}
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Trinity\",\n    \"email\": \"trinity@matrix.com\",\n    \"docNumberType\": \"CPF\",\n    \"docNumber\": \"28492740035\",\n    \"role\": \"USER\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:8080/users/{{user-id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "04 - Find users by name or email",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{auth_token}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/users/user-name-email?name=Thomas",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users",
+								"user-name-email"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "Thomas"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "05 - Find user by ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{auth_token}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "localhost:8080/users/{{user-id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "06 - Delete user by ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{auth_token}}"
+							}
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": "localhost:8080/users/{{user-id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "07 - Partial update user/driver default payment method",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{auth_token}}"
+							}
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"paymentMethod\": \"PIX\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:8080/users/d97fa35d-ce01-4b05-8b06-6d4099487aed"
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": {}
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "01 - Company",
+			"item": [
+				{
+					"name": "Create",
+					"item": [
+						{
+							"name": "01 - Return created status when create new company",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"deleted\": false,\n    \"active\": true,\n    \"name\": \"IT Company\",\n    \"email\": \"it@itcompany.com\",\n    \"docNumber\": \"50322346000184\",\n    \"docNumberType\": \"CNPJ\",\n    \"street\": \"Av Lins de Vasconcelos\",\n    \"number\": \"1222\",\n    \"neighborhood\": \"Cambuci\",\n    \"city\": \"São Paulo\",\n    \"state\": \"SP\",\n    \"country\": \"Brasil\",\n    \"postalCode\": \"01538001\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-companies}}/companies"
+							},
+							"response": []
+						},
+						{
+							"name": "02 - Return bad request status when company's name was not filled",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"deleted\": false,\n    \"active\": true,\n    \"name\": \"\",\n    \"email\": \"thomas.anderson@itcompany.com\",\n    \"docNumber\": \"11955975094\",\n    \"docNumberType\": \"CPF\",\n    \"street\": \"Av Lins de Vasconcelos\",\n    \"number\": \"1222\",\n    \"neighborhood\": \"Cambuci\",\n    \"city\": \"São Paulo\",\n    \"state\": \"SP\",\n    \"country\": \"Brasil\",\n    \"postalCode\": \"01538001\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-companies}}/companies"
+							},
+							"response": []
+						},
+						{
+							"name": "03 - Return bad request status when company's name length is invalid",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"deleted\": false,\n    \"active\": true,\n    \"name\": \"Th\",\n    \"email\": \"thomas.anderson@itcompany.com\",\n    \"docNumber\": \"11955975094\",\n    \"docNumberType\": \"CPF\",\n    \"street\": \"Av Lins de Vasconcelos\",\n    \"number\": \"1222\",\n    \"neighborhood\": \"Cambuci\",\n    \"city\": \"São Paulo\",\n    \"state\": \"SP\",\n    \"country\": \"Brasil\",\n    \"postalCode\": \"01538001\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-companies}}/companies"
+							},
+							"response": []
+						},
+						{
+							"name": "04 - Return bad request status when company's email was not filled",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"deleted\": false,\n    \"active\": true,\n    \"name\": \"Thomas Anderson\",\n    \"email\": \"\",\n    \"docNumber\": \"11955975094\",\n    \"docNumberType\": \"CPF\",\n    \"street\": \"Av Lins de Vasconcelos\",\n    \"number\": \"1222\",\n    \"neighborhood\": \"Cambuci\",\n    \"city\": \"São Paulo\",\n    \"state\": \"SP\",\n    \"country\": \"Brasil\",\n    \"postalCode\": \"01538001\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-companies}}/companies"
+							},
+							"response": []
+						},
+						{
+							"name": "05 - Return bad request status when company's email is invalid",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"deleted\": false,\n    \"active\": true,\n    \"name\": \"Thomas Anderson\",\n    \"email\": \"thomas.anderson.itcompany.com\",\n    \"docNumber\": \"11955975094\",\n    \"docNumberType\": \"CPF\",\n    \"street\": \"Av Lins de Vasconcelos\",\n    \"number\": \"1222\",\n    \"neighborhood\": \"Cambuci\",\n    \"city\": \"São Paulo\",\n    \"state\": \"SP\",\n    \"country\": \"Brasil\",\n    \"postalCode\": \"01538001\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-companies}}/companies"
+							},
+							"response": []
+						},
+						{
+							"name": "06 - Return bad request status when company's doc number was not filled",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"deleted\": false,\n    \"active\": true,\n    \"name\": \"Thomas Anderson\",\n    \"email\": \"thomas.anderson@itcompany.com\",\n    \"docNumber\": \"\",\n    \"docNumberType\": \"CPF\",\n    \"street\": \"Av Lins de Vasconcelos\",\n    \"number\": \"1222\",\n    \"neighborhood\": \"Cambuci\",\n    \"city\": \"São Paulo\",\n    \"state\": \"SP\",\n    \"country\": \"Brasil\",\n    \"postalCode\": \"01538001\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-companies}}/companies"
+							},
+							"response": []
+						},
+						{
+							"name": "07 - Return bad request status when company's doc number is invalid",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"deleted\": false,\n    \"active\": true,\n    \"name\": \"Thomas Anderson\",\n    \"email\": \"thomas.anderson@itcompany.com\",\n    \"docNumber\": \"1234567890\",\n    \"docNumberType\": \"CPF\",\n    \"street\": \"Av Lins de Vasconcelos\",\n    \"number\": \"1222\",\n    \"neighborhood\": \"Cambuci\",\n    \"city\": \"São Paulo\",\n    \"state\": \"SP\",\n    \"country\": \"Brasil\",\n    \"postalCode\": \"01538001\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-companies}}/companies"
+							},
+							"response": []
+						},
+						{
+							"name": "08 - Return bad request status when company's cpf is invalid",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"deleted\": false,\n    \"active\": true,\n    \"name\": \"Thomas Anderson\",\n    \"email\": \"thomas.anderson@itcompany.com\",\n    \"docNumber\": \"1234567890\",\n    \"docNumberType\": \"CPF\",\n    \"street\": \"Av Lins de Vasconcelos\",\n    \"number\": \"1222\",\n    \"neighborhood\": \"Cambuci\",\n    \"city\": \"São Paulo\",\n    \"state\": \"SP\",\n    \"country\": \"Brasil\",\n    \"postalCode\": \"01538001\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-companies}}/companies"
+							},
+							"response": []
+						},
+						{
+							"name": "09 - Return bad request status when company's cnpj is invalid",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"deleted\": false,\n    \"active\": true,\n    \"name\": \"Thomas Anderson\",\n    \"email\": \"thomas.anderson@itcompany.com\",\n    \"docNumber\": \"12345678901234\",\n    \"docNumberType\": \"CNPJ\",\n    \"street\": \"Av Lins de Vasconcelos\",\n    \"number\": \"1222\",\n    \"neighborhood\": \"Cambuci\",\n    \"city\": \"São Paulo\",\n    \"state\": \"SP\",\n    \"country\": \"Brasil\",\n    \"postalCode\": \"01538001\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-companies}}/companies"
+							},
+							"response": []
+						},
+						{
+							"name": "10 - Return bad request status when company's doc number already exists",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"deleted\": false,\n    \"active\": true,\n    \"name\": \"Thomas Anderson\",\n    \"email\": \"thomas.anderson@itcompany.com\",\n    \"docNumber\": \"11955975094\",\n    \"docNumberType\": \"CPF\",\n    \"street\": \"Av Lins de Vasconcelos\",\n    \"number\": \"1222\",\n    \"neighborhood\": \"Cambuci\",\n    \"city\": \"São Paulo\",\n    \"state\": \"SP\",\n    \"country\": \"Brasil\",\n    \"postalCode\": \"01538001\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-companies}}/companies"
+							},
+							"response": []
+						},
+						{
+							"name": "11 - Return bad request status when company's street was not filled",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"deleted\": false,\n    \"active\": true,\n    \"name\": \"Thomas Anderson\",\n    \"email\": \"thomas.anderson@itcompany.com\",\n    \"docNumber\": \"11955975094\",\n    \"docNumberType\": \"CPF\",\n    \"street\": \"\",\n    \"number\": \"1222\",\n    \"neighborhood\": \"Cambuci\",\n    \"city\": \"São Paulo\",\n    \"state\": \"SP\",\n    \"country\": \"Brasil\",\n    \"postalCode\": \"01538001\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-companies}}/companies"
+							},
+							"response": []
+						},
+						{
+							"name": "12 - Return bad request status when company's street length is invalid",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"deleted\": false,\n    \"active\": true,\n    \"name\": \"Thomas Anderson\",\n    \"email\": \"thomas.anderson@itcompany.com\",\n    \"docNumber\": \"11955975094\",\n    \"docNumberType\": \"CPF\",\n    \"street\": \"AB\",\n    \"number\": \"1222\",\n    \"neighborhood\": \"Cambuci\",\n    \"city\": \"São Paulo\",\n    \"state\": \"SP\",\n    \"country\": \"Brasil\",\n    \"postalCode\": \"01538001\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-companies}}/companies"
+							},
+							"response": []
+						},
+						{
+							"name": "13 - Return bad request status when company's address number was not filled",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"deleted\": false,\n    \"active\": true,\n    \"name\": \"Thomas Anderson\",\n    \"email\": \"thomas.anderson@itcompany.com\",\n    \"docNumber\": \"11955975094\",\n    \"docNumberType\": \"CPF\",\n    \"street\": \"Av Lins de Vasconcelos\",\n    \"number\": \"\",\n    \"neighborhood\": \"Cambuci\",\n    \"city\": \"São Paulo\",\n    \"state\": \"SP\",\n    \"country\": \"Brasil\",\n    \"postalCode\": \"01538001\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-companies}}/companies"
+							},
+							"response": []
+						},
+						{
+							"name": "14 - Return bad request status when company's address neighborhood was not filled",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"deleted\": false,\n    \"active\": true,\n    \"name\": \"Thomas Anderson\",\n    \"email\": \"thomas.anderson@itcompany.com\",\n    \"docNumber\": \"11955975094\",\n    \"docNumberType\": \"CPF\",\n    \"street\": \"Av Lins de Vasconcelos\",\n    \"number\": \"1222\",\n    \"neighborhood\": \"\",\n    \"city\": \"São Paulo\",\n    \"state\": \"SP\",\n    \"country\": \"Brasil\",\n    \"postalCode\": \"01538001\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-companies}}/companies"
+							},
+							"response": []
+						},
+						{
+							"name": "15 - Return bad request status when company's address city was not filled",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"deleted\": false,\n    \"active\": true,\n    \"name\": \"Thomas Anderson\",\n    \"email\": \"thomas.anderson@itcompany.com\",\n    \"docNumber\": \"11955975094\",\n    \"docNumberType\": \"CPF\",\n    \"street\": \"Av Lins de Vasconcelos\",\n    \"number\": \"1222\",\n    \"neighborhood\": \"Cambuci\",\n    \"city\": \"\",\n    \"state\": \"SP\",\n    \"country\": \"Brasil\",\n    \"postalCode\": \"01538001\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-companies}}/companies"
+							},
+							"response": []
+						},
+						{
+							"name": "16 - Return bad request status when company's address state was not filled",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"deleted\": false,\n    \"active\": true,\n    \"name\": \"Thomas Anderson\",\n    \"email\": \"thomas.anderson@itcompany.com\",\n    \"docNumber\": \"11955975094\",\n    \"docNumberType\": \"CPF\",\n    \"street\": \"Av Lins de Vasconcelos\",\n    \"number\": \"1222\",\n    \"neighborhood\": \"Cambuci\",\n    \"city\": \"São Paulo\",\n    \"state\": \"\",\n    \"country\": \"Brasil\",\n    \"postalCode\": \"01538001\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-companies}}/companies"
+							},
+							"response": []
+						},
+						{
+							"name": "17 - Return bad request status when company's address country was not filled",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"deleted\": false,\n    \"active\": true,\n    \"name\": \"Thomas Anderson\",\n    \"email\": \"thomas.anderson@itcompany.com\",\n    \"docNumber\": \"11955975094\",\n    \"docNumberType\": \"CPF\",\n    \"street\": \"Av Lins de Vasconcelos\",\n    \"number\": \"1222\",\n    \"neighborhood\": \"Cambuci\",\n    \"city\": \"São Paulo\",\n    \"state\": \"SP\",\n    \"country\": \"\",\n    \"postalCode\": \"01538001\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-companies}}/companies"
+							},
+							"response": []
+						},
+						{
+							"name": "18 - Return bad request status when company's address postal code was not filled",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"deleted\": false,\n    \"active\": true,\n    \"name\": \"Thomas Anderson\",\n    \"email\": \"thomas.anderson@itcompany.com\",\n    \"docNumber\": \"11955975094\",\n    \"docNumberType\": \"CPF\",\n    \"street\": \"Av Lins de Vasconcelos\",\n    \"number\": \"1222\",\n    \"neighborhood\": \"Cambuci\",\n    \"city\": \"São Paulo\",\n    \"state\": \"SP\",\n    \"country\": \"Brasil\",\n    \"postalCode\": \"\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-companies}}/companies"
+							},
+							"response": []
+						},
+						{
+							"name": "19 - Return bad request status when company's address postal code is invalid",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"deleted\": false,\n    \"active\": true,\n    \"name\": \"Thomas Anderson\",\n    \"email\": \"thomas.anderson@itcompany.com\",\n    \"docNumber\": \"11955975094\",\n    \"docNumberType\": \"CPF\",\n    \"street\": \"Av Lins de Vasconcelos\",\n    \"number\": \"1222\",\n    \"neighborhood\": \"Cambuci\",\n    \"city\": \"São Paulo\",\n    \"state\": \"SP\",\n    \"country\": \"Brasil\",\n    \"postalCode\": \"1234567O\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-companies}}/companies"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Get",
+					"item": [
+						{
+							"name": "01 - Return ok when find company by id",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{auth_token}}"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": "{{url-companies}}/companies/{{company-id}}"
+							},
+							"response": []
+						},
+						{
+							"name": "02 - Return not found when not find company by id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "{{url-companies}}/companies/8f836f61-17c4-4f4f-935e-8625aad84ee7"
+							},
+							"response": []
+						},
+						{
+							"name": "03 - Return bad request when find company by invalid id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "{{url-companies}}/companies/1ab"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Update",
+					"item": [
+						{
+							"name": "01 - Return accept status when update company",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"deleted\": false,\n    \"active\": true,\n    \"name\": \"IT Company\",\n    \"email\": \"it@itcompany.com\",\n    \"docNumber\": \"68260836000169\",\n    \"docNumberType\": \"CNPJ\",\n    \"street\": \"Alameda Rio Claro\",\n    \"number\": \"190\",\n    \"neighborhood\": \"Bela Vista\",\n    \"city\": \"São Paulo\",\n    \"state\": \"SP\",\n    \"country\": \"Brasil\",\n    \"postalCode\": \"01332010\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-companies}}/companies/{{company-id}}"
+							},
+							"response": []
+						},
+						{
+							"name": "02 - Return bad request status when company's name was not filled",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"deleted\": false,\n    \"active\": true,\n    \"name\": \"\",\n    \"email\": \"it@itcompany.com\",\n    \"docNumber\": \"50322346000184\",\n    \"docNumberType\": \"CNPJ\",\n    \"street\": \"Av Lins de Vasconcelos\",\n    \"number\": \"1222\",\n    \"neighborhood\": \"Cambuci\",\n    \"city\": \"São Paulo\",\n    \"state\": \"SP\",\n    \"country\": \"Brasil\",\n    \"postalCode\": \"01538001\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-companies}}/companies/{{company-id}}"
+							},
+							"response": []
+						},
+						{
+							"name": "03 - Return bad request status when company's name length is invalid",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"deleted\": false,\n    \"active\": true,\n    \"name\": \"IT\",\n    \"email\": \"it@itcompany.com\",\n    \"docNumber\": \"50322346000184\",\n    \"docNumberType\": \"CNPJ\",\n    \"street\": \"Av Lins de Vasconcelos\",\n    \"number\": \"1222\",\n    \"neighborhood\": \"Cambuci\",\n    \"city\": \"São Paulo\",\n    \"state\": \"SP\",\n    \"country\": \"Brasil\",\n    \"postalCode\": \"01538001\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-companies}}/companies/{{company-id}}"
+							},
+							"response": []
+						},
+						{
+							"name": "04 - Return bad request status when company's email was not filled",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"deleted\": false,\n    \"active\": true,\n    \"name\": \"IT Company\",\n    \"email\": \"\",\n    \"docNumber\": \"50322346000184\",\n    \"docNumberType\": \"CNPJ\",\n    \"street\": \"Av Lins de Vasconcelos\",\n    \"number\": \"1222\",\n    \"neighborhood\": \"Cambuci\",\n    \"city\": \"São Paulo\",\n    \"state\": \"SP\",\n    \"country\": \"Brasil\",\n    \"postalCode\": \"01538001\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-companies}}/companies/{{company-id}}"
+							},
+							"response": []
+						},
+						{
+							"name": "05 - Return bad request status when company's email is invalid",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"deleted\": false,\n    \"active\": true,\n    \"name\": \"IT Company\",\n    \"email\": \"it.itcompany.com\",\n    \"docNumber\": \"50322346000184\",\n    \"docNumberType\": \"CNPJ\",\n    \"street\": \"Av Lins de Vasconcelos\",\n    \"number\": \"1222\",\n    \"neighborhood\": \"Cambuci\",\n    \"city\": \"São Paulo\",\n    \"state\": \"SP\",\n    \"country\": \"Brasil\",\n    \"postalCode\": \"01538001\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-companies}}/companies/{{company-id}}"
+							},
+							"response": []
+						},
+						{
+							"name": "06 - Return bad request status when company's doc number was not filled",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"deleted\": false,\n    \"active\": true,\n    \"name\": \"IT Company\",\n    \"email\": \"it@itcompany.com\",\n    \"docNumber\": \"\",\n    \"docNumberType\": \"CNPJ\",\n    \"street\": \"Av Lins de Vasconcelos\",\n    \"number\": \"1222\",\n    \"neighborhood\": \"Cambuci\",\n    \"city\": \"São Paulo\",\n    \"state\": \"SP\",\n    \"country\": \"Brasil\",\n    \"postalCode\": \"01538001\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-companies}}/companies/{{company-id}}"
+							},
+							"response": []
+						},
+						{
+							"name": "07 - Return bad request status when company's doc number is invalid",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"deleted\": false,\n    \"active\": true,\n    \"name\": \"IT Company\",\n    \"email\": \"it@itcompany.com\",\n    \"docNumber\": \"1234567890\",\n    \"docNumberType\": \"CNPJ\",\n    \"street\": \"Av Lins de Vasconcelos\",\n    \"number\": \"1222\",\n    \"neighborhood\": \"Cambuci\",\n    \"city\": \"São Paulo\",\n    \"state\": \"SP\",\n    \"country\": \"Brasil\",\n    \"postalCode\": \"01538001\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-companies}}/companies/{{company-id}}"
+							},
+							"response": []
+						},
+						{
+							"name": "08 - Return bad request status when company's cpf is invalid",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"deleted\": false,\n    \"active\": true,\n    \"name\": \"IT Company\",\n    \"email\": \"it@itcompany.com\",\n    \"docNumber\": \"12345678901\",\n    \"docNumberType\": \"CPF\",\n    \"street\": \"Av Lins de Vasconcelos\",\n    \"number\": \"1222\",\n    \"neighborhood\": \"Cambuci\",\n    \"city\": \"São Paulo\",\n    \"state\": \"SP\",\n    \"country\": \"Brasil\",\n    \"postalCode\": \"01538001\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-companies}}/companies/{{company-id}}"
+							},
+							"response": []
+						},
+						{
+							"name": "09 - Return bad request status when company's cnpj is invalid",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"deleted\": false,\n    \"active\": true,\n    \"name\": \"IT Company\",\n    \"email\": \"it@itcompany.com\",\n    \"docNumber\": \"12345678901234\",\n    \"docNumberType\": \"CNPJ\",\n    \"street\": \"Av Lins de Vasconcelos\",\n    \"number\": \"1222\",\n    \"neighborhood\": \"Cambuci\",\n    \"city\": \"São Paulo\",\n    \"state\": \"SP\",\n    \"country\": \"Brasil\",\n    \"postalCode\": \"01538001\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-companies}}/companies/{{company-id}}"
+							},
+							"response": []
+						},
+						{
+							"name": "10 - Return bad request status when company's doc number already exists",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"deleted\": false,\n    \"active\": true,\n    \"name\": \"Thomas Anderson\",\n    \"email\": \"thomas.anderson@itcompany.com\",\n    \"docNumber\": \"11955975094\",\n    \"docNumberType\": \"CPF\",\n    \"street\": \"Av Lins de Vasconcelos\",\n    \"number\": \"1222\",\n    \"neighborhood\": \"Cambuci\",\n    \"city\": \"São Paulo\",\n    \"state\": \"SP\",\n    \"country\": \"Brasil\",\n    \"postalCode\": \"01538001\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-companies}}/companies/{{company-id}}"
+							},
+							"response": []
+						},
+						{
+							"name": "11 - Return bad request status when company's street was not filled",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"deleted\": false,\n    \"active\": true,\n    \"name\": \"IT Company\",\n    \"email\": \"it@itcompany.com\",\n    \"docNumber\": \"50322346000184\",\n    \"docNumberType\": \"CNPJ\",\n    \"street\": \"\",\n    \"number\": \"1222\",\n    \"neighborhood\": \"Cambuci\",\n    \"city\": \"São Paulo\",\n    \"state\": \"SP\",\n    \"country\": \"Brasil\",\n    \"postalCode\": \"01538001\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-companies}}/companies/{{company-id}}"
+							},
+							"response": []
+						},
+						{
+							"name": "12 - Return bad request status when company's street length is invalid",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"deleted\": false,\n    \"active\": true,\n    \"name\": \"IT Company\",\n    \"email\": \"it@itcompany.com\",\n    \"docNumber\": \"50322346000184\",\n    \"docNumberType\": \"CNPJ\",\n    \"street\": \"Av\",\n    \"number\": \"1222\",\n    \"neighborhood\": \"Cambuci\",\n    \"city\": \"São Paulo\",\n    \"state\": \"SP\",\n    \"country\": \"Brasil\",\n    \"postalCode\": \"01538001\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-companies}}/companies/{{company-id}}"
+							},
+							"response": []
+						},
+						{
+							"name": "13 - Return bad request status when company's address number was not filled",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"deleted\": false,\n    \"active\": true,\n    \"name\": \"IT Company\",\n    \"email\": \"it@itcompany.com\",\n    \"docNumber\": \"50322346000184\",\n    \"docNumberType\": \"CNPJ\",\n    \"street\": \"Av Lins de Vasconcelos\",\n    \"number\": \"\",\n    \"neighborhood\": \"Cambuci\",\n    \"city\": \"São Paulo\",\n    \"state\": \"SP\",\n    \"country\": \"Brasil\",\n    \"postalCode\": \"01538001\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-companies}}/companies/{{company-id}}"
+							},
+							"response": []
+						},
+						{
+							"name": "14 - Return bad request status when company's address neighborhood was not filled",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"deleted\": false,\n    \"active\": true,\n    \"name\": \"IT Company\",\n    \"email\": \"it@itcompany.com\",\n    \"docNumber\": \"50322346000184\",\n    \"docNumberType\": \"CNPJ\",\n    \"street\": \"Av Lins de Vasconcelos\",\n    \"number\": \"1222\",\n    \"neighborhood\": \"\",\n    \"city\": \"São Paulo\",\n    \"state\": \"SP\",\n    \"country\": \"Brasil\",\n    \"postalCode\": \"01538001\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-companies}}/companies/{{company-id}}"
+							},
+							"response": []
+						},
+						{
+							"name": "15 - Return bad request status when company's address city was not filled",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"deleted\": false,\n    \"active\": true,\n    \"name\": \"IT Company\",\n    \"email\": \"it@itcompany.com\",\n    \"docNumber\": \"50322346000184\",\n    \"docNumberType\": \"CNPJ\",\n    \"street\": \"Av Lins de Vasconcelos\",\n    \"number\": \"1222\",\n    \"neighborhood\": \"Cambuci\",\n    \"city\": \"\",\n    \"state\": \"SP\",\n    \"country\": \"Brasil\",\n    \"postalCode\": \"01538001\"\n\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-companies}}/companies/{{company-id}}"
+							},
+							"response": []
+						},
+						{
+							"name": "16 - Return bad request status when company's address state was not filled",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"deleted\": false,\n    \"active\": true,\n    \"name\": \"IT Company\",\n    \"email\": \"it@itcompany.com\",\n    \"docNumber\": \"50322346000184\",\n    \"docNumberType\": \"CNPJ\",\n    \"street\": \"Av Lins de Vasconcelos\",\n    \"number\": \"1222\",\n    \"neighborhood\": \"Cambuci\",\n    \"city\": \"São Paulo\",\n    \"state\": \"\",\n    \"country\": \"Brasil\",\n    \"postalCode\": \"01538001\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-companies}}/companies/{{company-id}}"
+							},
+							"response": []
+						},
+						{
+							"name": "17 - Return bad request status when company's address country was not filled",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"deleted\": false,\n    \"active\": true,\n    \"name\": \"IT Company\",\n    \"email\": \"it@itcompany.com\",\n    \"docNumber\": \"50322346000184\",\n    \"docNumberType\": \"CNPJ\",\n    \"street\": \"Av Lins de Vasconcelos\",\n    \"number\": \"1222\",\n    \"neighborhood\": \"Cambuci\",\n    \"city\": \"São Paulo\",\n    \"state\": \"SP\",\n    \"country\": \"\",\n    \"postalCode\": \"01538001\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-companies}}/companies/{{company-id}}"
+							},
+							"response": []
+						},
+						{
+							"name": "18 - Return bad request status when company's address postal code was not filled",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"deleted\": false,\n    \"active\": true,\n    \"name\": \"IT Company\",\n    \"email\": \"it@itcompany.com\",\n    \"docNumber\": \"50322346000184\",\n    \"docNumberType\": \"CNPJ\",\n    \"street\": \"Av Lins de Vasconcelos\",\n    \"number\": \"1222\",\n    \"neighborhood\": \"Cambuci\",\n    \"city\": \"São Paulo\",\n    \"state\": \"SP\",\n    \"country\": \"Brasil\",\n    \"postalCode\": \"\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-companies}}/companies/{{company-id}}"
+							},
+							"response": []
+						},
+						{
+							"name": "19 - Return bad request status when company's address postal code is invalid",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"deleted\": false,\n    \"active\": true,\n    \"name\": \"Thomas Anderson\",\n    \"email\": \"thomas.anderson@itcompany.com\",\n    \"docNumber\": \"11955975094\",\n    \"docNumberType\": \"CPF\",\n    \"street\": \"Av Lins de Vasconcelos\",\n    \"number\": \"1222\",\n    \"neighborhood\": \"Cambuci\",\n    \"city\": \"São Paulo\",\n    \"state\": \"SP\",\n    \"country\": \"Brasil\",\n    \"postalCode\": \"1234567O\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-companies}}/companies/{{company-id}}"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Delete",
+					"item": [
+						{
+							"name": "01 - Return no content status when delete company by id",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": "{{url-companies}}/companies/{{company-id}}"
+							},
+							"response": []
+						},
+						{
+							"name": "02 - Return bad request status when delete company by invalid id",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": "{{url-companies}}/companies/1aB"
+							},
+							"response": []
+						},
+						{
+							"name": "03 - Return not found status when delete by not found company id",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": "{{url-companies}}/companies/8f836f61-17c4-4f4f-935e-8625aad84ee7"
+							},
+							"response": []
+						},
+						{
+							"name": "04 - Return not found status when delete by company id already deleted",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": "{{url-companies}}/companies/{{company-id}}"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Get all by name or email paginated",
+					"item": [
+						{
+							"name": "01 - Return ok status when get companies by name or email",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url-companies}}/companies/name-email?name=IT Company&email=it@itcompany.com",
+									"host": [
+										"{{url-companies}}"
+									],
+									"path": [
+										"companies",
+										"name-email"
+									],
+									"query": [
+										{
+											"key": "name",
+											"value": "IT Company"
+										},
+										{
+											"key": "email",
+											"value": "it@itcompany.com"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "02 - Return ok status and empty result when get customers by name or email and companies do not exists",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url-companies}}/companies/name-email?name=&email=",
+									"host": [
+										"{{url-companies}}"
+									],
+									"path": [
+										"companies",
+										"name-email"
+									],
+									"query": [
+										{
+											"key": "name",
+											"value": ""
+										},
+										{
+											"key": "email",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": {
+					"token": "{{auth_token}}"
+				}
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "02 - Products",
+			"item": [
+				{
+					"name": "Create",
+					"item": [
+						{
+							"name": "01 - Return created status when create new product",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"deleted\": false,\n    \"active\": true,\n    \"sku\": \"Key/BR-/Erg/White\",\n    \"description\": \"Keyboard Ergonomic White\",\n    \"quantityStock\": 10.00,\n    \"price\": 315.00,\n    \"unitMeasurement\": \"UN\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-products}}/products"
+							},
+							"response": []
+						},
+						{
+							"name": "02 - Return bad request status when product skw was not filled",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"deleted\": false,\n    \"active\": true,\n    \"sku\": \"\",\n    \"description\": \"Keyboard Ergonomic Black\",\n    \"quantityStock\": 10.00,\n    \"price\": 315.00,\n    \"unitMeasurement\": \"UN\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-products}}/products"
+							},
+							"response": []
+						},
+						{
+							"name": "03 - Return bad request status when product sku length is bigger than 20 characters",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"deleted\": false,\n    \"active\": true,\n    \"sku\": \"012345678900123456789001234567890\",\n    \"description\": \"Keyboard Ergonomic Black\",\n    \"quantityStock\": 10.00,\n    \"price\": 315.00,\n    \"unitMeasurement\": \"UN\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-products}}/products"
+							},
+							"response": []
+						},
+						{
+							"name": "04 - Return conflict status when product sku already exists",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"deleted\": false,\n    \"active\": true,\n    \"sku\": \"Key/BR-/Erg/Bla\",\n    \"description\": \"Keyboard Ergonomic Black\",\n    \"quantityStock\": 10.00,\n    \"price\": 315.00,\n    \"unitMeasurement\": \"UN\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-products}}/products"
+							},
+							"response": []
+						},
+						{
+							"name": "05 - Return bad request status when product description was not filled",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"deleted\": false,\n    \"active\": true,\n    \"sku\": \"Key/BR-/Erg/Bla\",\n    \"description\": \"\",\n    \"quantityStock\": 10.00,\n    \"price\": 315.00,\n    \"unitMeasurement\": \"UN\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-products}}/products"
+							},
+							"response": []
+						},
+						{
+							"name": "06 - Return bad request status when product description length is invalid",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"deleted\": false,\n    \"active\": true,\n    \"sku\": \"Key/BR-/Erg/Bla\",\n    \"description\": \"01\",\n    \"quantityStock\": 10.00,\n    \"price\": 315.00,\n    \"unitMeasurement\": \"UN\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-products}}/products"
+							},
+							"response": []
+						},
+						{
+							"name": "07 - Return bad request status when product unit measurement was not filled",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"deleted\": false,\n    \"active\": true,\n    \"sku\": \"Key/BR-/Erg/Bla\",\n    \"description\": \"Keyboard Ergonomic Black\",\n    \"quantityStock\": 10.00,\n    \"price\": 315.00,\n    \"unitMeasurement\": \"\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-products}}/products"
+							},
+							"response": []
+						},
+						{
+							"name": "08 - Return bad request status when product unit measurement length is invalid",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"deleted\": false,\n    \"active\": true,\n    \"sku\": \"Key/BR-/Erg/Bla\",\n    \"description\": \"Keyboard Ergonomic Black\",\n    \"quantityStock\": 10.00,\n    \"price\": 315.00,\n    \"unitMeasurement\": \"012345678901234567890123456789\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-products}}/products"
+							},
+							"response": []
+						},
+						{
+							"name": "09 - Return bad request status when product quantity stock is lower than zero",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"deleted\": false,\n    \"active\": true,\n    \"sku\": \"Key/BR-/Erg/Bla\",\n    \"description\": \"Keyboard Ergonomic Black\",\n    \"quantityStock\": -10.00,\n    \"price\": 315.00,\n    \"unitMeasurement\": \"UN\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-products}}/products"
+							},
+							"response": []
+						},
+						{
+							"name": "10 - Return bad request status when product price is lower than zero Copy",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"deleted\": false,\n    \"active\": true,\n    \"sku\": \"Key/BR-/Erg/Bla\",\n    \"description\": \"Keyboard Ergonomic Black\",\n    \"quantityStock\": 10.00,\n    \"price\": -315.00,\n    \"unitMeasurement\": \"UN\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-products}}/products"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Get",
+					"item": [
+						{
+							"name": "01 - Return ok when find product by id",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{auth_token}}"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": "{{url-products}}/products/{{product-id}}"
+							},
+							"response": []
+						},
+						{
+							"name": "02 - Return not found when not find product by id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "{{url-products}}/products/{{id}}"
+							},
+							"response": []
+						},
+						{
+							"name": "03 - Return bad request when not find product by invalid id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "{{url-products}}/products/1ab"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Update",
+					"item": [
+						{
+							"name": "01 - Return accepted status when update product",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"deleted\": false,\n    \"active\": true,\n    \"sku\": \"Key/BR-/Erg/White\",\n    \"description\": \"Keyboard Ergonomic White Test\",\n    \"quantityStock\": 10.00,\n    \"price\": 315.00,\n    \"unitMeasurement\": \"UN\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-products}}/products/{{product-id}}"
+							},
+							"response": []
+						},
+						{
+							"name": "02 - Return bad request status when update product without sku",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"deleted\": false,\n    \"active\": true,\n    \"sku\": \"\",\n    \"description\": \"Keyboard Ergonomic Black\",\n    \"quantityStock\": 10.00,\n    \"price\": 315.00,\n    \"unitMeasurement\": \"UN\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-products}}/products/{{product-id}}"
+							},
+							"response": []
+						},
+						{
+							"name": "03 - Return bad request status when update product sku length is invalid",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"deleted\": false,\n    \"active\": true,\n    \"sku\": \"012345678901234567890123456789\",\n    \"description\": \"Keyboard Ergonomic Black\",\n    \"quantityStock\": 10.00,\n    \"price\": 315.00,\n    \"unitMeasurement\": \"UN\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-products}}/products/{{product-id}}"
+							},
+							"response": []
+						},
+						{
+							"name": "04 - Return conflict status when update product sku already exists in other product",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"deleted\": false,\n    \"active\": true,\n    \"sku\": \"Key/BR-/Erg/Wht\",\n    \"description\": \"Keyboard Ergonomic Black\",\n    \"quantityStock\": 10.00,\n    \"price\": 315.00,\n    \"unitMeasurement\": \"UN\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-products}}/products/{{product-id}}"
+							},
+							"response": []
+						},
+						{
+							"name": "05 - Return bad request status when update product description was not filled",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"deleted\": false,\n    \"active\": true,\n    \"sku\": \"Key/BR-/Erg/Bla\",\n    \"description\": \"\",\n    \"quantityStock\": 10.00,\n    \"price\": 315.00,\n    \"unitMeasurement\": \"UN\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-products}}/products/{{product-id}}"
+							},
+							"response": []
+						},
+						{
+							"name": "06 - Return bad request status when update product description length is invalid",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"deleted\": false,\n    \"active\": true,\n    \"sku\": \"Key/BR-/Erg/Bla\",\n    \"description\": \"1\",\n    \"quantityStock\": 10.00,\n    \"price\": 315.00,\n    \"unitMeasurement\": \"UN\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-products}}/products/{{product-id}}"
+							},
+							"response": []
+						},
+						{
+							"name": "07 - Return bad request status when update product unit measurement was not filled",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"deleted\": false,\n    \"active\": true,\n    \"sku\": \"Key/BR-/Erg/Bla\",\n    \"description\": \"Keyboard Ergonomic Black\",\n    \"quantityStock\": 10.00,\n    \"price\": 315.00,\n    \"unitMeasurement\": \"\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-products}}/products/{{product-id}}"
+							},
+							"response": []
+						},
+						{
+							"name": "08 - Return bad request status when update product unit measurement length is invalid",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"deleted\": false,\n    \"active\": true,\n    \"sku\": \"Key/BR-/Erg/Bla\",\n    \"description\": \"Keyboard Ergonomic Black\",\n    \"quantityStock\": 10.00,\n    \"price\": 315.00,\n    \"unitMeasurement\": \"012345678901234567890123456789\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-products}}/products/{{product-id}}"
+							},
+							"response": []
+						},
+						{
+							"name": "09 - Return bad request status when update product quantity stock is lower than zero",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"deleted\": false,\n    \"active\": true,\n    \"sku\": \"Key/BR-/Erg/Bla\",\n    \"description\": \"Keyboard Ergonomic Black\",\n    \"quantityStock\": -10.00,\n    \"price\": 315.00,\n    \"unitMeasurement\": \"UN\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-products}}/products/{{product-id}}"
+							},
+							"response": []
+						},
+						{
+							"name": "10 - Return bad request status when update product price is lower than zero Copy",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"deleted\": false,\n    \"active\": true,\n    \"sku\": \"Key/BR-/Erg/Bla\",\n    \"description\": \"Keyboard Ergonomic Black\",\n    \"quantityStock\": 10.00,\n    \"price\": -315.00,\n    \"unitMeasurement\": \"UN\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-products}}/products/{{product-id}}"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Delete",
+					"item": [
+						{
+							"name": "01 - Return no content status when delete product",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": "{{url-products}}/products/{{product-id}}"
+							},
+							"response": []
+						},
+						{
+							"name": "02 - Return bad request status when delete product by invalid id",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": "{{url-products}}/products/1ab"
+							},
+							"response": []
+						},
+						{
+							"name": "03 - Return not found status when delete product by not found id",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": "{{url-products}}/products/{{product-id}}"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Get all by sku or description",
+					"item": [
+						{
+							"name": "01 - Return ok status when get product by sku or description",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url-products}}/products/sku-description?sku=Key/BR-/Erg/Wht&description=Keyboard Ergonomic White",
+									"host": [
+										"{{url-products}}"
+									],
+									"path": [
+										"products",
+										"sku-description"
+									],
+									"query": [
+										{
+											"key": "sku",
+											"value": "Key/BR-/Erg/Wht"
+										},
+										{
+											"key": "description",
+											"value": "Keyboard Ergonomic White"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "02 - Return ok status and empty result when get product by sku or description and it does not exist",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url-products}}/products/sku-description?sku=Key/BR-/Erg/Bla&description=Keyboard Ergonomic Black",
+									"host": [
+										"{{url-products}}"
+									],
+									"path": [
+										"products",
+										"sku-description"
+									],
+									"query": [
+										{
+											"key": "sku",
+											"value": "Key/BR-/Erg/Bla"
+										},
+										{
+											"key": "description",
+											"value": "Keyboard Ergonomic Black"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Batch",
+					"item": [
+						{
+							"name": "01 - Return created http status when products was imported",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": "{{url-batch}}/products/batch"
+							},
+							"response": []
+						}
+					]
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": {
+					"token": "{{auth_token}}"
+				}
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "03 - Order",
+			"item": [
+				{
+					"name": "Create",
+					"item": [
+						{
+							"name": "01 - Return created http status when an order was created",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{auth_token}}"
+									}
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"companyId\": \"dcd3398e-4988-4fba-b8c0-a649ae1ff677\",\n    \"customerId\": \"6b42b26f-ffd8-4dc3-9caf-8629add26a92\",\n    \"orderItems\": [\n        {\n            \"productId\": \"cfa8315f-3f9a-4105-a2f2-f02a0a303b20\",\n            \"productSku\": \"Key/BR-/Erg/Bla\",\n            \"quantity\": 10,\n            \"price\": 315\n        }\n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-orders}}/orders"
+							},
+							"response": []
+						},
+						{
+							"name": "02 - Return bad request http status when company id was not filled",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"companyId\": \"\",\n    \"customerId\": \"64f6db0a-3d9a-429c-a7e6-04c4691f3be9\",\n    \"orderItems\": [\n        {\n            \"productId\": \"cfa8315f-3f9a-4105-a2f2-f02a0a303b20\",\n            \"quantity\": 10,\n            \"price\": 315\n        }\n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-orders}}/orders"
+							},
+							"response": []
+						},
+						{
+							"name": "03 - Return bad request http status when an order customer id was not filled",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"companyId\": \"dcd3398e-4988-4fba-b8c0-a649ae1ff677\",\n    \"customerId\": \"\",\n    \"orderItems\": [\n        {\n            \"productId\": \"cfa8315f-3f9a-4105-a2f2-f02a0a303b20\",\n            \"quantity\": 10,\n            \"price\": 315\n        }\n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-orders}}/orders"
+							},
+							"response": []
+						},
+						{
+							"name": "04 - Return bad request http status when an order items was not filled",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"companyId\": \"dcd3398e-4988-4fba-b8c0-a649ae1ff677\",\n    \"customerId\": \"64f6db0a-3d9a-429c-a7e6-04c4691f3be9\",\n    \"orderItems\": []\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-orders}}/orders"
+							},
+							"response": []
+						},
+						{
+							"name": "05 - Return bad request http status when an order items product id was not filled",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"companyId\": \"dcd3398e-4988-4fba-b8c0-a649ae1ff677\",\n    \"customerId\": \"64f6db0a-3d9a-429c-a7e6-04c4691f3be9\",\n    \"orderItems\": [\n        {\n            \"productId\": \"\",\n            \"quantity\": 10,\n            \"price\": 315\n        }\n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-orders}}/orders"
+							},
+							"response": []
+						},
+						{
+							"name": "06 - Return bad request http status when an order items quantity is invalid",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"companyId\": \"dcd3398e-4988-4fba-b8c0-a649ae1ff677\",\n    \"customerId\": \"64f6db0a-3d9a-429c-a7e6-04c4691f3be9\",\n    \"orderItems\": [\n        {\n            \"productId\": \"cfa8315f-3f9a-4105-a2f2-f02a0a303b20\",\n            \"quantity\": 0,\n            \"price\": 315\n        }\n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-orders}}/orders"
+							},
+							"response": []
+						},
+						{
+							"name": "07 - Return bad request http status when an order items price is invalid",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"companyId\": \"dcd3398e-4988-4fba-b8c0-a649ae1ff677\",\n    \"customerId\": \"64f6db0a-3d9a-429c-a7e6-04c4691f3be9\",\n    \"orderItems\": [\n        {\n            \"productId\": \"cfa8315f-3f9a-4105-a2f2-f02a0a303b20\",\n            \"quantity\": 10,\n            \"price\": 0\n        }\n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-orders}}/orders"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Get",
+					"item": [
+						{
+							"name": "01 - Return ok when find order by id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "{{url-orders}}/orders/{{order-id}}"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Update",
+					"item": [
+						{
+							"name": "01 - Return ok when update order",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": \"26b93191-bc5f-441d-9d12-b61c2f5e3307\",\n    \"companyId\": \"dcd3398e-4988-4fba-b8c0-a649ae1ff677\",\n    \"customerId\": \"4f0c3c8a-e29e-4862-8463-0e3bb2fafb21\",\n    \"orderItems\": [\n        {\n            \"id\": \"c26e19ab-9ee9-45cd-9d51-3c64ee4147d4\",\n            \"productId\": \"cfa8315f-3f9a-4105-a2f2-f02a0a303b20\",\n            \"quantity\": 10.00,\n            \"price\": 315.00,\n            \"totalAmout\": 3150.00\n        }\n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-orders}}/orders/{{order-id}}"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Payment",
+					"item": [
+						{
+							"name": "01 - Return no content http status when an order was paid",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{auth_token}}"
+									}
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"orderId\": \"6f1b9492-cb0d-4fe8-9cb4-a684657cf204\",\n    \"paymentType\": \"PIX\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url-payments}}/payments"
+							},
+							"response": []
+						}
+					]
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": {
+					"token": "{{auth_token}}"
+				}
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"value": "",
+			"type": "string"
+		}
+	]
+}
